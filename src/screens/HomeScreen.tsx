@@ -47,7 +47,7 @@ export default function HomeScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <GradientBackground>
-        <DominoPattern />
+        <DominoPattern variant="home" />
         
         <View style={styles.content}>
           <Animated.Text

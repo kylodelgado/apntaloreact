@@ -15,6 +15,7 @@ import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { COLORS, SPACING, FONTS, SHADOWS } from '../styles/theme';
 import { GradientBackground } from '../components/GradientBackground';
 import { RootStackParamList } from '../navigation/types';
+import { DominoPattern } from '../components/DominoPattern';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameSetup'>;
 
@@ -106,6 +107,8 @@ export default function GameSetupScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <GradientBackground>
+        <DominoPattern variant="setup" />
+        
         <ScrollView 
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}

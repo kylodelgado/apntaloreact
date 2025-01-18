@@ -23,6 +23,7 @@ import { FrostedGlassCard } from '../components/FrostedGlassCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { CustomNumberPad } from '../components/CustomNumberPad';
+import { DominoPattern } from '../components/DominoPattern';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'GamePlay'>;
@@ -466,6 +467,8 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   return (
     <SafeAreaView style={styles.container}>
       <GradientBackground>
+        <DominoPattern variant="gameplay" />
+        
         <View style={styles.content}>
           {isLoading && (
             <View style={styles.loadingContainer}>
