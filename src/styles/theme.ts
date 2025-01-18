@@ -22,7 +22,7 @@ export const COLORS = {
   gradient: {
     primary: ['#1E3A8A', '#2563EB'],
     accent: ['#FBC02D', '#F59E0B'],
-    background: ['#EEF2FF', '#FFFFFF']
+    background: ['#EEF2FF', '#1E3A8A']
   }
 };
 

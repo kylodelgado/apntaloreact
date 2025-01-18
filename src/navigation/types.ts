@@ -12,4 +12,8 @@ export type RootStackParamList = {
     winner: string;
     gameMode: 'teams' | 'players';
   };
+  Settings: undefined;
+  PrivacyPolicy: undefined;
+  TermsOfService: undefined;
+  AppStore: undefined;
 }; 

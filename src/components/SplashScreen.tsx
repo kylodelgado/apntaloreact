@@ -41,6 +41,24 @@ export const SplashScreen = () => {
     outputRange: ['0deg', '360deg'],
   });
 
+  // Helper function to render a 6-dot pattern
+  const renderSixDots = () => (
+    <View style={styles.dotsContainer}>
+      <View style={styles.dotRow}>
+        <View style={styles.dot} />
+        <View style={styles.dot} />
+      </View>
+      <View style={styles.dotRow}>
+        <View style={styles.dot} />
+        <View style={styles.dot} />
+      </View>
+      <View style={styles.dotRow}>
+        <View style={styles.dot} />
+        <View style={styles.dot} />
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -63,12 +81,12 @@ export const SplashScreen = () => {
           ]}
         >
           <View style={styles.domino}>
+            {/* Top half */}
+            {renderSixDots()}
+            {/* Dividing line */}
             <View style={styles.dominoLine} />
-            <View style={styles.dotsContainer}>
-              <View style={styles.dot} />
-              <View style={styles.dot} />
-              <View style={styles.dot} />
-            </View>
+            {/* Bottom half */}
+            {renderSixDots()}
           </View>
         </Animated.View>
 
@@ -109,22 +127,46 @@ const styles = StyleSheet.create({
     borderRadius: DOMINO_SIZE / 8,
     padding: DOMINO_SIZE / 8,
     justifyContent: 'space-between',
+    // Add shadow for 3D effect
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
   },
   dominoLine: {
-    height: 2,
+    height: 1,
     backgroundColor: COLORS.primary,
-    marginVertical: DOMINO_SIZE / 4,
+    opacity: 0.2,
+    marginVertical: 2,
   },
   dotsContainer: {
     flex: 1,
     justifyContent: 'space-around',
+    paddingVertical: 4,
+  },
+  dotRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   dot: {
-    width: DOMINO_SIZE / 6,
-    height: DOMINO_SIZE / 6,
-    borderRadius: DOMINO_SIZE / 12,
+    width: DOMINO_SIZE / 8,
+    height: DOMINO_SIZE / 8,
+    borderRadius: DOMINO_SIZE / 16,
     backgroundColor: COLORS.primary,
+    // Add inner shadow effect
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    elevation: 2,
   },
   title: {
     ...FONTS.title,

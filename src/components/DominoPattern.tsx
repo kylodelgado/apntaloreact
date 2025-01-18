@@ -99,11 +99,8 @@ export const DominoPattern: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: -50, // Extend beyond the safe area
-    left: 0,
-    right: 0,
-    bottom: -50,
+    ...StyleSheet.absoluteFillObject,
+    overflow: 'hidden',
   },
   row: {
     flexDirection: 'row',
@@ -144,11 +141,21 @@ const styles = StyleSheet.create({
     height: PATTERN_SIZE / 6,
     margin: PATTERN_SIZE / 24,
     borderRadius: PATTERN_SIZE / 12,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   visibleDot: {
     backgroundColor: COLORS.white,
+    elevation: 3,
   },
   invisibleDot: {
     backgroundColor: 'transparent',
+    elevation: 0,
   },
 }); 

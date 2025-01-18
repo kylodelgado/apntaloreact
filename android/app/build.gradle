@@ -105,6 +105,14 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    // Add this block for react-native-vector-icons
+    sourceSets {
+        main {
+            assets.srcDirs += ['src/main/assets/']
+            res.srcDirs += ['src/main/res']
+        }
+    }
 }
 
 dependencies {
@@ -115,5 +123,15 @@ dependencies {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
+    }
+
+    // Force all the support libraries to use the same version
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.core:core:1.9.0'
+            force 'androidx.core:core-ktx:1.9.0'
+            // Exclude old support library
+            exclude group: 'com.android.support'
+        }
     }
 }

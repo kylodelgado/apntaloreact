@@ -464,29 +464,52 @@ export default function GamePlayScreen({ navigation, route }: Props) {
     }
   };
 
+  const handleReset = () => {
+    Alert.alert(
+      'Reset Game',
+      'Are you sure you want to reset all scores? This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Reset',
+          style: 'destructive',
+          onPress: () => {
+            setScores(participants.map(() => [0]));
+            AsyncStorage.removeItem(STORAGE_KEY).catch(console.error);
+          },
+        },
+      ]
+    );
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <GradientBackground>
-        <DominoPattern variant="gameplay" />
+    <GradientBackground safeAreaEdges={['top', 'bottom']}>
+      <DominoPattern variant="gameplay" />
+      
+      <View style={styles.content}>
+        <TouchableOpacity 
+          style={styles.resetButton}
+          onPress={handleReset}
+        >
+          <Icon name="refresh" size={24} color={COLORS.white} />
+        </TouchableOpacity>
+
+        {isLoading && (
+          <View style={styles.loadingContainer}>
+            <LoadingSpinner size={32} color={COLORS.primary} />
+          </View>
+        )}
         
-        <View style={styles.content}>
-          {isLoading && (
-            <View style={styles.loadingContainer}>
-              <LoadingSpinner size={32} color={COLORS.primary} />
-            </View>
-          )}
-          
-          {error && (
-            <ErrorMessage 
-              message={error} 
-              onFinish={() => setError(null)} 
-            />
-          )}
-          
-          {renderParticipantColumns()}
-        </View>
-      </GradientBackground>
-    </SafeAreaView>
+        {error && (
+          <ErrorMessage 
+            message={error} 
+            onFinish={() => setError(null)} 
+          />
+        )}
+        
+        {renderParticipantColumns()}
+      </View>
+    </GradientBackground>
   );
 }
 
@@ -502,11 +525,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: SPACING.md,
     padding: SPACING.md,
+    paddingTop: SPACING.xl * 2,
   },
   playersContainer: {
     flex: 1,
     gap: SPACING.md,
     padding: SPACING.md,
+    paddingTop: SPACING.xl * 2,
   },
   playersRow: {
     flexDirection: 'row',
@@ -658,5 +683,15 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: COLORS.accent,
     borderRadius: 8,
+  },
+  resetButton: {
+    position: 'absolute',
+    top: SPACING.md,
+    right: SPACING.md,
+    backgroundColor: COLORS.primary,
+    padding: SPACING.sm,
+    borderRadius: 8,
+    zIndex: 10,
+    ...SHADOWS.medium,
   },
 }); 

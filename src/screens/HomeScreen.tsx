@@ -6,13 +6,14 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
+  Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { COLORS, SPACING, FONTS, SHADOWS } from '../styles/theme';
 import { DominoPattern } from '../components/DominoPattern';
 import { GradientBackground } from '../components/GradientBackground';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -45,41 +46,46 @@ export default function HomeScreen({ navigation }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <GradientBackground>
-        <DominoPattern variant="home" />
-        
-        <View style={styles.content}>
-          <Animated.Text
-            style={[
-              styles.title,
-              {
-                transform: [
-                  {
-                    scale: titleBounce.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0.8, 1],
-                    }),
-                  },
-                ],
-              },
-            ]}
-          >
-            ¡Apuntalo!
-          </Animated.Text>
-          
-          <Text style={styles.subtitle}>Domino Score Tracker</Text>
+    <GradientBackground safeAreaEdges={['top', 'bottom']}>
+      <DominoPattern variant="home" />
+      
+      <TouchableOpacity 
+        style={styles.settingsButton}
+        onPress={() => navigation.navigate('Settings')}
+      >
+        <Icon name="cog" size={24} color={COLORS.primary} />
+      </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleNewGame}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.buttonText}>New Game</Text>
-          </TouchableOpacity>
-        </View>
-      </GradientBackground>
-    </SafeAreaView>
+      <View style={styles.content}>
+        <Animated.Text
+          style={[
+            styles.title,
+            {
+              transform: [
+                {
+                  scale: titleBounce.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.8, 1],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          ¡Apuntalo!
+        </Animated.Text>
+        
+        <Text style={styles.subtitle}>Domino Score Tracker</Text>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleNewGame}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.buttonText}>New Game</Text>
+        </TouchableOpacity>
+      </View>
+    </GradientBackground>
   );
 }
 
@@ -118,5 +124,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: COLORS.white,
     textAlign: 'center',
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : SPACING.xl,
+    right: SPACING.lg,
+    backgroundColor: COLORS.white,
+    padding: SPACING.sm,
+    borderRadius: 8,
+    zIndex: 10,
+    ...SHADOWS.small,
   },
 }); 

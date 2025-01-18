@@ -11,10 +11,10 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		29A0BE8210FEF80252634269 /* libPods-apntaloreact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 124EE243727A64133501035B /* libPods-apntaloreact.a */; };
 		4D598A3F58FE528352B8978D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		A98071EE2E07D8638F8F26FF /* libPods-apntaloreact-apntaloreactTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2457968D308227E9E42F112 /* libPods-apntaloreact-apntaloreactTests.a */; };
+		88C65032CCE5AEA4B864032B /* libPods-apntaloreact-apntaloreactTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 716422C0D7ACBE8C0657F60A /* libPods-apntaloreact-apntaloreactTests.a */; };
+		CDF2750ECBC0DCA8D36943BE /* libPods-apntaloreact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDECAD52760FB8C779C0A3FE /* libPods-apntaloreact.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,7 +31,6 @@
 		00E356EE1AD99517003FC87E /* apntaloreactTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = apntaloreactTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* apntaloreactTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = apntaloreactTests.m; sourceTree = "<group>"; };
-		124EE243727A64133501035B /* libPods-apntaloreact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-apntaloreact.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* apntaloreact.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = apntaloreact.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = apntaloreact/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = apntaloreact/AppDelegate.mm; sourceTree = "<group>"; };
@@ -39,13 +38,14 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = apntaloreact/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = apntaloreact/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = apntaloreact/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		15395E462E2D6C9E56C89A99 /* Pods-apntaloreact-apntaloreactTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-apntaloreact-apntaloreactTests.debug.xcconfig"; path = "Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests.debug.xcconfig"; sourceTree = "<group>"; };
-		23DB818B7A65CCFDF94C4E0D /* Pods-apntaloreact-apntaloreactTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-apntaloreact-apntaloreactTests.release.xcconfig"; path = "Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests.release.xcconfig"; sourceTree = "<group>"; };
-		32527BC0FC37B1EB120D3155 /* Pods-apntaloreact.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-apntaloreact.release.xcconfig"; path = "Target Support Files/Pods-apntaloreact/Pods-apntaloreact.release.xcconfig"; sourceTree = "<group>"; };
-		38B485156FD49CF0289B688C /* Pods-apntaloreact.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-apntaloreact.debug.xcconfig"; path = "Target Support Files/Pods-apntaloreact/Pods-apntaloreact.debug.xcconfig"; sourceTree = "<group>"; };
+		200C87A798E225703DAAFEB1 /* Pods-apntaloreact.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-apntaloreact.debug.xcconfig"; path = "Target Support Files/Pods-apntaloreact/Pods-apntaloreact.debug.xcconfig"; sourceTree = "<group>"; };
+		226A00F4E24064B6BD270DAA /* Pods-apntaloreact-apntaloreactTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-apntaloreact-apntaloreactTests.debug.xcconfig"; path = "Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests.debug.xcconfig"; sourceTree = "<group>"; };
+		716422C0D7ACBE8C0657F60A /* libPods-apntaloreact-apntaloreactTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-apntaloreact-apntaloreactTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = apntaloreact/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9578D3CA0CAC143D1D272F1A /* Pods-apntaloreact-apntaloreactTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-apntaloreact-apntaloreactTests.release.xcconfig"; path = "Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests.release.xcconfig"; sourceTree = "<group>"; };
+		BDECAD52760FB8C779C0A3FE /* libPods-apntaloreact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-apntaloreact.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA82B3606DF024FAD7CFF776 /* Pods-apntaloreact.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-apntaloreact.release.xcconfig"; path = "Target Support Files/Pods-apntaloreact/Pods-apntaloreact.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F2457968D308227E9E42F112 /* libPods-apntaloreact-apntaloreactTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-apntaloreact-apntaloreactTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A98071EE2E07D8638F8F26FF /* libPods-apntaloreact-apntaloreactTests.a in Frameworks */,
+				88C65032CCE5AEA4B864032B /* libPods-apntaloreact-apntaloreactTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29A0BE8210FEF80252634269 /* libPods-apntaloreact.a in Frameworks */,
+				CDF2750ECBC0DCA8D36943BE /* libPods-apntaloreact.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,8 +103,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				124EE243727A64133501035B /* libPods-apntaloreact.a */,
-				F2457968D308227E9E42F112 /* libPods-apntaloreact-apntaloreactTests.a */,
+				BDECAD52760FB8C779C0A3FE /* libPods-apntaloreact.a */,
+				716422C0D7ACBE8C0657F60A /* libPods-apntaloreact-apntaloreactTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -143,10 +143,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				38B485156FD49CF0289B688C /* Pods-apntaloreact.debug.xcconfig */,
-				32527BC0FC37B1EB120D3155 /* Pods-apntaloreact.release.xcconfig */,
-				15395E462E2D6C9E56C89A99 /* Pods-apntaloreact-apntaloreactTests.debug.xcconfig */,
-				23DB818B7A65CCFDF94C4E0D /* Pods-apntaloreact-apntaloreactTests.release.xcconfig */,
+				200C87A798E225703DAAFEB1 /* Pods-apntaloreact.debug.xcconfig */,
+				CA82B3606DF024FAD7CFF776 /* Pods-apntaloreact.release.xcconfig */,
+				226A00F4E24064B6BD270DAA /* Pods-apntaloreact-apntaloreactTests.debug.xcconfig */,
+				9578D3CA0CAC143D1D272F1A /* Pods-apntaloreact-apntaloreactTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -158,12 +158,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "apntaloreactTests" */;
 			buildPhases = (
-				9D222E01F433424C96521042 /* [CP] Check Pods Manifest.lock */,
+				D822ED7B41B3DF4660DBADE2 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				A85AED57B94B7C1F8C022F65 /* [CP] Embed Pods Frameworks */,
-				DF667BFC380DD64F8503EF71 /* [CP] Copy Pods Resources */,
+				EB1D35B50DA2F81B8C49DE62 /* [CP] Embed Pods Frameworks */,
+				AB8E16F21B80C6F7D13A713F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -179,13 +179,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "apntaloreact" */;
 			buildPhases = (
-				C4EAD6E71AF8ECB864DAD23B /* [CP] Check Pods Manifest.lock */,
+				65ED1DC784A0A519399A9B65 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				787367CDCFA1DF2A2B8251F9 /* [CP] Embed Pods Frameworks */,
-				529668D0E612FC9658206F84 /* [CP] Copy Pods Resources */,
+				5567B62ADCDEC5C60FAF0F32 /* [CP] Embed Pods Frameworks */,
+				1B276B0689C1BF205751361D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -269,7 +269,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		529668D0E612FC9658206F84 /* [CP] Copy Pods Resources */ = {
+		1B276B0689C1BF205751361D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -286,7 +286,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-apntaloreact/Pods-apntaloreact-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		787367CDCFA1DF2A2B8251F9 /* [CP] Embed Pods Frameworks */ = {
+		5567B62ADCDEC5C60FAF0F32 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -303,46 +303,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-apntaloreact/Pods-apntaloreact-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9D222E01F433424C96521042 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-apntaloreact-apntaloreactTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A85AED57B94B7C1F8C022F65 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C4EAD6E71AF8ECB864DAD23B /* [CP] Check Pods Manifest.lock */ = {
+		65ED1DC784A0A519399A9B65 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -364,7 +325,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DF667BFC380DD64F8503EF71 /* [CP] Copy Pods Resources */ = {
+		AB8E16F21B80C6F7D13A713F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -379,6 +340,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D822ED7B41B3DF4660DBADE2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-apntaloreact-apntaloreactTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EB1D35B50DA2F81B8C49DE62 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-apntaloreact-apntaloreactTests/Pods-apntaloreact-apntaloreactTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -414,7 +414,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 15395E462E2D6C9E56C89A99 /* Pods-apntaloreact-apntaloreactTests.debug.xcconfig */;
+			baseConfigurationReference = 226A00F4E24064B6BD270DAA /* Pods-apntaloreact-apntaloreactTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -441,7 +441,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 23DB818B7A65CCFDF94C4E0D /* Pods-apntaloreact-apntaloreactTests.release.xcconfig */;
+			baseConfigurationReference = 9578D3CA0CAC143D1D272F1A /* Pods-apntaloreact-apntaloreactTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -465,7 +465,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 38B485156FD49CF0289B688C /* Pods-apntaloreact.debug.xcconfig */;
+			baseConfigurationReference = 200C87A798E225703DAAFEB1 /* Pods-apntaloreact.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -494,7 +494,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 32527BC0FC37B1EB120D3155 /* Pods-apntaloreact.release.xcconfig */;
+			baseConfigurationReference = CA82B3606DF024FAD7CFF776 /* Pods-apntaloreact.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -588,10 +588,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -660,10 +657,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

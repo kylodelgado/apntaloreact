@@ -11,13 +11,18 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, SPACING, FONTS, SHADOWS } from '../styles/theme';
 import { GradientBackground } from '../components/GradientBackground';
 import { RootStackParamList } from '../navigation/types';
 import { DominoPattern } from '../components/DominoPattern';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameSetup'>;
+
+const STORAGE_KEYS = {
+  DEFAULT_SCORE: '@default_score',
+  DEFAULT_GAME_MODE: '@default_game_mode',
+};
 
 export default function GameSetupScreen({ navigation }: Props) {
   const [gameMode, setGameMode] = useState<'teams' | 'players'>('teams');
@@ -29,6 +34,31 @@ export default function GameSetupScreen({ navigation }: Props) {
   // Animation values
   const inputScales = useRef<Animated.Value[]>([]);
   const scoreScale = useRef(new Animated.Value(1)).current;
+
+  // Load default settings
+  useEffect(() => {
+    loadDefaultSettings();
+  }, []);
+
+  const loadDefaultSettings = async () => {
+    try {
+      const [savedScore, savedGameMode] = await Promise.all([
+        AsyncStorage.getItem(STORAGE_KEYS.DEFAULT_SCORE),
+        AsyncStorage.getItem(STORAGE_KEYS.DEFAULT_GAME_MODE),
+      ]);
+
+      if (savedScore) {
+        const score = parseInt(savedScore, 10);
+        setTargetScore(score);
+      }
+      
+      if (savedGameMode) {
+        setGameMode(savedGameMode as 'teams' | 'players');
+      }
+    } catch (error) {
+      console.error('Error loading default settings:', error);
+    }
+  };
 
   // Initialize animation values
   useEffect(() => {
@@ -105,119 +135,117 @@ export default function GameSetupScreen({ navigation }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <GradientBackground>
-        <DominoPattern variant="setup" />
-        
-        <ScrollView 
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <Text style={styles.title}>Game Setup</Text>
+    <GradientBackground safeAreaEdges={['top', 'bottom']}>
+      <DominoPattern variant="setup" />
+      
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.title}>Game Setup</Text>
 
-          <View style={styles.modeToggle}>
-            <TouchableOpacity
+        <View style={styles.modeToggle}>
+          <TouchableOpacity
+            style={[
+              styles.modeButton,
+              gameMode === 'teams' && styles.modeButtonActive,
+            ]}
+            onPress={() => setGameMode('teams')}
+          >
+            <Icon
+              name="account-group"
+              size={24}
+              color={gameMode === 'teams' ? COLORS.white : COLORS.primary}
+            />
+            <Text
               style={[
-                styles.modeButton,
-                gameMode === 'teams' && styles.modeButtonActive,
+                styles.modeButtonText,
+                gameMode === 'teams' && styles.modeButtonTextActive,
               ]}
-              onPress={() => setGameMode('teams')}
             >
-              <Icon
-                name="account-group"
-                size={24}
-                color={gameMode === 'teams' ? COLORS.white : COLORS.primary}
-              />
-              <Text
-                style={[
-                  styles.modeButtonText,
-                  gameMode === 'teams' && styles.modeButtonTextActive,
-                ]}
-              >
-                2 Teams
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.modeButton,
-                gameMode === 'players' && styles.modeButtonActive,
-              ]}
-              onPress={() => setGameMode('players')}
-            >
-              <Icon
-                name="account-multiple"
-                size={24}
-                color={gameMode === 'players' ? COLORS.white : COLORS.primary}
-              />
-              <Text
-                style={[
-                  styles.modeButtonText,
-                  gameMode === 'players' && styles.modeButtonTextActive,
-                ]}
-              >
-                3+ Players
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
-              {gameMode === 'teams' ? 'Team Names' : 'Player Names'}
+              2 Teams
             </Text>
-            <View style={styles.inputsContainer}>
-              {renderNameInputs()}
-              {gameMode === 'players' && playerNames.length < 6 && (
-                <TouchableOpacity
-                  style={styles.addButton}
-                  onPress={() => {
-                    setPlayerNames([
-                      ...playerNames,
-                      `Player ${playerNames.length + 1}`,
-                    ]);
-                  }}
-                >
-                  <Icon name="plus" size={24} color={COLORS.white} />
-                  <Text style={styles.addButtonText}>Add Player</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Target Score</Text>
-            <Animated.View style={[styles.scoreDisplay, { transform: [{ scale: scoreScale }] }]}>
-              <Text style={styles.scoreText}>{targetScore}</Text>
-            </Animated.View>
-            <View style={styles.commonScores}>
-              {[200, 300, 400].map((score) => (
-                <TouchableOpacity
-                  key={score}
-                  style={[
-                    styles.scoreButton,
-                    targetScore === score && styles.scoreButtonActive,
-                  ]}
-                  onPress={() => handleScoreChange(score)}
-                >
-                  <Text
-                    style={[
-                      styles.scoreButtonText,
-                      targetScore === score && styles.scoreButtonTextActive,
-                    ]}
-                  >
-                    {score}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          <TouchableOpacity style={styles.startButton} onPress={startGame}>
-            <Text style={styles.startButtonText}>Start Game</Text>
           </TouchableOpacity>
-        </ScrollView>
-      </GradientBackground>
-    </SafeAreaView>
+          <TouchableOpacity
+            style={[
+              styles.modeButton,
+              gameMode === 'players' && styles.modeButtonActive,
+            ]}
+            onPress={() => setGameMode('players')}
+          >
+            <Icon
+              name="account-multiple"
+              size={24}
+              color={gameMode === 'players' ? COLORS.white : COLORS.primary}
+            />
+            <Text
+              style={[
+                styles.modeButtonText,
+                gameMode === 'players' && styles.modeButtonTextActive,
+              ]}
+            >
+              3+ Players
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>
+            {gameMode === 'teams' ? 'Team Names' : 'Player Names'}
+          </Text>
+          <View style={styles.inputsContainer}>
+            {renderNameInputs()}
+            {gameMode === 'players' && playerNames.length < 6 && (
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => {
+                  setPlayerNames([
+                    ...playerNames,
+                    `Player ${playerNames.length + 1}`,
+                  ]);
+                }}
+              >
+                <Icon name="plus" size={24} color={COLORS.white} />
+                <Text style={styles.addButtonText}>Add Player</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Target Score</Text>
+          <Animated.View style={[styles.scoreDisplay, { transform: [{ scale: scoreScale }] }]}>
+            <Text style={styles.scoreText}>{targetScore}</Text>
+          </Animated.View>
+          <View style={styles.commonScores}>
+            {[200, 300, 400].map((score) => (
+              <TouchableOpacity
+                key={score}
+                style={[
+                  styles.scoreButton,
+                  targetScore === score && styles.scoreButtonActive,
+                ]}
+                onPress={() => handleScoreChange(score)}
+              >
+                <Text
+                  style={[
+                    styles.scoreButtonText,
+                    targetScore === score && styles.scoreButtonTextActive,
+                  ]}
+                >
+                  {score}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.startButton} onPress={startGame}>
+          <Text style={styles.startButtonText}>Start Game</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </GradientBackground>
   );
 }
 

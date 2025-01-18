@@ -49,35 +49,33 @@ export default function GameOverScreen({ navigation, route }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <GradientBackground>
-        <DominoPattern variant="gameOver" opacity={0.08} />
-        
-        <View style={styles.content}>
-          <Text style={styles.gameOverTitle}>¡Juego Terminado!</Text>
+    <GradientBackground safeAreaEdges={['top', 'bottom']}>
+      <DominoPattern variant="gameOver" opacity={0.08} />
+      
+      <View style={styles.content}>
+        <Text style={styles.gameOverTitle}>¡Juego Terminado!</Text>
 
-          <View style={styles.participantsContainer}>
-            {scores.map((_, index) => renderParticipantSummary(index))}
-          </View>
-
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.newGameButton]}
-              onPress={() => navigation.navigate('GameSetup')}
-            >
-              <Text style={styles.buttonText}>New Game</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity
-              style={[styles.button, styles.homeButton]}
-              onPress={() => navigation.navigate('Home')}
-            >
-              <Text style={styles.buttonText}>Home</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.participantsContainer}>
+          {scores.map((_, index) => renderParticipantSummary(index))}
         </View>
-      </GradientBackground>
-    </SafeAreaView>
+
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.newGameButton]}
+            onPress={() => navigation.navigate('GameSetup')}
+          >
+            <Text style={styles.buttonText}>New Game</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={[styles.button, styles.homeButton]}
+            onPress={() => navigation.navigate('Home')}
+          >
+            <Text style={styles.buttonText}>Home</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </GradientBackground>
   );
 }
 
