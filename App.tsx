@@ -13,6 +13,7 @@ import { AppRegistry } from 'react-native';
 
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
 import { AppNavigator } from './src/navigation/AppNavigator';
+import { TranslationProvider } from './src/translations/TranslationContext';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,11 +35,13 @@ function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <TranslationProvider>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </TranslationProvider>
   );
 }
 

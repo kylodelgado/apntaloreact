@@ -16,6 +16,7 @@ import { GradientBackground } from '../components/GradientBackground';
 import { DominoPattern } from '../components/DominoPattern';
 import { FrostedGlassCard } from '../components/FrostedGlassCard';
 import { RootStackParamList } from '../navigation/types';
+import { useTranslation } from '../translations/TranslationContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
@@ -27,6 +28,9 @@ const STORAGE_KEYS = {
 };
 
 export default function SettingsScreen({ navigation }: Props) {
+  const { t, language, setLanguage } = useTranslation();
+  console.log('Current language:', language); // Debug log
+  
   // Game Settings
   const [defaultScore, setDefaultScore] = useState(200);
   const [defaultGameMode, setDefaultGameMode] = useState<GameMode>('teams');
@@ -38,8 +42,10 @@ export default function SettingsScreen({ navigation }: Props) {
 
   const loadSettings = async () => {
     try {
-      const savedScore = await AsyncStorage.getItem(STORAGE_KEYS.DEFAULT_SCORE);
-      const savedGameMode = await AsyncStorage.getItem(STORAGE_KEYS.DEFAULT_GAME_MODE);
+      const [savedScore, savedGameMode] = await Promise.all([
+        AsyncStorage.getItem(STORAGE_KEYS.DEFAULT_SCORE),
+        AsyncStorage.getItem(STORAGE_KEYS.DEFAULT_GAME_MODE),
+      ]);
       
       if (savedScore) setDefaultScore(parseInt(savedScore, 10));
       if (savedGameMode) setDefaultGameMode(savedGameMode as GameMode);
@@ -66,22 +72,27 @@ export default function SettingsScreen({ navigation }: Props) {
     }
   };
 
+  const handleLanguageChange = async (newLanguage: 'en' | 'es') => {
+    console.log('Changing language to:', newLanguage); // Debug log
+    await setLanguage(newLanguage);
+  };
+
   // Handle data management
   const handleClearHistory = () => {
     Alert.alert(
-      'Clear Game History',
-      'Are you sure you want to clear all game history? This cannot be undone.',
+      t.alerts.clearHistoryTitle,
+      t.alerts.clearHistoryMessage,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t.common.cancel, style: 'cancel' },
         {
-          text: 'Clear',
+          text: t.common.clear,
           style: 'destructive',
           onPress: async () => {
             try {
               await AsyncStorage.removeItem('@game_state');
-              Alert.alert('Success', 'Game history cleared successfully');
+              Alert.alert(t.alerts.success, t.alerts.clearHistorySuccess);
             } catch (error) {
-              Alert.alert('Error', 'Failed to clear game history');
+              Alert.alert(t.alerts.error, t.alerts.clearHistoryError);
             }
           },
         },
@@ -105,27 +116,66 @@ export default function SettingsScreen({ navigation }: Props) {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.title}>{t.settings.title}</Text>
+
+        {/* Language Settings - Moved to top */}
+        <FrostedGlassCard style={styles.card}>
+          <Text style={styles.cardTitle}>{t.settings.language}</Text>
+          <View style={styles.settingContainer}>
+            <Text style={styles.settingText}>{t.settings.appLanguage}</Text>
+            <View style={styles.languageOptions}>
+              <TouchableOpacity
+                style={[
+                  styles.languageOption,
+                  language === 'en' && styles.languageOptionActive,
+                ]}
+                onPress={() => handleLanguageChange('en')}
+              >
+                <Text style={[
+                  styles.languageOptionText,
+                  language === 'en' && styles.languageOptionTextActive,
+                ]}>
+                  English
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.languageOption,
+                  language === 'es' && styles.languageOptionActive,
+                ]}
+                onPress={() => handleLanguageChange('es')}
+              >
+                <Text style={[
+                  styles.languageOptionText,
+                  language === 'es' && styles.languageOptionTextActive,
+                ]}>
+                  Español
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </FrostedGlassCard>
 
         {/* App Information */}
-        {renderSettingsCard('App Information', (
+        {renderSettingsCard(t.settings.appInformation, (
           <View>
             <TouchableOpacity style={styles.settingRow} onPress={() => navigation.navigate('PrivacyPolicy')}>
-              <Text style={styles.settingText}>Privacy Policy</Text>
+              <Text style={styles.settingText}>{t.settings.privacyPolicy}</Text>
               <Icon name="chevron-right" size={24} color={COLORS.primary} />
             </TouchableOpacity>
             <View style={styles.settingRow}>
-              <Text style={styles.settingText}>Version</Text>
+              <Text style={styles.settingText}>{t.common.version}</Text>
               <Text style={styles.settingValue}>1.0.0</Text>
             </View>
           </View>
         ))}
 
         {/* Game Settings */}
-        {renderSettingsCard('Game Settings', (
+        <FrostedGlassCard style={styles.card}>
+          <Text style={styles.cardTitle}>{t.settings.gameSettings}</Text>
           <View>
             <View style={styles.settingContainer}>
-              <Text style={styles.settingText}>Default Target Score</Text>
+              <Text style={styles.settingText}>{t.settings.defaultTargetScore}</Text>
               <View style={styles.scoreOptions}>
                 {[200, 300, 400].map((score) => (
                   <TouchableOpacity
@@ -147,7 +197,7 @@ export default function SettingsScreen({ navigation }: Props) {
               </View>
             </View>
             <View style={styles.settingContainer}>
-              <Text style={styles.settingText}>Default Game Mode</Text>
+              <Text style={styles.settingText}>{t.settings.defaultGameMode}</Text>
               <View style={styles.gameModeOptions}>
                 <TouchableOpacity
                   style={[
@@ -160,7 +210,7 @@ export default function SettingsScreen({ navigation }: Props) {
                     styles.gameModeOptionText,
                     defaultGameMode === 'teams' && styles.gameModeOptionTextActive,
                   ]}>
-                    Teams
+                    {t.settings.teams}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -174,53 +224,54 @@ export default function SettingsScreen({ navigation }: Props) {
                     styles.gameModeOptionText,
                     defaultGameMode === 'players' && styles.gameModeOptionTextActive,
                   ]}>
-                    Players
+                    {t.settings.players}
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
-        ))}
+        </FrostedGlassCard>
 
         {/* Support */}
-        {renderSettingsCard('Support', (
+        <FrostedGlassCard style={styles.card}>
+          <Text style={styles.cardTitle}>{t.settings.support}</Text>
           <View>
             <TouchableOpacity 
               style={styles.settingRow}
               onPress={() => Linking.openURL('mailto:app@ardanco.com')}
             >
-              <Text style={styles.settingText}>Contact Us</Text>
+              <Text style={styles.settingText}>{t.settings.contactUs}</Text>
               <Icon name="email" size={24} color={COLORS.primary} />
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.settingRow}
               onPress={() => Linking.openURL('mailto:app@ardanco.com?subject=Bug%20Report')}
             >
-              <Text style={styles.settingText}>Report a Bug</Text>
+              <Text style={styles.settingText}>{t.settings.reportBug}</Text>
               <Icon name="bug" size={24} color={COLORS.primary} />
             </TouchableOpacity>
           </View>
-        ))}
+        </FrostedGlassCard>
 
         {/* Data Management */}
-        {renderSettingsCard('Data Management', (
+        {renderSettingsCard(t.settings.dataManagement, (
           <View>
             <TouchableOpacity style={styles.settingRow} onPress={handleClearHistory}>
-              <Text style={styles.settingText}>Clear Game History</Text>
+              <Text style={styles.settingText}>{t.settings.clearGameHistory}</Text>
               <Icon name="delete" size={24} color={COLORS.error} />
             </TouchableOpacity>
           </View>
         ))}
 
         {/* Legal */}
-        {renderSettingsCard('Legal', (
+        {renderSettingsCard(t.settings.legal, (
           <View>
             <TouchableOpacity style={styles.settingRow} onPress={() => navigation.navigate('TermsOfService')}>
-              <Text style={styles.settingText}>Terms of Service</Text>
+              <Text style={styles.settingText}>{t.settings.termsOfService}</Text>
               <Icon name="chevron-right" size={24} color={COLORS.primary} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.settingRow} onPress={() => navigation.navigate('AppStore')}>
-              <Text style={styles.settingText}>App Store Information</Text>
+              <Text style={styles.settingText}>{t.settings.appStoreInfo}</Text>
               <Icon name="chevron-right" size={24} color={COLORS.primary} />
             </TouchableOpacity>
           </View>
@@ -264,8 +315,6 @@ const styles = StyleSheet.create({
   },
   settingContainer: {
     paddingVertical: SPACING.md,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray + '20',
   },
   settingText: {
     ...FONTS.medium,
@@ -277,6 +326,31 @@ const styles = StyleSheet.create({
     ...FONTS.regular,
     fontSize: 16,
     color: COLORS.text.secondary,
+  },
+  languageOptions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: SPACING.sm,
+  },
+  languageOption: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    borderRadius: 8,
+    marginHorizontal: SPACING.xs,
+    ...SHADOWS.small,
+  },
+  languageOptionActive: {
+    backgroundColor: COLORS.primary,
+  },
+  languageOptionText: {
+    ...FONTS.regular,
+    color: COLORS.primary,
+    textAlign: 'center',
+  },
+  languageOptionTextActive: {
+    color: COLORS.white,
   },
   scoreOptions: {
     flexDirection: 'row',

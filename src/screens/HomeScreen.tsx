@@ -14,12 +14,15 @@ import { COLORS, SPACING, FONTS, SHADOWS } from '../styles/theme';
 import { DominoPattern } from '../components/DominoPattern';
 import { GradientBackground } from '../components/GradientBackground';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTranslation } from '../translations/TranslationContext';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
 };
 
 export default function HomeScreen({ navigation }: Props) {
+  const { t } = useTranslation();
+  
   // Animation values
   const titleBounce = new Animated.Value(0);
   const buttonScale = new Animated.Value(1);
@@ -72,17 +75,17 @@ export default function HomeScreen({ navigation }: Props) {
             },
           ]}
         >
-          ¡Apuntalo!
+          Domino Apuntalo!
         </Animated.Text>
         
-        <Text style={styles.subtitle}>Domino Score Tracker</Text>
+        <Text style={styles.subtitle}>{t.home.subtitle}</Text>
 
         <TouchableOpacity
           style={styles.button}
           onPress={handleNewGame}
           activeOpacity={0.8}
         >
-          <Text style={styles.buttonText}>New Game</Text>
+          <Text style={styles.buttonText}>{t.home.newGame}</Text>
         </TouchableOpacity>
       </View>
     </GradientBackground>

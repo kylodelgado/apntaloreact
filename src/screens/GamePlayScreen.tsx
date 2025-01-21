@@ -24,6 +24,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { CustomNumberPad } from '../components/CustomNumberPad';
 import { DominoPattern } from '../components/DominoPattern';
+import { useTranslation } from '../translations/TranslationContext';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'GamePlay'>;
@@ -40,6 +41,7 @@ type Props = {
 const STORAGE_KEY = '@game_state';
 
 export default function GamePlayScreen({ navigation, route }: Props) {
+  const { t } = useTranslation();
   const { targetScore, gameMode, teamNames, playerNames } = route.params;
   const participants = gameMode === 'teams' ? teamNames! : playerNames!;
   
@@ -134,12 +136,12 @@ export default function GamePlayScreen({ navigation, route }: Props) {
 
   const deleteScore = (participantIndex: number, scoreIndex: number) => {
     Alert.alert(
-      'Delete Score',
-      'Are you sure you want to delete this score?',
+      t.gameplay.deleteScore,
+      t.gameplay.deleteScoreConfirm,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t.common.cancel, style: 'cancel' },
         {
-          text: 'Delete',
+          text: t.common.delete,
           style: 'destructive',
           onPress: () => {
             const newScores = scores.map((participantScores, idx) => {
@@ -230,7 +232,7 @@ export default function GamePlayScreen({ navigation, route }: Props) {
           style={styles.addScoreButton}
           onPress={() => setActiveInputIndex(participantIndex)}
         >
-          <Text style={styles.addScoreButtonText}>Add Score</Text>
+          <Text style={styles.addScoreButtonText}>{t.gameplay.addScore}</Text>
         </TouchableOpacity>
       );
     }
@@ -418,7 +420,7 @@ export default function GamePlayScreen({ navigation, route }: Props) {
               style={styles.addScoreButton}
               onPress={() => setActiveInputIndex(index)}
             >
-              <Text style={styles.addScoreButtonText}>Add Score</Text>
+              <Text style={styles.addScoreButtonText}>{t.gameplay.addScore}</Text>
             </TouchableOpacity>
           )}
 
@@ -466,12 +468,12 @@ export default function GamePlayScreen({ navigation, route }: Props) {
 
   const handleReset = () => {
     Alert.alert(
-      'Reset Game',
-      'Are you sure you want to reset all scores? This cannot be undone.',
+      t.gameplay.resetGame,
+      t.gameplay.resetConfirm,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t.common.cancel, style: 'cancel' },
         {
-          text: 'Reset',
+          text: t.common.reset,
           style: 'destructive',
           onPress: () => {
             setScores(participants.map(() => [0]));

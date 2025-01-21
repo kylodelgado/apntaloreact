@@ -12,10 +12,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { COLORS, SPACING, FONTS, SHADOWS } from '../styles/theme';
 import { GradientBackground } from '../components/GradientBackground';
 import { RootStackParamList } from '../navigation/types';
 import { DominoPattern } from '../components/DominoPattern';
+import { useTranslation } from '../translations/TranslationContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameSetup'>;
 
@@ -25,6 +27,7 @@ const STORAGE_KEYS = {
 };
 
 export default function GameSetupScreen({ navigation }: Props) {
+  const { t } = useTranslation();
   const [gameMode, setGameMode] = useState<'teams' | 'players'>('teams');
   const [teamNames, setTeamNames] = useState(['Team 1', 'Team 2']);
   const [playerNames, setPlayerNames] = useState(['Player 1', 'Player 2']);
@@ -143,7 +146,7 @@ export default function GameSetupScreen({ navigation }: Props) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Game Setup</Text>
+        <Text style={styles.title}>{t.gameSetup.title}</Text>
 
         <View style={styles.modeToggle}>
           <TouchableOpacity
@@ -164,7 +167,7 @@ export default function GameSetupScreen({ navigation }: Props) {
                 gameMode === 'teams' && styles.modeButtonTextActive,
               ]}
             >
-              2 Teams
+              {t.settings.teams}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -185,14 +188,14 @@ export default function GameSetupScreen({ navigation }: Props) {
                 gameMode === 'players' && styles.modeButtonTextActive,
               ]}
             >
-              3+ Players
+              {t.settings.players}
             </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            {gameMode === 'teams' ? 'Team Names' : 'Player Names'}
+            {gameMode === 'teams' ? t.gameSetup.teamNames : t.gameSetup.playerNames}
           </Text>
           <View style={styles.inputsContainer}>
             {renderNameInputs()}
@@ -202,19 +205,19 @@ export default function GameSetupScreen({ navigation }: Props) {
                 onPress={() => {
                   setPlayerNames([
                     ...playerNames,
-                    `Player ${playerNames.length + 1}`,
+                    `${t.settings.players} ${playerNames.length + 1}`,
                   ]);
                 }}
               >
                 <Icon name="plus" size={24} color={COLORS.white} />
-                <Text style={styles.addButtonText}>Add Player</Text>
+                <Text style={styles.addButtonText}>{t.gameSetup.addPlayer}</Text>
               </TouchableOpacity>
             )}
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Target Score</Text>
+          <Text style={styles.sectionTitle}>{t.gameSetup.targetScore}</Text>
           <Animated.View style={[styles.scoreDisplay, { transform: [{ scale: scoreScale }] }]}>
             <Text style={styles.scoreText}>{targetScore}</Text>
           </Animated.View>
@@ -242,7 +245,7 @@ export default function GameSetupScreen({ navigation }: Props) {
         </View>
 
         <TouchableOpacity style={styles.startButton} onPress={startGame}>
-          <Text style={styles.startButtonText}>Start Game</Text>
+          <Text style={styles.startButtonText}>{t.gameSetup.startGame}</Text>
         </TouchableOpacity>
       </ScrollView>
     </GradientBackground>

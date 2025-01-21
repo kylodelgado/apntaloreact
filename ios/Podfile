@@ -38,3 +38,4 @@ target 'apntaloreact' do
     )
   end
 end
+pod "glog", :podspec => "../node_modules/react-native/third-party-podspecs/glog.podspec", :modular_headers => false
