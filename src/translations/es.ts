@@ -30,6 +30,12 @@ export const es = {
     termsOfService: 'Términos de Servicio',
     appStoreInfo: 'Información de App Store',
   },
+  gameHistory: {
+    title: 'Historial de Juegos',
+    noGames: 'No hay juegos jugados aún',
+    completed: 'Completado',
+    inProgress: 'En Progreso',
+  },
   gameSetup: {
     title: 'Configuración del Juego',
     teamNames: 'Nombres de Equipos',
@@ -37,6 +43,9 @@ export const es = {
     targetScore: 'Puntuación Objetivo',
     addPlayer: 'Agregar Jugador',
     startGame: 'Comenzar Juego',
+    newGame: 'Nuevo Juego',
+    continueGame: 'Continuar Juego',
+    viewHistory: 'Ver Historial',
   },
   gameplay: {
     resetGame: 'Reiniciar Juego',
@@ -46,6 +55,7 @@ export const es = {
     addScore: 'Agregar Puntuación',
     winner: 'Ganador',
     totalScore: 'Puntuación Total',
+    gameOver: '¡Juego Terminado!',
   },
   alerts: {
     clearHistoryTitle: 'Borrar Historial de Juegos',

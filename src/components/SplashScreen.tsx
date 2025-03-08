@@ -96,7 +96,7 @@ export const SplashScreen = () => {
             { opacity: titleOpacity },
           ]}
         >
-          Domino Apuntalo!
+          Domino Apunte!
         </Animated.Text>
       </View>
     </View>

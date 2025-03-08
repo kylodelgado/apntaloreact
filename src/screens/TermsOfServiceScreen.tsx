@@ -26,13 +26,13 @@ export default function TermsOfServiceScreen() {
 
           <Text style={styles.sectionTitle}>1. Acceptance of Terms</Text>
           <Text style={styles.text}>
-            By downloading, installing, or using Domino Apuntalo! ("the App"), you agree to be bound by these Terms of Service. 
+            By downloading, installing, or using Domino Apunte! ("the App"), you agree to be bound by these Terms of Service. 
             If you do not agree to these terms, please do not use the App.
           </Text>
 
           <Text style={styles.sectionTitle}>2. App Description</Text>
           <Text style={styles.text}>
-            Domino Apuntalo! is a score tracking application designed primarily for domino games. The App allows users to:{'\n'}
+            Domino Apunte! is a score tracking application designed primarily for domino games. The App allows users to:{'\n'}
             • Track scores for team and individual games{'\n'}
             • Set custom game configurations{'\n'}
             • Save game history locally on their device

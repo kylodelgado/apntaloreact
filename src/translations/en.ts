@@ -30,6 +30,12 @@ export const en = {
     termsOfService: 'Terms of Service',
     appStoreInfo: 'App Store Information',
   },
+  gameHistory: {
+    title: 'Game History',
+    noGames: 'No games played yet',
+    completed: 'Completed',
+    inProgress: 'In Progress',
+  },
   gameSetup: {
     title: 'Game Setup',
     teamNames: 'Team Names',
@@ -37,6 +43,9 @@ export const en = {
     targetScore: 'Target Score',
     addPlayer: 'Add Player',
     startGame: 'Start Game',
+    newGame: 'New Game',
+    continueGame: 'Continue Game',
+    viewHistory: 'View History',
   },
   gameplay: {
     resetGame: 'Reset Game',
@@ -46,6 +55,7 @@ export const en = {
     addScore: 'Add Score',
     winner: 'Winner',
     totalScore: 'Total Score',
+    gameOver: 'Game Over!',
   },
   alerts: {
     clearHistoryTitle: 'Clear Game History',

@@ -75,7 +75,7 @@ export default function HomeScreen({ navigation }: Props) {
             },
           ]}
         >
-          Domino Apuntalo!
+          Domino Apunte!
         </Animated.Text>
         
         <Text style={styles.subtitle}>{t.home.subtitle}</Text>

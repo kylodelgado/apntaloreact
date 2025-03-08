@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,15 +8,54 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../navigation/types';
 import { COLORS, SPACING, FONTS } from '../styles/theme';
 import { GradientBackground } from '../components/GradientBackground';
 import { DominoPattern } from '../components/DominoPattern';
+import { useTranslation } from '../translations/TranslationContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameOver'>;
 
 export default function GameOverScreen({ navigation, route }: Props) {
-  const { scores, winner, gameMode } = route.params;
+  const { t } = useTranslation();
+  const { scores, winner, gameMode, targetScore } = route.params;
+
+  // Save game to history when component mounts
+  useEffect(() => {
+    saveGameToHistory();
+  }, []);
+
+  const saveGameToHistory = async () => {
+    try {
+      // Get existing history
+      const historyJson = await AsyncStorage.getItem('@game_history');
+      const history = historyJson ? JSON.parse(historyJson) : [];
+
+      // Create new game history entry
+      const gameEntry = {
+        timestamp: new Date().toISOString(),
+        gameMode,
+        targetScore,
+        participants: scores.map((_, index) => 
+          gameMode === 'teams' ? `Team ${index + 1}` : `Player ${index + 1}`
+        ),
+        scores,
+        winner,
+      };
+
+      // Add new game to history
+      const updatedHistory = [gameEntry, ...history];
+
+      // Save updated history
+      await AsyncStorage.setItem('@game_history', JSON.stringify(updatedHistory));
+
+      // Clear the game in progress
+      await AsyncStorage.removeItem('@game_state');
+    } catch (error) {
+      console.error('Error saving game to history:', error);
+    }
+  };
 
   const calculateTotal = (participantScores: number[]) => 
     participantScores.reduce((sum, score) => sum + score, 0);
@@ -24,22 +63,23 @@ export default function GameOverScreen({ navigation, route }: Props) {
   const renderParticipantSummary = (index: number) => {
     const participantScores = scores[index];
     const total = calculateTotal(participantScores);
-    const isWinner = winner === (gameMode === 'teams' ? `Team ${index + 1}` : `Player ${index + 1}`);
+    const participantName = gameMode === 'teams' ? `Team ${index + 1}` : `Player ${index + 1}`;
+    const isWinner = winner === participantName;
 
     return (
-      <View style={[styles.participantSummary, isWinner && styles.winningParticipant]}>
+      <View key={`participant-${index}`} style={[styles.participantSummary, isWinner && styles.winningParticipant]}>
         <View style={styles.participantHeader}>
           <Text style={styles.participantTitle}>
-            {gameMode === 'teams' ? `Team ${index + 1}` : `Player ${index + 1}`}
+            {participantName}
           </Text>
           {isWinner && (
-            <Text style={styles.winnerLabel}>Winner! 🏆</Text>
+            <Text style={styles.winnerLabel}>{t.gameplay.winner} 🏆</Text>
           )}
         </View>
         <Text style={styles.totalScore}>{total}</Text>
         <ScrollView style={styles.scoresList}>
           {participantScores.map((score, scoreIndex) => (
-            <Text key={scoreIndex} style={styles.scoreItem}>
+            <Text key={`score-${scoreIndex}`} style={styles.scoreItem}>
               {score}
             </Text>
           ))}
@@ -53,7 +93,7 @@ export default function GameOverScreen({ navigation, route }: Props) {
       <DominoPattern variant="gameOver" opacity={0.08} />
       
       <View style={styles.content}>
-        <Text style={styles.gameOverTitle}>¡Juego Terminado!</Text>
+        <Text style={styles.gameOverTitle}>{t.gameplay.gameOver}</Text>
 
         <View style={styles.participantsContainer}>
           {scores.map((_, index) => renderParticipantSummary(index))}
@@ -64,14 +104,14 @@ export default function GameOverScreen({ navigation, route }: Props) {
             style={[styles.button, styles.newGameButton]}
             onPress={() => navigation.navigate('GameSetup')}
           >
-            <Text style={styles.buttonText}>New Game</Text>
+            <Text style={styles.buttonText}>{t.gameSetup.newGame}</Text>
           </TouchableOpacity>
           
           <TouchableOpacity
-            style={[styles.button, styles.homeButton]}
-            onPress={() => navigation.navigate('Home')}
+            style={[styles.button, styles.historyButton]}
+            onPress={() => navigation.navigate('GameHistory')}
           >
-            <Text style={styles.buttonText}>Home</Text>
+            <Text style={styles.buttonText}>{t.gameSetup.viewHistory}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -163,7 +203,7 @@ const styles = StyleSheet.create({
   newGameButton: {
     backgroundColor: COLORS.primary,
   },
-  homeButton: {
+  historyButton: {
     backgroundColor: COLORS.secondary,
   },
   buttonText: {

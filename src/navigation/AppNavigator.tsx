@@ -5,6 +5,7 @@ import HomeScreen from '../screens/HomeScreen';
 import GameSetupScreen from '../screens/GameSetupScreen';
 import GamePlayScreen from '../screens/GamePlayScreen';
 import GameOverScreen from '../screens/GameOverScreen';
+import GameHistoryScreen from '../screens/GameHistoryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
@@ -23,6 +24,7 @@ export function AppNavigator() {
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="GameSetup" component={GameSetupScreen} />
+      <Stack.Screen name="GameHistory" component={GameHistoryScreen} />
       <Stack.Screen name="GamePlay" component={GamePlayScreen} />
       <Stack.Screen name="GameOver" component={GameOverScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />

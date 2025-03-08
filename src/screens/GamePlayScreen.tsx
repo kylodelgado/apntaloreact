@@ -38,7 +38,9 @@ type Props = {
   };
 };
 
-const STORAGE_KEY = '@game_state';
+const STORAGE_KEYS = {
+  GAME_IN_PROGRESS: '@game_state',
+};
 
 export default function GamePlayScreen({ navigation, route }: Props) {
   const { t } = useTranslation();
@@ -84,7 +86,7 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   useEffect(() => {
     const loadGameState = async () => {
       try {
-        const savedState = await AsyncStorage.getItem(STORAGE_KEY);
+        const savedState = await AsyncStorage.getItem(STORAGE_KEYS.GAME_IN_PROGRESS);
         if (savedState) {
           const { scores: savedScores, gameMode: savedGameMode, targetScore: savedTargetScore } = JSON.parse(savedState);
           // Only restore if it's the same game configuration
@@ -111,7 +113,7 @@ export default function GamePlayScreen({ navigation, route }: Props) {
           participants,
           timestamp: new Date().toISOString(),
         };
-        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+        await AsyncStorage.setItem(STORAGE_KEYS.GAME_IN_PROGRESS, JSON.stringify(gameState));
       } catch (error) {
         console.error('Error saving game state:', error);
       }
@@ -124,11 +126,12 @@ export default function GamePlayScreen({ navigation, route }: Props) {
       const total = participantScores.reduce((sum, score) => sum + score, 0);
       if (total >= targetScore) {
         // Clear saved game state when game is over
-        AsyncStorage.removeItem(STORAGE_KEY).catch(console.error);
+        AsyncStorage.removeItem(STORAGE_KEYS.GAME_IN_PROGRESS).catch(console.error);
         navigation.replace('GameOver', {
           scores: newScores,
           winner: participants[index],
           gameMode,
+          targetScore,
         });
       }
     });
@@ -205,6 +208,7 @@ export default function GamePlayScreen({ navigation, route }: Props) {
           scores: newScores,
           winner: participants[participantIndex],
           gameMode,
+          targetScore,
         });
       }
     }
@@ -477,7 +481,7 @@ export default function GamePlayScreen({ navigation, route }: Props) {
           style: 'destructive',
           onPress: () => {
             setScores(participants.map(() => [0]));
-            AsyncStorage.removeItem(STORAGE_KEY).catch(console.error);
+            AsyncStorage.removeItem(STORAGE_KEYS.GAME_IN_PROGRESS).catch(console.error);
           },
         },
       ]
@@ -525,54 +529,62 @@ const styles = StyleSheet.create({
   },
   teamsContainer: {
     flexDirection: 'row',
-    gap: SPACING.md,
-    padding: SPACING.md,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
     paddingTop: SPACING.xl * 2,
+    paddingHorizontal: SPACING.sm,
   },
   playersContainer: {
     flex: 1,
-    gap: SPACING.md,
-    padding: SPACING.md,
     paddingTop: SPACING.xl * 2,
+    paddingHorizontal: SPACING.sm,
   },
   playersRow: {
     flexDirection: 'row',
-    gap: SPACING.md,
-    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginBottom: SPACING.md,
   },
   participantColumn: {
-    flex: 1,
-    margin: SPACING.sm,
+    width: Platform.OS === 'ios' ? '47%' : '48%',
     minHeight: 300,
+    marginHorizontal: SPACING.xs,
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: SPACING.sm,
+    position: 'relative',
+    minHeight: 40,
+    paddingHorizontal: SPACING.xl,
   },
   crownContainer: {
     position: 'absolute',
     top: -SPACING.sm,
-    right: SPACING.sm,
-    zIndex: 1,
+    right: 0,
+    zIndex: 2,
+    backgroundColor: COLORS.white + '80',
+    borderRadius: 12,
+    padding: SPACING.xs,
   },
   participantName: {
     ...FONTS.bold,
     fontSize: 20,
     color: COLORS.text.primary,
     textAlign: 'center',
+    flex: 1,
   },
   totalScore: {
     ...FONTS.bold,
-    fontSize: 32,
+    fontSize: 40,
     color: COLORS.primary,
     textAlign: 'center',
     marginBottom: SPACING.md,
   },
   leadingScore: {
     color: COLORS.accent,
-    fontSize: 36,
+    fontSize: 48,
   },
   scoresContainer: {
     marginTop: SPACING.md,
@@ -580,7 +592,7 @@ const styles = StyleSheet.create({
   },
   scoreRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: SPACING.xs,
     paddingHorizontal: SPACING.sm,
@@ -588,11 +600,16 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.gray + '20',
   },
   scoreText: {
-    fontSize: 16,
+    ...FONTS.medium,
+    fontSize: 25,
     color: COLORS.text.primary,
+    textAlign: 'center',
+    flex: 1,
   },
   deleteButton: {
     padding: SPACING.xs,
+    position: 'absolute',
+    right: SPACING.xs,
   },
   deleteButtonText: {
     color: COLORS.error,
@@ -601,15 +618,17 @@ const styles = StyleSheet.create({
   },
   addScoreButton: {
     backgroundColor: COLORS.primary,
-    padding: SPACING.sm,
-    borderRadius: 8,
+    paddingVertical: SPACING.md,
+    borderRadius: 12,
     alignItems: 'center',
-    marginVertical: SPACING.sm,
+    marginVertical: SPACING.md,
+    width: '100%',
+    ...SHADOWS.small,
   },
   addScoreButtonText: {
-    ...FONTS.medium,
+    ...FONTS.bold,
     color: COLORS.white,
-    fontSize: 16,
+    fontSize: 18,
   },
   scoreInputContainer: {
     marginVertical: SPACING.sm,
@@ -622,37 +641,42 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: 8,
     padding: SPACING.sm,
-    fontSize: 16,
+    fontSize: 24,
     textAlign: 'center',
   },
   doneButton: {
     backgroundColor: COLORS.success,
     padding: SPACING.sm,
-    borderRadius: 8,
+    paddingVertical: SPACING.md,
+    borderRadius: 12,
     alignItems: 'center',
-    marginBottom: SPACING.sm,
+    marginVertical: SPACING.md,
+    width: '100%',
+    ...SHADOWS.small,
   },
   doneButtonText: {
-    ...FONTS.medium,
+    ...FONTS.bold,
     color: COLORS.white,
-    fontSize: 16,
+    fontSize: 18,
   },
   quickScores: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    paddingHorizontal: SPACING.xs,
+    width: '100%',
   },
   quickScoreButton: {
     backgroundColor: COLORS.secondary,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    borderRadius: 8,
-    minWidth: 60,
+    paddingVertical: SPACING.md,
+    borderRadius: 12,
+    width: '48%',
     alignItems: 'center',
+    ...SHADOWS.small,
   },
   quickScoreText: {
-    ...FONTS.medium,
+    ...FONTS.bold,
     color: COLORS.white,
-    fontSize: 16,
+    fontSize: 18,
   },
   keyboardToolbar: {
     backgroundColor: '#f8f8f8',

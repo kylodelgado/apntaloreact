@@ -7,6 +7,7 @@ import {
   TextInput,
   ScrollView,
   Animated,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -18,12 +19,14 @@ import { GradientBackground } from '../components/GradientBackground';
 import { RootStackParamList } from '../navigation/types';
 import { DominoPattern } from '../components/DominoPattern';
 import { useTranslation } from '../translations/TranslationContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameSetup'>;
 
 const STORAGE_KEYS = {
   DEFAULT_SCORE: '@default_score',
   DEFAULT_GAME_MODE: '@default_game_mode',
+  GAME_IN_PROGRESS: '@game_state',
 };
 
 export default function GameSetupScreen({ navigation }: Props) {
@@ -33,15 +36,51 @@ export default function GameSetupScreen({ navigation }: Props) {
   const [playerNames, setPlayerNames] = useState(['Player 1', 'Player 2']);
   const [targetScore, setTargetScore] = useState(200);
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
+  const [hasGameInProgress, setHasGameInProgress] = useState(false);
 
   // Animation values
   const inputScales = useRef<Animated.Value[]>([]);
   const scoreScale = useRef(new Animated.Value(1)).current;
 
-  // Load default settings
+  // Load default settings on mount
   useEffect(() => {
     loadDefaultSettings();
   }, []);
+
+  // Check for game in progress when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      checkGameInProgress();
+    }, [])
+  );
+
+  const checkGameInProgress = async () => {
+    try {
+      const gameData = await AsyncStorage.getItem(STORAGE_KEYS.GAME_IN_PROGRESS);
+      if (gameData) {
+        const parsedData = JSON.parse(gameData);
+        // Only consider it a game in progress if it has valid data
+        if (parsedData.scores && parsedData.gameMode && parsedData.targetScore) {
+          setHasGameInProgress(true);
+          // Update the form with the saved game settings
+          setGameMode(parsedData.gameMode);
+          setTargetScore(parsedData.targetScore);
+          if (parsedData.gameMode === 'teams' && parsedData.participants) {
+            setTeamNames(parsedData.participants);
+          } else if (parsedData.gameMode === 'players' && parsedData.participants) {
+            setPlayerNames(parsedData.participants);
+          }
+        } else {
+          setHasGameInProgress(false);
+        }
+      } else {
+        setHasGameInProgress(false);
+      }
+    } catch (error) {
+      console.error('Error checking game in progress:', error);
+      setHasGameInProgress(false);
+    }
+  };
 
   const loadDefaultSettings = async () => {
     try {
@@ -87,12 +126,41 @@ export default function GameSetupScreen({ navigation }: Props) {
     }
   };
 
-  const startGame = () => {
+  const startNewGame = async () => {
+    // Clear any existing game data
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEYS.GAME_IN_PROGRESS);
+    } catch (error) {
+      console.error('Error clearing game data:', error);
+    }
+    
+    // Start new game
     navigation.navigate('GamePlay', {
       targetScore,
       gameMode,
       ...(gameMode === 'teams' ? { teamNames } : { playerNames }),
     });
+  };
+
+  const continueGame = async () => {
+    try {
+      const gameData = await AsyncStorage.getItem(STORAGE_KEYS.GAME_IN_PROGRESS);
+      if (gameData) {
+        const parsedData = JSON.parse(gameData);
+        if (parsedData.scores && parsedData.gameMode && parsedData.targetScore) {
+          navigation.navigate('GamePlay', {
+            gameMode: parsedData.gameMode,
+            targetScore: parsedData.targetScore,
+            ...(parsedData.gameMode === 'teams' 
+              ? { teamNames: parsedData.participants }
+              : { playerNames: parsedData.participants }
+            ),
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error loading saved game:', error);
+    }
   };
 
   const renderNameInputs = () => {
@@ -141,6 +209,13 @@ export default function GameSetupScreen({ navigation }: Props) {
     <GradientBackground safeAreaEdges={['top', 'bottom']}>
       <DominoPattern variant="setup" />
       
+      <TouchableOpacity 
+        style={styles.historyButton}
+        onPress={() => navigation.navigate('GameHistory')}
+      >
+        <Icon name="history" size={24} color={COLORS.primary} />
+      </TouchableOpacity>
+
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -244,9 +319,22 @@ export default function GameSetupScreen({ navigation }: Props) {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.startButton} onPress={startGame}>
-          <Text style={styles.startButtonText}>{t.gameSetup.startGame}</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          {hasGameInProgress ? (
+            <>
+              <TouchableOpacity style={styles.newGameButton} onPress={startNewGame}>
+                <Text style={styles.buttonText}>{t.gameSetup.newGame}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.continueButton} onPress={continueGame}>
+                <Text style={styles.buttonText}>{t.gameSetup.continueGame}</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <TouchableOpacity style={styles.startButton} onPress={startNewGame}>
+              <Text style={styles.startButtonText}>{t.gameSetup.startGame}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </ScrollView>
     </GradientBackground>
   );
@@ -383,5 +471,39 @@ const styles = StyleSheet.create({
     ...FONTS.bold,
     color: COLORS.white,
     fontSize: 18,
+  },
+  buttonContainer: {
+    marginTop: 'auto',
+    marginBottom: SPACING.md,
+    gap: SPACING.md,
+  },
+  newGameButton: {
+    backgroundColor: COLORS.secondary,
+    padding: SPACING.md,
+    borderRadius: 8,
+    alignItems: 'center',
+    ...SHADOWS.medium,
+  },
+  continueButton: {
+    backgroundColor: COLORS.primary,
+    padding: SPACING.md,
+    borderRadius: 8,
+    alignItems: 'center',
+    ...SHADOWS.medium,
+  },
+  buttonText: {
+    ...FONTS.bold,
+    color: COLORS.white,
+    fontSize: 18,
+  },
+  historyButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : SPACING.xl,
+    right: SPACING.lg,
+    backgroundColor: COLORS.white,
+    padding: SPACING.sm,
+    borderRadius: 8,
+    zIndex: 10,
+    ...SHADOWS.small,
   },
 }); 

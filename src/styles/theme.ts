@@ -5,11 +5,13 @@ export const COLORS = {
   secondary: '#6B7280',  // Warm gray
   accent: '#FBC02D',     // Gold
   success: '#10B981',    // Green
+  warning: '#F59E0B',    // Orange
   error: '#EF4444',      // Red
   white: '#FFFFFF',
   black: '#000000',
   lightGray: '#F3F4F6',
   gray: '#9CA3AF',
+  border: '#E5E7EB',     // Light gray for borders
   background: {
     light: '#FFFFFF',
     dark: '#1E2A3B'
