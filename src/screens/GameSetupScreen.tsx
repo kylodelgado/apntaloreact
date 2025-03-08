@@ -209,12 +209,21 @@ export default function GameSetupScreen({ navigation }: Props) {
     <GradientBackground safeAreaEdges={['top', 'bottom']}>
       <DominoPattern variant="setup" />
       
-      <TouchableOpacity 
-        style={styles.historyButton}
-        onPress={() => navigation.navigate('GameHistory')}
-      >
-        <Icon name="history" size={24} color={COLORS.primary} />
-      </TouchableOpacity>
+      <View style={styles.headerButtons}>
+        <TouchableOpacity 
+          style={styles.iconButton}
+          onPress={() => navigation.navigate('GameHistory')}
+        >
+          <Icon name="history" size={24} color={COLORS.primary} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.iconButton}
+          onPress={() => navigation.navigate('Settings')}
+        >
+          <Icon name="cog" size={24} color={COLORS.primary} />
+        </TouchableOpacity>
+      </View>
 
       <ScrollView 
         style={styles.scrollView}
@@ -350,6 +359,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     padding: SPACING.lg,
+    paddingTop: Platform.OS === 'ios' ? 50 : SPACING.xxl,
   },
   title: {
     ...FONTS.title,
@@ -496,14 +506,18 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 18,
   },
-  historyButton: {
+  headerButtons: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 60 : SPACING.xl,
     right: SPACING.lg,
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    zIndex: 10,
+  },
+  iconButton: {
     backgroundColor: COLORS.white,
     padding: SPACING.sm,
     borderRadius: 8,
-    zIndex: 10,
     ...SHADOWS.small,
   },
 }); 

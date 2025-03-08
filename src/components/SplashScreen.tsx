@@ -6,10 +6,11 @@ import { COLORS, FONTS } from '../styles/theme';
 const { width } = Dimensions.get('window');
 const DOMINO_SIZE = width * 0.2;
 
-export const SplashScreen = () => {
+export const SplashScreen = ({ onAnimationComplete }: { onAnimationComplete: () => void }) => {
   const dominoRotate = new Animated.Value(0);
   const titleOpacity = new Animated.Value(0);
   const dominoScale = new Animated.Value(0.5);
+  const containerOpacity = new Animated.Value(1);
 
   useEffect(() => {
     Animated.sequence([
@@ -33,7 +34,17 @@ export const SplashScreen = () => {
         duration: 500,
         useNativeDriver: true,
       }),
-    ]).start();
+      // Hold for a moment
+      Animated.delay(500),
+      // Fade out everything
+      Animated.timing(containerOpacity, {
+        toValue: 0,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      onAnimationComplete();
+    });
   }, []);
 
   const spin = dominoRotate.interpolate({
@@ -60,7 +71,7 @@ export const SplashScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: containerOpacity }]}>
       <LinearGradient
         colors={COLORS.gradient.primary}
         style={styles.background}
@@ -99,7 +110,7 @@ export const SplashScreen = () => {
           Domino Apunte!
         </Animated.Text>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
