@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ViewShot, { ViewShotProperties } from 'react-native-view-shot';
+import Share from 'react-native-share';
 import { RootStackParamList } from '../navigation/types';
-import { COLORS, SPACING, FONTS } from '../styles/theme';
+import { COLORS, SPACING, FONTS, SHADOWS } from '../styles/theme';
 import { GradientBackground } from '../components/GradientBackground';
 import { DominoPattern } from '../components/DominoPattern';
 import { useTranslation } from '../translations/TranslationContext';
@@ -20,11 +24,27 @@ type Props = NativeStackScreenProps<RootStackParamList, 'GameOver'>;
 export default function GameOverScreen({ navigation, route }: Props) {
   const { t } = useTranslation();
   const { scores, winner, gameMode, targetScore } = route.params;
+  const viewShotRef = useRef<ViewShot & { capture: () => Promise<string> }>(null);
 
   // Save game to history when component mounts
   useEffect(() => {
     saveGameToHistory();
   }, []);
+
+  const handleShare = async () => {
+    try {
+      if (viewShotRef.current) {
+        const uri = await viewShotRef.current.capture();
+        await Share.open({
+          url: uri,
+          title: t.gameplay.gameOver,
+          message: `${t.gameplay.gameOver} - ${winner} ${t.gameplay.winner}! 🏆`,
+        });
+      }
+    } catch (error) {
+      console.error('Error sharing screenshot:', error);
+    }
+  };
 
   const saveGameToHistory = async () => {
     try {
@@ -38,7 +58,7 @@ export default function GameOverScreen({ navigation, route }: Props) {
         gameMode,
         targetScore,
         participants: scores.map((_, index) => 
-          gameMode === 'teams' ? `Team ${index + 1}` : `Player ${index + 1}`
+          gameMode === 'teams' ? `${t.settings.team} ${index + 1}` : `${t.settings.player} ${index + 1}`
         ),
         scores,
         winner,
@@ -63,11 +83,16 @@ export default function GameOverScreen({ navigation, route }: Props) {
   const renderParticipantSummary = (index: number) => {
     const participantScores = scores[index];
     const total = calculateTotal(participantScores);
-    const participantName = gameMode === 'teams' ? `Team ${index + 1}` : `Player ${index + 1}`;
+    const participantName = gameMode === 'teams' 
+      ? `${t.settings.team} ${index + 1}` 
+      : `${t.settings.player} ${index + 1}`;
     const isWinner = winner === participantName;
 
     return (
-      <View key={`participant-${index}`} style={[styles.participantSummary, isWinner && styles.winningParticipant]}>
+      <View key={`participant-${index}`} style={[
+        styles.participantSummary, 
+        isWinner && styles.winningParticipant,
+      ]}>
         <View style={styles.participantHeader}>
           <Text style={styles.participantTitle}>
             {participantName}
@@ -77,13 +102,13 @@ export default function GameOverScreen({ navigation, route }: Props) {
           )}
         </View>
         <Text style={styles.totalScore}>{total}</Text>
-        <ScrollView style={styles.scoresList}>
+        <View style={styles.scoresList}>
           {participantScores.map((score, scoreIndex) => (
             <Text key={`score-${scoreIndex}`} style={styles.scoreItem}>
               {score}
             </Text>
           ))}
-        </ScrollView>
+        </View>
       </View>
     );
   };
@@ -92,29 +117,50 @@ export default function GameOverScreen({ navigation, route }: Props) {
     <GradientBackground safeAreaEdges={['top', 'bottom']}>
       <DominoPattern variant="gameOver" opacity={0.08} />
       
-      <View style={styles.content}>
-        <Text style={styles.gameOverTitle}>{t.gameplay.gameOver}</Text>
-
-        <View style={styles.participantsContainer}>
-          {scores.map((_, index) => renderParticipantSummary(index))}
-        </View>
-
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={[styles.button, styles.newGameButton]}
-            onPress={() => navigation.navigate('GameSetup')}
-          >
-            <Text style={styles.buttonText}>{t.gameSetup.newGame}</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity
-            style={[styles.button, styles.historyButton]}
-            onPress={() => navigation.navigate('GameHistory')}
-          >
-            <Text style={styles.buttonText}>{t.gameSetup.viewHistory}</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.shareButton}
+          onPress={handleShare}
+        >
+          <Icon name="share-variant" size={24} color={COLORS.primary} />
+        </TouchableOpacity>
       </View>
+
+      <ViewShot ref={viewShotRef} style={styles.container}>
+        <ScrollView 
+          style={styles.container}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.content}>
+            <Text style={styles.gameOverTitle}>{t.gameplay.gameOver}</Text>
+
+            <View style={styles.participantsContainer}>
+              {scores.map((_, index) => (
+                <View key={`participant-${index}`} style={styles.participantColumn}>
+                  {renderParticipantSummary(index)}
+                </View>
+              ))}
+            </View>
+
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={[styles.button, styles.newGameButton]}
+                onPress={() => navigation.navigate('GameSetup')}
+              >
+                <Text style={styles.buttonText}>{t.gameSetup.newGame}</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[styles.button, styles.historyButton]}
+                onPress={() => navigation.navigate('GameHistory')}
+              >
+                <Text style={styles.buttonText}>{t.gameSetup.viewHistory}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </ViewShot>
     </GradientBackground>
   );
 }
@@ -122,7 +168,10 @@ export default function GameOverScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: SPACING.xl,
   },
   content: {
     flex: 1,
@@ -130,26 +179,26 @@ const styles = StyleSheet.create({
   },
   gameOverTitle: {
     ...FONTS.bold,
-    fontSize: 36,
+    fontSize: 32,
     color: COLORS.primary,
     textAlign: 'center',
-    marginBottom: SPACING.xl,
+    marginBottom: SPACING.lg,
   },
   participantsContainer: {
-    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: SPACING.md,
     justifyContent: 'center',
+    gap: SPACING.md,
+    marginBottom: SPACING.xl,
+  },
+  participantColumn: {
+    width: '47%',
   },
   participantSummary: {
-    flex: 1,
-    minWidth: 150,
-    maxWidth: 200,
     backgroundColor: COLORS.lightGray,
     borderRadius: 12,
     padding: SPACING.md,
-    margin: SPACING.sm,
+    height: 'auto',
   },
   winningParticipant: {
     backgroundColor: COLORS.success + '20',
@@ -158,41 +207,46 @@ const styles = StyleSheet.create({
   },
   participantHeader: {
     alignItems: 'center',
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
   },
   participantTitle: {
     ...FONTS.bold,
-    fontSize: 24,
+    fontSize: 20,
     color: COLORS.text.primary,
     marginBottom: SPACING.xs,
   },
   winnerLabel: {
     ...FONTS.medium,
-    fontSize: 18,
+    fontSize: 16,
     color: COLORS.success,
   },
   totalScore: {
     ...FONTS.bold,
-    fontSize: 48,
+    fontSize: 40,
     color: COLORS.primary,
     textAlign: 'center',
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
   },
   scoresList: {
-    maxHeight: 200,
+    width: '100%',
+  },
+  scoresListContent: {
+    flexGrow: 1,
   },
   scoreItem: {
-    ...FONTS.regular,
-    fontSize: 16,
+    ...FONTS.medium,
+    fontSize: 22,
+    color: COLORS.text.primary,
     textAlign: 'center',
-    padding: SPACING.sm,
+    padding: SPACING.xs,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.gray + '20',
   },
   buttonsContainer: {
     flexDirection: 'row',
     gap: SPACING.md,
-    marginTop: SPACING.lg,
+    marginTop: 'auto',
+    paddingHorizontal: SPACING.md,
   },
   button: {
     flex: 1,
@@ -210,5 +264,19 @@ const styles = StyleSheet.create({
     ...FONTS.medium,
     color: COLORS.white,
     fontSize: 18,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
+    paddingTop: Platform.OS === 'ios' ? SPACING.xl * 2 : SPACING.xl,
+    marginBottom: SPACING.md,
+  },
+  shareButton: {
+    backgroundColor: COLORS.white,
+    padding: SPACING.xs,
+    borderRadius: 8,
+    ...SHADOWS.small,
   },
 }); 

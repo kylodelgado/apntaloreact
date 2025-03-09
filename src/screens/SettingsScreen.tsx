@@ -25,6 +25,8 @@ type GameMode = 'teams' | 'players';
 const STORAGE_KEYS = {
   DEFAULT_SCORE: '@default_score',
   DEFAULT_GAME_MODE: '@default_game_mode',
+  GAME_IN_PROGRESS: '@game_state',
+  GAME_HISTORY: '@game_history'
 };
 
 export default function SettingsScreen({ navigation }: Props) {
@@ -89,9 +91,14 @@ export default function SettingsScreen({ navigation }: Props) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await AsyncStorage.removeItem('@game_state');
+              // Clear both game in progress and game history
+              await Promise.all([
+                AsyncStorage.removeItem(STORAGE_KEYS.GAME_IN_PROGRESS),
+                AsyncStorage.removeItem(STORAGE_KEYS.GAME_HISTORY)
+              ]);
               Alert.alert(t.alerts.success, t.alerts.clearHistorySuccess);
             } catch (error) {
+              console.error('Error clearing history:', error);
               Alert.alert(t.alerts.error, t.alerts.clearHistoryError);
             }
           },
@@ -116,7 +123,15 @@ export default function SettingsScreen({ navigation }: Props) {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>{t.settings.title}</Text>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Icon name="chevron-left" size={32} color={COLORS.primary} />
+          </TouchableOpacity>
+          <Text style={styles.title}>{t.settings.title}</Text>
+        </View>
 
         {/* Language Settings - Moved to top */}
         <FrostedGlassCard style={styles.card}>
@@ -238,17 +253,24 @@ export default function SettingsScreen({ navigation }: Props) {
           <View>
             <TouchableOpacity 
               style={styles.settingRow}
-              onPress={() => Linking.openURL('mailto:app@ardanco.com')}
+              onPress={() => Linking.openURL('mailto:app@aplicadom.com')}
             >
               <Text style={styles.settingText}>{t.settings.contactUs}</Text>
               <Icon name="email" size={24} color={COLORS.primary} />
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.settingRow}
-              onPress={() => Linking.openURL('mailto:app@ardanco.com?subject=Bug%20Report')}
+              onPress={() => Linking.openURL('mailto:app@aplicadom.com?subject=Bug%20Report')}
             >
               <Text style={styles.settingText}>{t.settings.reportBug}</Text>
               <Icon name="bug" size={24} color={COLORS.primary} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.settingRow}
+              onPress={() => Linking.openURL('mailto:app@aplicadom.com?subject=Feature%20Request')}
+            >
+              <Text style={styles.settingText}>{t.settings.requestFeature}</Text>
+              <Icon name="lightbulb-on" size={24} color={COLORS.primary} />
             </TouchableOpacity>
           </View>
         </FrostedGlassCard>
@@ -288,12 +310,27 @@ const styles = StyleSheet.create({
   content: {
     padding: SPACING.lg,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.xl,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    borderRadius: 8,
+    padding: SPACING.xs,
+    marginRight: SPACING.md,
+    ...SHADOWS.small,
+  },
   title: {
     ...FONTS.title,
     fontSize: 32,
     color: COLORS.primary,
-    marginBottom: SPACING.xl,
     textAlign: 'center',
+    flex: 1,
+    marginRight: 40, // To offset the back button width and keep title centered
   },
   card: {
     marginBottom: SPACING.lg,

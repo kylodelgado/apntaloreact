@@ -14,4 +14,7 @@ export type RootStackParamList = {
   };
   Settings: undefined;
   GameHistory: undefined;
+  PrivacyPolicy: undefined;
+  TermsOfService: undefined;
+  AppStore: undefined;
 }; 

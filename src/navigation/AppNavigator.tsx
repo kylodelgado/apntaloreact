@@ -7,6 +7,7 @@ import GameOverScreen from '../screens/GameOverScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import GameHistoryScreen from '../screens/GameHistoryScreen';
 import { RootStackParamList } from './types';
+import { AdLayout } from '../components/AdLayout';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -15,14 +16,38 @@ const screenOptions = {
   contentStyle: { backgroundColor: COLORS.background.light },
 };
 
+// Wrap each screen component with AdLayout
+const withAdLayout = (Component: React.ComponentType<any>) => {
+  return (props: any) => (
+    <AdLayout>
+      <Component {...props} />
+    </AdLayout>
+  );
+};
+
 export default function AppNavigator() {
   return (
     <Stack.Navigator screenOptions={screenOptions} initialRouteName="GameSetup">
-      <Stack.Screen name="GameSetup" component={GameSetupScreen} />
-      <Stack.Screen name="GamePlay" component={GamePlayScreen} />
-      <Stack.Screen name="GameOver" component={GameOverScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="GameHistory" component={GameHistoryScreen} />
+      <Stack.Screen 
+        name="GameSetup" 
+        component={withAdLayout(GameSetupScreen)} 
+      />
+      <Stack.Screen 
+        name="GamePlay" 
+        component={withAdLayout(GamePlayScreen)} 
+      />
+      <Stack.Screen 
+        name="GameOver" 
+        component={withAdLayout(GameOverScreen)} 
+      />
+      <Stack.Screen 
+        name="Settings" 
+        component={withAdLayout(SettingsScreen)} 
+      />
+      <Stack.Screen 
+        name="GameHistory" 
+        component={withAdLayout(GameHistoryScreen)} 
+      />
     </Stack.Navigator>
   );
 } 

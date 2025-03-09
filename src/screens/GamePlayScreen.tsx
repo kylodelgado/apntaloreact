@@ -194,23 +194,19 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   const handleScoreSubmit = (participantIndex: number) => {
     const score = parseInt(currentScore);
     if (!isNaN(score) && score > 0) {
-      const newScores = [...scores];
-      newScores[participantIndex] = [...newScores[participantIndex], score];
+      const newScores = scores.map((participantScores, index) => {
+        if (index === participantIndex) {
+          return [...participantScores, score];
+        }
+        return [...participantScores, 0];
+      });
+      
       setScores(newScores);
       setCurrentScore('');
       setActiveInputIndex(null);
       animateTilt(participantIndex);
-
-      // Check for game over
-      const total = newScores[participantIndex].reduce((sum, s) => sum + s, 0);
-      if (total >= targetScore) {
-        navigation.replace('GameOver', {
-          scores: newScores,
-          winner: participants[participantIndex],
-          gameMode,
-          targetScore,
-        });
-      }
+      animateNewScore(participantIndex, score);
+      checkGameOver(newScores);
     }
   };
 
@@ -402,7 +398,7 @@ export default function GamePlayScreen({ navigation, route }: Props) {
                 style={styles.doneButton}
                 onPress={() => handleScoreSubmit(index)}
               >
-                <Text style={styles.doneButtonText}>Done</Text>
+                <Text style={styles.doneButtonText}>{t.common.done}</Text>
               </TouchableOpacity>
               <View style={styles.quickScores}>
                 <TouchableOpacity
@@ -428,7 +424,10 @@ export default function GamePlayScreen({ navigation, route }: Props) {
             </TouchableOpacity>
           )}
 
-          <ScrollView style={styles.scoresContainer}>
+          <ScrollView style={[
+            styles.scoresContainer,
+            { maxHeight: gameMode === 'teams' ? undefined : 200 }
+          ]}>
             {scores[index].map((score, scoreIndex) => (
               <View key={scoreIndex} style={styles.scoreRow}>
                 <Text style={styles.scoreText}>{score}</Text>
@@ -492,29 +491,35 @@ export default function GamePlayScreen({ navigation, route }: Props) {
     <GradientBackground safeAreaEdges={['top', 'bottom']}>
       <DominoPattern variant="gameplay" />
       
-      <View style={styles.content}>
-        <TouchableOpacity 
-          style={styles.resetButton}
-          onPress={handleReset}
-        >
-          <Icon name="refresh" size={24} color={COLORS.white} />
-        </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.resetButton}
+        onPress={handleReset}
+      >
+        <Icon name="refresh" size={24} color={COLORS.white} />
+      </TouchableOpacity>
 
-        {isLoading && (
-          <View style={styles.loadingContainer}>
-            <LoadingSpinner size={32} color={COLORS.primary} />
-          </View>
-        )}
-        
-        {error && (
-          <ErrorMessage 
-            message={error} 
-            onFinish={() => setError(null)} 
-          />
-        )}
-        
-        {renderParticipantColumns()}
-      </View>
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.content}>
+          {isLoading && (
+            <View style={styles.loadingContainer}>
+              <LoadingSpinner size={32} color={COLORS.primary} />
+            </View>
+          )}
+          
+          {error && (
+            <ErrorMessage 
+              message={error} 
+              onFinish={() => setError(null)} 
+            />
+          )}
+          
+          {renderParticipantColumns()}
+        </View>
+      </ScrollView>
     </GradientBackground>
   );
 }
@@ -522,7 +527,10 @@ export default function GamePlayScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: SPACING.xl,
   },
   content: {
     flex: 1,
@@ -588,7 +596,6 @@ const styles = StyleSheet.create({
   },
   scoresContainer: {
     marginTop: SPACING.md,
-    maxHeight: 200,
   },
   scoreRow: {
     flexDirection: 'row',
@@ -712,7 +719,7 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     position: 'absolute',
-    top: SPACING.md,
+    top: Platform.OS === 'ios' ? SPACING.xl * 2 : SPACING.xl,
     right: SPACING.md,
     backgroundColor: COLORS.primary,
     padding: SPACING.sm,

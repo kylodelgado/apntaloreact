@@ -10,6 +10,9 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme"
       android:supportsRtl="true">
+      <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-5105447899809010~5062778503"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

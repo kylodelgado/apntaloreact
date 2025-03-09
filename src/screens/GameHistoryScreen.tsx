@@ -110,6 +110,12 @@ export default function GameHistoryScreen({ navigation }: Props) {
       <DominoPattern variant="setup" opacity={0.05} />
       
       <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.navigate('GameSetup')}
+        >
+          <Icon name="chevron-left" size={32} color={COLORS.primary} />
+        </TouchableOpacity>
         <Text style={styles.title}>{t.gameHistory.title}</Text>
       </View>
 
@@ -133,15 +139,28 @@ export default function GameHistoryScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: SPACING.lg,
     paddingTop: Platform.OS === 'ios' ? 60 : SPACING.xl,
     paddingBottom: SPACING.lg,
+  },
+  backButton: {
+    position: 'absolute',
+    left: SPACING.lg,
+    top: Platform.OS === 'ios' ? 60 : SPACING.xl,
+    zIndex: 10,
+    backgroundColor: COLORS.white,
+    borderRadius: 8,
+    padding: SPACING.xs,
+    ...SHADOWS.small,
   },
   title: {
     ...FONTS.title,
     fontSize: 32,
     color: COLORS.primary,
     textAlign: 'center',
+    flex: 1,
   },
   scrollView: {
     flex: 1,

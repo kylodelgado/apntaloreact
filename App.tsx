@@ -9,12 +9,21 @@ import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
-import { AppRegistry, Animated } from 'react-native';
+import { AppRegistry, Animated, Platform } from 'react-native';
+import mobileAds from 'react-native-google-mobile-ads';
 
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
 import AppNavigator from './src/navigation/AppNavigator';
 import { TranslationProvider } from './src/translations/TranslationContext';
 import { COLORS } from './src/styles/theme';
+
+// Initialize AdMob
+mobileAds()
+  .initialize()
+  .then(adapterStatuses => {
+    // Mobile Ads SDK is initialized
+    console.log('AdMob Initialized');
+  });
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
