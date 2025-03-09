@@ -24,6 +24,8 @@ const getDeviceLanguage = (): Language => {
   console.log('Getting device language...');
   
   try {
+    let detectedLanguage = 'en';
+
     if (Platform.OS === 'ios') {
       // Get device language settings
       const languages = NativeModules.SettingsManager.settings.AppleLanguages;
@@ -36,17 +38,18 @@ const getDeviceLanguage = (): Language => {
       if (languages && languages.length > 0) {
         const primaryLanguage = languages[0].toLowerCase();
         console.log('Primary language:', primaryLanguage);
+        // We only support 'es' (Spanish) and 'en' (English)
         if (primaryLanguage.startsWith('es')) {
-          return 'es';
+          detectedLanguage = 'es';
         }
       }
       
       // Fallback to locale if AppleLanguages doesn't give us what we need
-      if (locale) {
+      if (!detectedLanguage && locale) {
         const localeLanguage = locale.toLowerCase().split('_')[0];
         console.log('Locale language:', localeLanguage);
         if (localeLanguage === 'es') {
-          return 'es';
+          detectedLanguage = 'es';
         }
       }
     }
@@ -58,14 +61,15 @@ const getDeviceLanguage = (): Language => {
       if (locale) {
         const localeLanguage = locale.toLowerCase().split('_')[0];
         console.log('Android locale language:', localeLanguage);
+        // We only support 'es' (Spanish) and 'en' (English)
         if (localeLanguage === 'es') {
-          return 'es';
+          detectedLanguage = 'es';
         }
       }
     }
 
-    // Default to English if no Spanish locale is found
-    return 'en';
+    console.log(`Device language detected: ${detectedLanguage} (Supporting: en, es)`);
+    return detectedLanguage as Language;
   } catch (error) {
     console.error('Error detecting device language:', error);
     return 'en';
