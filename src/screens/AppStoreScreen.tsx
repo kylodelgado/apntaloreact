@@ -31,8 +31,6 @@ export default function AppStoreScreen({ navigation }: Props) {
         </View>
         
         <FrostedGlassCard style={styles.card}>
-          <Text style={styles.lastUpdated}>Last Updated: March 18, 2024 (v1.1.3)</Text>
-
           <Text style={styles.sectionTitle}>App Category</Text>
           <Text style={styles.text}>
             Sports / Games / Utilities
@@ -68,8 +66,8 @@ export default function AppStoreScreen({ navigation }: Props) {
 
           <Text style={styles.sectionTitle}>Developer Information</Text>
           <Text style={styles.text}>
-            Ardanco{'\n'}
-            app@ardanco.com{'\n'}
+            AplicaDom{'\n'}
+            app@aplicadom.com{'\n'}
             Dominican Republic
           </Text>
 
@@ -114,12 +112,6 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: SPACING.lg,
-  },
-  lastUpdated: {
-    ...FONTS.medium,
-    fontSize: 14,
-    color: COLORS.text.secondary,
-    marginBottom: SPACING.xl,
   },
   sectionTitle: {
     ...FONTS.bold,

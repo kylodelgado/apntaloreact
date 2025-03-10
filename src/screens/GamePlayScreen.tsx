@@ -11,6 +11,7 @@ import {
   Keyboard,
   Platform,
   Animated,
+  StatusBar,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -491,48 +492,61 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   };
 
   return (
-    <GradientBackground safeAreaEdges={['top', 'bottom']}>
-      <DominoPattern variant="gameplay" />
-      
-      <View style={styles.headerButtons}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="chevron-left" size={32} color={COLORS.primary} />
-        </TouchableOpacity>
+    <>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+      <GradientBackground safeAreaEdges={Platform.select({
+        ios: ['top', 'bottom'],
+        android: ['top', 'bottom'],
+      })}>
+        <DominoPattern variant="gameplay" />
         
-        <TouchableOpacity 
-          style={styles.resetButton}
-          onPress={handleReset}
-        >
-          <Icon name="refresh" size={24} color={COLORS.white} />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView 
-        style={styles.container}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.content}>
-          {isLoading && (
-            <View style={styles.loadingContainer}>
-              <LoadingSpinner size={32} color={COLORS.primary} />
-            </View>
-          )}
+        <View style={styles.headerButtons}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Icon name="chevron-left" size={32} color={COLORS.primary} />
+          </TouchableOpacity>
           
-          {error && (
-            <ErrorMessage 
-              message={error} 
-              onFinish={() => setError(null)} 
-            />
-          )}
-          
-          {renderParticipantColumns()}
+          <TouchableOpacity 
+            style={styles.resetButton}
+            onPress={handleReset}
+          >
+            <Icon name="refresh" size={24} color={COLORS.white} />
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-    </GradientBackground>
+
+        <ScrollView 
+          style={[
+            styles.container,
+            Platform.OS === 'android' && { marginTop: StatusBar.currentHeight },
+          ]}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.content}>
+            {isLoading && (
+              <View style={styles.loadingContainer}>
+                <LoadingSpinner size={32} color={COLORS.primary} />
+              </View>
+            )}
+            
+            {error && (
+              <ErrorMessage 
+                message={error} 
+                onFinish={() => setError(null)} 
+              />
+            )}
+            
+            {renderParticipantColumns()}
+          </View>
+        </ScrollView>
+      </GradientBackground>
+    </>
   );
 }
 
@@ -551,12 +565,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    paddingTop: SPACING.xl * 2,
+    paddingTop: Platform.select({
+      ios: SPACING.xl * 2,
+      android: SPACING.xl * 3,
+    }),
     paddingHorizontal: SPACING.sm,
   },
   playersContainer: {
     flex: 1,
-    paddingTop: SPACING.xl * 2,
+    paddingTop: Platform.select({
+      ios: SPACING.xl * 2,
+      android: SPACING.xl * 3,
+    }),
     paddingHorizontal: SPACING.sm,
   },
   playersRow: {
@@ -637,7 +657,11 @@ const styles = StyleSheet.create({
   },
   addScoreButton: {
     backgroundColor: COLORS.primary,
-    paddingVertical: SPACING.md,
+    paddingVertical: Platform.select({
+      ios: SPACING.md,
+      android: SPACING.sm,
+    }),
+    paddingHorizontal: SPACING.sm,
     borderRadius: 12,
     alignItems: 'center',
     marginVertical: SPACING.md,
@@ -648,6 +672,12 @@ const styles = StyleSheet.create({
     ...FONTS.bold,
     color: COLORS.white,
     fontSize: 18,
+    textAlign: 'center',
+    ...Platform.select({
+      android: {
+        width: '80%',
+      }
+    }),
   },
   scoreInputContainer: {
     marginVertical: SPACING.sm,
@@ -734,7 +764,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     position: 'absolute',
-    top: Platform.OS === 'ios' ? SPACING.xl * 2 : SPACING.xl,
+    top: Platform.select({
+      ios: SPACING.xl * 2,
+      android: (StatusBar.currentHeight || 0) + SPACING.xl,
+    }),
     left: SPACING.md,
     right: SPACING.md,
     zIndex: 10,

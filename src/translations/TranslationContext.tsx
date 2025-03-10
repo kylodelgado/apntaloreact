@@ -55,16 +55,32 @@ const getDeviceLanguage = (): Language => {
     }
 
     if (Platform.OS === 'android') {
-      const locale = NativeModules.I18nManager.localeIdentifier;
-      console.log('Android Device Locale:', locale);
-      
-      if (locale) {
-        const localeLanguage = locale.toLowerCase().split('_')[0];
-        console.log('Android locale language:', localeLanguage);
-        // We only support 'es' (Spanish) and 'en' (English)
-        if (localeLanguage === 'es') {
-          detectedLanguage = 'es';
+      try {
+        // First try I18nManager
+        const locale = NativeModules.I18nManager.getConstants().localeIdentifier;
+        console.log('Android Device Locale (I18nManager):', locale);
+        
+        if (locale) {
+          const localeLanguage = locale.toLowerCase().split('_')[0];
+          console.log('Android locale language:', localeLanguage);
+          if (localeLanguage === 'es') {
+            detectedLanguage = 'es';
+          }
+        } else {
+          // Fallback to SettingsManager
+          const settingsLocale = NativeModules.SettingsManager.settings.locale;
+          console.log('Android Device Locale (SettingsManager):', settingsLocale);
+          
+          if (settingsLocale) {
+            const localeLanguage = settingsLocale.toLowerCase().split('_')[0];
+            console.log('Android locale language (SettingsManager):', localeLanguage);
+            if (localeLanguage === 'es') {
+              detectedLanguage = 'es';
+            }
+          }
         }
+      } catch (error) {
+        console.error('Error accessing Android locale:', error);
       }
     }
 

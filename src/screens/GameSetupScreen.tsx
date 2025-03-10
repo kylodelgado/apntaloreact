@@ -8,6 +8,7 @@ import {
   ScrollView,
   Animated,
   Platform,
+  StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -231,168 +232,184 @@ export default function GameSetupScreen({ navigation }: Props) {
   };
 
   return (
-    <GradientBackground safeAreaEdges={['top', 'bottom']}>
-      <DominoPattern variant="setup" opacity={0.05} />
-      
-      <ResponsiveContainer>
-        <ScrollView 
-          style={styles.container}
-          contentContainerStyle={[
-            styles.content,
-            { 
-              padding: getResponsiveSpacing(SPACING.lg),
-              paddingTop: isTablet ? getResponsiveSpacing(SPACING.xl * 3) : getResponsiveSpacing(SPACING.lg)
-            }
-          ]}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.titleContainer}>
-            <Text style={[
-              styles.title,
-              { fontSize: getResponsiveFontSize(32) }
-            ]}>
-              {t.gameSetup.title}
-            </Text>
-          </View>
-
-          <View style={styles.modeToggle}>
-            <TouchableOpacity
-              style={[
-                styles.modeButton,
-                gameMode === 'teams' && styles.modeButtonActive,
-              ]}
-              onPress={() => setGameMode('teams')}
-            >
-              <Icon
-                name="account-group"
-                size={24}
-                color={gameMode === 'teams' ? COLORS.white : COLORS.primary}
-              />
-              <Text
-                style={[
-                  styles.modeButtonText,
-                  gameMode === 'teams' && styles.modeButtonTextActive,
-                ]}
-              >
-                {t.settings.teams}
+    <>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+      <GradientBackground safeAreaEdges={Platform.select({
+        ios: ['top', 'bottom'],
+        android: ['bottom'],
+      })}>
+        <DominoPattern variant="setup" opacity={0.05} />
+        
+        <ResponsiveContainer>
+          <ScrollView 
+            style={[
+              styles.container,
+              Platform.OS === 'android' && { marginTop: StatusBar.currentHeight },
+            ]}
+            contentContainerStyle={[
+              styles.content,
+              { 
+                padding: getResponsiveSpacing(SPACING.lg),
+                paddingTop: isTablet ? getResponsiveSpacing(SPACING.xl * 3) : getResponsiveSpacing(SPACING.lg)
+              }
+            ]}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.titleContainer}>
+              <Text style={[
+                styles.title,
+                { fontSize: getResponsiveFontSize(32) }
+              ]}>
+                {t.gameSetup.title}
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.modeButton,
-                gameMode === 'players' && styles.modeButtonActive,
-              ]}
-              onPress={() => setGameMode('players')}
-            >
-              <Icon
-                name="account-multiple"
-                size={24}
-                color={gameMode === 'players' ? COLORS.white : COLORS.primary}
-              />
-              <Text
-                style={[
-                  styles.modeButtonText,
-                  gameMode === 'players' && styles.modeButtonTextActive,
-                ]}
-              >
-                {t.settings.players}
-              </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
-              {gameMode === 'teams' ? t.gameSetup.teamNames : t.gameSetup.playerNames}
-            </Text>
-            <View style={styles.inputsContainer}>
-              {renderNameInputs()}
-              {gameMode === 'players' && playerNames.length < 6 && (
-                <TouchableOpacity
-                  style={styles.addButton}
-                  onPress={() => {
-                    setPlayerNames([
-                      ...playerNames,
-                      `${t.settings.player} ${playerNames.length + 1}`,
-                    ]);
-                  }}
+            <View style={styles.modeToggle}>
+              <TouchableOpacity
+                style={[
+                  styles.modeButton,
+                  gameMode === 'teams' && styles.modeButtonActive,
+                ]}
+                onPress={() => setGameMode('teams')}
+              >
+                <Icon
+                  name="account-group"
+                  size={24}
+                  color={gameMode === 'teams' ? COLORS.white : COLORS.primary}
+                />
+                <Text
+                  style={[
+                    styles.modeButtonText,
+                    gameMode === 'teams' && styles.modeButtonTextActive,
+                  ]}
                 >
-                  <Icon name="plus" size={24} color={COLORS.white} />
-                  <Text style={styles.addButtonText}>{t.gameSetup.addPlayer}</Text>
+                  {t.settings.teams}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.modeButton,
+                  gameMode === 'players' && styles.modeButtonActive,
+                ]}
+                onPress={() => setGameMode('players')}
+              >
+                <Icon
+                  name="account-multiple"
+                  size={24}
+                  color={gameMode === 'players' ? COLORS.white : COLORS.primary}
+                />
+                <Text
+                  style={[
+                    styles.modeButtonText,
+                    gameMode === 'players' && styles.modeButtonTextActive,
+                  ]}
+                >
+                  {t.settings.players}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>
+                {gameMode === 'teams' ? t.gameSetup.teamNames : t.gameSetup.playerNames}
+              </Text>
+              <View style={styles.inputsContainer}>
+                {renderNameInputs()}
+                {gameMode === 'players' && playerNames.length < 6 && (
+                  <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={() => {
+                      setPlayerNames([
+                        ...playerNames,
+                        `${t.settings.player} ${playerNames.length + 1}`,
+                      ]);
+                    }}
+                  >
+                    <Icon name="plus" size={24} color={COLORS.white} />
+                    <Text style={styles.addButtonText}>{t.gameSetup.addPlayer}</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t.gameSetup.targetScore}</Text>
+              <View style={styles.commonScores}>
+                {[200, 300, 400].map((score) => (
+                  <TouchableOpacity
+                    key={score}
+                    style={[
+                      styles.scoreButton,
+                      targetScore === score && styles.scoreButtonActive,
+                    ]}
+                    onPress={() => handleScoreChange(score)}
+                  >
+                    <Text style={[
+                      styles.scoreButtonText,
+                      targetScore === score && styles.scoreButtonTextActive,
+                    ]}>
+                      {score}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.buttonContainer}>
+              {hasGameInProgress ? (
+                <>
+                  <TouchableOpacity style={styles.newGameButton} onPress={startNewGame}>
+                    <Text style={styles.buttonText}>{t.gameSetup.newGame}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.continueButton} onPress={continueGame}>
+                    <Text style={styles.buttonText}>{t.gameSetup.continueGame}</Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <TouchableOpacity style={styles.startButton} onPress={startNewGame}>
+                  <Text style={styles.startButtonText}>{t.gameSetup.startGame}</Text>
                 </TouchableOpacity>
               )}
             </View>
-          </View>
+          </ScrollView>
+        </ResponsiveContainer>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t.gameSetup.targetScore}</Text>
-            <View style={styles.commonScores}>
-              {[200, 300, 400].map((score) => (
-                <TouchableOpacity
-                  key={score}
-                  style={[
-                    styles.scoreButton,
-                    targetScore === score && styles.scoreButtonActive,
-                  ]}
-                  onPress={() => handleScoreChange(score)}
-                >
-                  <Text style={[
-                    styles.scoreButtonText,
-                    targetScore === score && styles.scoreButtonTextActive,
-                  ]}>
-                    {score}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          <View style={styles.buttonContainer}>
-            {hasGameInProgress ? (
-              <>
-                <TouchableOpacity style={styles.newGameButton} onPress={startNewGame}>
-                  <Text style={styles.buttonText}>{t.gameSetup.newGame}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.continueButton} onPress={continueGame}>
-                  <Text style={styles.buttonText}>{t.gameSetup.continueGame}</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <TouchableOpacity style={styles.startButton} onPress={startNewGame}>
-                <Text style={styles.startButtonText}>{t.gameSetup.startGame}</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </ScrollView>
-      </ResponsiveContainer>
-
-      <View style={[
-        styles.headerButtons,
-        {
-          top: Platform.OS === 'ios' ? SPACING.xl * 2 : SPACING.xl,
-          right: getResponsiveSpacing(SPACING.lg),
-          gap: getResponsiveSpacing(SPACING.sm),
-        }
-      ]}>
-        <TouchableOpacity
-          style={[
-            styles.iconButton,
-            { padding: getResponsiveSpacing(SPACING.sm) }
-          ]}
-          onPress={() => navigation.navigate('Settings')}
-        >
-          <Icon name="cog" size={24} color={COLORS.primary} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.iconButton,
-            { padding: getResponsiveSpacing(SPACING.sm) }
-          ]}
-          onPress={() => navigation.navigate('GameHistory')}
-        >
-          <Icon name="history" size={24} color={COLORS.primary} />
-        </TouchableOpacity>
-      </View>
-    </GradientBackground>
+        <View style={[
+          styles.headerButtons,
+          {
+            top: Platform.select({
+              ios: SPACING.xl * 2,
+              android: (StatusBar.currentHeight || 0) + SPACING.xl,
+            }),
+            right: getResponsiveSpacing(SPACING.lg),
+            gap: getResponsiveSpacing(SPACING.sm),
+          }
+        ]}>
+          <TouchableOpacity
+            style={[
+              styles.iconButton,
+              { padding: getResponsiveSpacing(SPACING.sm) }
+            ]}
+            onPress={() => navigation.navigate('Settings')}
+          >
+            <Icon name="cog" size={24} color={COLORS.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.iconButton,
+              { padding: getResponsiveSpacing(SPACING.sm) }
+            ]}
+            onPress={() => navigation.navigate('GameHistory')}
+          >
+            <Icon name="history" size={24} color={COLORS.primary} />
+          </TouchableOpacity>
+        </View>
+      </GradientBackground>
+    </>
   );
 }
 
@@ -404,8 +421,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   titleContainer: {
-    paddingTop: Platform.OS === 'ios' ? SPACING.xl : SPACING.lg,
-    paddingHorizontal: SPACING.xl,
+    paddingTop: Platform.select({
+      ios: SPACING.xl,
+      android: SPACING.xl * 2,
+    }),
+    paddingHorizontal: Platform.select({
+      ios: SPACING.xl,
+      android: SPACING.xl * 2,
+    }),
     marginBottom: SPACING.xl,
   },
   title: {

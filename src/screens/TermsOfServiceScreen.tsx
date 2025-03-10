@@ -31,8 +31,6 @@ export default function TermsOfServiceScreen({ navigation }: Props) {
         </View>
         
         <FrostedGlassCard style={styles.card}>
-          <Text style={styles.lastUpdated}>Last Updated: March 18, 2024 (v1.1.3)</Text>
-
           <Text style={styles.sectionTitle}>1. Acceptance of Terms</Text>
           <Text style={styles.text}>
             By downloading, installing, or using Domino Apunte! ("the App"), you agree to be bound by these Terms of Service. 
@@ -133,12 +131,6 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: SPACING.lg,
-  },
-  lastUpdated: {
-    ...FONTS.medium,
-    fontSize: 14,
-    color: COLORS.text.secondary,
-    marginBottom: SPACING.xl,
   },
   sectionTitle: {
     ...FONTS.bold,

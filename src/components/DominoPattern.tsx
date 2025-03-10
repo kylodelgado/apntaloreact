@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import { COLORS } from '../styles/theme';
 
 const { width, height } = Dimensions.get('window');
-const PATTERN_SIZE = width / 8;
+const PATTERN_SIZE = Platform.select({
+  ios: width / 8,
+  android: width / 7,
+}) || width / 8; // Provide default value
 
 type DotPositions = {
   [key: number]: number[];
@@ -105,12 +108,29 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginVertical: PATTERN_SIZE / 4,
+    marginVertical: Platform.select({
+      ios: PATTERN_SIZE / 4,
+      android: PATTERN_SIZE / 3, // Adjust spacing for Android
+    }),
   },
   dominoContainer: {
     width: PATTERN_SIZE,
     height: PATTERN_SIZE * 2,
     transform: [{ rotate: '45deg' }],
+    ...Platform.select({
+      android: {
+        elevation: 0, // Remove elevation on Android for pattern
+      },
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+      },
+    }),
   },
   domino: {
     width: '100%',
@@ -119,6 +139,11 @@ const styles = StyleSheet.create({
     borderRadius: PATTERN_SIZE / 4,
     justifyContent: 'space-between',
     padding: PATTERN_SIZE / 8,
+    ...Platform.select({
+      android: {
+        elevation: 0, // Remove elevation on Android for pattern
+      },
+    }),
   },
   dominoHalf: {
     flex: 1,
@@ -141,18 +166,28 @@ const styles = StyleSheet.create({
     height: PATTERN_SIZE / 6,
     margin: PATTERN_SIZE / 24,
     borderRadius: PATTERN_SIZE / 12,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+      },
+      android: {
+        elevation: 0, // Remove elevation on Android for pattern
+      },
+    }),
   },
   visibleDot: {
     backgroundColor: COLORS.white,
-    elevation: 3,
+    ...Platform.select({
+      android: {
+        elevation: 0, // Remove elevation on Android for pattern
+      },
+    }),
   },
   invisibleDot: {
     backgroundColor: 'transparent',
