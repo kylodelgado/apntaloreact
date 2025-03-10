@@ -239,28 +239,31 @@ export default function GamePlayScreen({ navigation, route }: Props) {
 
     return (
       <View style={styles.scoreInputContainer}>
-        <CustomNumberPad
+        <TextInput
+          style={styles.scoreInput}
           value={currentScore}
-          onNumberPress={(number) => setCurrentScore(prev => prev + number.toString())}
-          onClear={() => setCurrentScore('')}
-          onSubmit={() => handleScoreSubmit(participantIndex)}
+          onChangeText={setCurrentScore}
+          keyboardType="number-pad"
+          autoFocus
+          returnKeyType="done"
+          onSubmitEditing={() => handleScoreSubmit(participantIndex)}
         />
+        <TouchableOpacity
+          style={styles.doneButton}
+          onPress={() => handleScoreSubmit(participantIndex)}
+        >
+          <Text style={styles.doneButtonText}>{t.common.done}</Text>
+        </TouchableOpacity>
         <View style={styles.quickScores}>
           <TouchableOpacity
             style={styles.quickScoreButton}
-            onPress={() => {
-              setCurrentScore('25');
-              handleScoreSubmit(participantIndex);
-            }}
+            onPress={() => handleQuickScore(participantIndex, 25)}
           >
             <Text style={styles.quickScoreText}>25</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.quickScoreButton}
-            onPress={() => {
-              setCurrentScore('30');
-              handleScoreSubmit(participantIndex);
-            }}
+            onPress={() => handleQuickScore(participantIndex, 30)}
           >
             <Text style={styles.quickScoreText}>30</Text>
           </TouchableOpacity>
@@ -491,12 +494,21 @@ export default function GamePlayScreen({ navigation, route }: Props) {
     <GradientBackground safeAreaEdges={['top', 'bottom']}>
       <DominoPattern variant="gameplay" />
       
-      <TouchableOpacity 
-        style={styles.resetButton}
-        onPress={handleReset}
-      >
-        <Icon name="refresh" size={24} color={COLORS.white} />
-      </TouchableOpacity>
+      <View style={styles.headerButtons}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="chevron-left" size={32} color={COLORS.primary} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.resetButton}
+          onPress={handleReset}
+        >
+          <Icon name="refresh" size={24} color={COLORS.white} />
+        </TouchableOpacity>
+      </View>
 
       <ScrollView 
         style={styles.container}
@@ -717,14 +729,28 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.accent,
     borderRadius: 8,
   },
-  resetButton: {
+  headerButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     position: 'absolute',
     top: Platform.OS === 'ios' ? SPACING.xl * 2 : SPACING.xl,
+    left: SPACING.md,
     right: SPACING.md,
+    zIndex: 10,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    borderRadius: 8,
+    padding: SPACING.xs,
+    ...SHADOWS.small,
+  },
+  resetButton: {
     backgroundColor: COLORS.primary,
     padding: SPACING.sm,
     borderRadius: 8,
-    zIndex: 10,
     ...SHADOWS.medium,
   },
 }); 

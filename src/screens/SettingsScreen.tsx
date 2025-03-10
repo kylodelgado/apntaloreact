@@ -180,7 +180,7 @@ export default function SettingsScreen({ navigation }: Props) {
             </TouchableOpacity>
             <View style={styles.settingRow}>
               <Text style={styles.settingText}>{t.common.version}</Text>
-              <Text style={styles.settingValue}>1.0.0</Text>
+              <Text style={styles.settingValue}>1.1.3</Text>
             </View>
           </View>
         ))}

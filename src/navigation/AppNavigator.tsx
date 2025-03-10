@@ -30,20 +30,39 @@ const withAdLayout = (Component: React.ComponentType<any>) => {
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        animation: 'slide_from_right',
-      }}
-    >
-      <Stack.Screen name="GameSetup" component={GameSetupScreen} />
-      <Stack.Screen name="GamePlay" component={GamePlayScreen} />
-      <Stack.Screen name="GameOver" component={GameOverScreen} />
-      <Stack.Screen name="GameHistory" component={GameHistoryScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
-      <Stack.Screen name="TermsOfService" component={TermsOfServiceScreen} />
-      <Stack.Screen name="AppStore" component={AppStoreScreen} />
+    <Stack.Navigator screenOptions={screenOptions} initialRouteName="GameSetup">
+      <Stack.Screen 
+        name="GameSetup" 
+        component={withAdLayout(GameSetupScreen)} 
+      />
+      <Stack.Screen 
+        name="GamePlay" 
+        component={withAdLayout(GamePlayScreen)} 
+      />
+      <Stack.Screen 
+        name="GameOver" 
+        component={withAdLayout(GameOverScreen)} 
+      />
+      <Stack.Screen 
+        name="Settings" 
+        component={withAdLayout(SettingsScreen)} 
+      />
+      <Stack.Screen 
+        name="GameHistory" 
+        component={withAdLayout(GameHistoryScreen)} 
+      />
+      <Stack.Screen 
+        name="PrivacyPolicy" 
+        component={withAdLayout(PrivacyPolicyScreen)} 
+      />
+      <Stack.Screen 
+        name="TermsOfService" 
+        component={withAdLayout(TermsOfServiceScreen)} 
+      />
+      <Stack.Screen 
+        name="AppStore" 
+        component={withAdLayout(AppStoreScreen)} 
+      />
     </Stack.Navigator>
   );
 } 

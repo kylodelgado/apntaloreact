@@ -1,8 +1,8 @@
 export type RootStackParamList = {
   GameSetup: undefined;
   GamePlay: {
-    targetScore: number;
     gameMode: 'teams' | 'players';
+    targetScore: number;
     teamNames?: string[];
     playerNames?: string[];
   };
@@ -12,8 +12,8 @@ export type RootStackParamList = {
     gameMode: 'teams' | 'players';
     targetScore: number;
   };
-  GameHistory: undefined;
   Settings: undefined;
+  GameHistory: undefined;
   PrivacyPolicy: undefined;
   TermsOfService: undefined;
   AppStore: undefined;
