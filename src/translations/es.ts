@@ -33,6 +33,11 @@ export const es = {
     legal: 'Legal',
     termsOfService: 'Términos de Servicio',
     appStoreInfo: 'Información de App Store',
+    appearance: 'Apariencia',
+    theme: 'Tema',
+    light: 'Claro',
+    dark: 'Oscuro',
+    system: 'Sistema',
   },
   gameHistory: {
     title: 'Historial de Juegos',

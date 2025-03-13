@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import { COLORS } from '../styles/theme';
+import { useTheme } from '../context/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 const PATTERN_SIZE = Platform.select({
@@ -47,6 +48,7 @@ export const DominoPattern: React.FC<Props> = ({
   customDomino,
   opacity = 0.05 
 }) => {
+  const { isDark } = useTheme();
   const dominoPattern = customDomino || DOMINO_VARIANTS[variant];
 
   const renderDots = (number: number) => {
@@ -60,7 +62,9 @@ export const DominoPattern: React.FC<Props> = ({
             key={index}
             style={[
               styles.dot,
-              positions.includes(index) ? styles.visibleDot : styles.invisibleDot
+              positions.includes(index) ? 
+                isDark ? styles.visibleDotDark : styles.visibleDotLight 
+                : styles.invisibleDot
             ]}
           />
         ))}
@@ -69,11 +73,17 @@ export const DominoPattern: React.FC<Props> = ({
   };
 
   const renderDomino = () => (
-    <View style={styles.domino}>
+    <View style={[
+      styles.domino,
+      isDark ? styles.dominoDark : styles.dominoLight
+    ]}>
       <View style={styles.dominoHalf}>
         {renderDots(dominoPattern.top)}
       </View>
-      <View style={styles.dominoLine} />
+      <View style={[
+        styles.dominoLine,
+        isDark ? styles.dominoLineDark : styles.dominoLineLight
+      ]} />
       <View style={styles.dominoHalf}>
         {renderDots(dominoPattern.bottom)}
       </View>
@@ -135,7 +145,6 @@ const styles = StyleSheet.create({
   domino: {
     width: '100%',
     height: '100%',
-    backgroundColor: COLORS.primary,
     borderRadius: PATTERN_SIZE / 4,
     justifyContent: 'space-between',
     padding: PATTERN_SIZE / 8,
@@ -145,14 +154,25 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  dominoLight: {
+    backgroundColor: COLORS.primary,
+  },
+  dominoDark: {
+    backgroundColor: COLORS.white,
+  },
   dominoHalf: {
     flex: 1,
     justifyContent: 'center',
   },
   dominoLine: {
     height: 1,
-    backgroundColor: COLORS.white,
     marginVertical: PATTERN_SIZE / 16,
+  },
+  dominoLineLight: {
+    backgroundColor: COLORS.white,
+  },
+  dominoLineDark: {
+    backgroundColor: COLORS.primary,
   },
   dotsContainer: {
     flex: 1,
@@ -181,13 +201,11 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  visibleDot: {
+  visibleDotLight: {
     backgroundColor: COLORS.white,
-    ...Platform.select({
-      android: {
-        elevation: 0, // Remove elevation on Android for pattern
-      },
-    }),
+  },
+  visibleDotDark: {
+    backgroundColor: COLORS.primary,
   },
   invisibleDot: {
     backgroundColor: 'transparent',

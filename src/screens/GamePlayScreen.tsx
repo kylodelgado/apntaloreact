@@ -12,6 +12,7 @@ import {
   Platform,
   Animated,
   StatusBar,
+  InputAccessoryView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,12 +21,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RootStackParamList } from '../navigation/types';
 import { COLORS, SPACING, FONTS, SHADOWS } from '../styles/theme';
 import { GradientBackground } from '../components/GradientBackground';
-import { FrostedGlassCard } from '../components/FrostedGlassCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
-import { CustomNumberPad } from '../components/CustomNumberPad';
 import { DominoPattern } from '../components/DominoPattern';
 import { useTranslation } from '../translations/TranslationContext';
+import { useTheme } from '../context/ThemeContext';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'GamePlay'>;
@@ -45,6 +45,7 @@ const STORAGE_KEYS = {
 
 export default function GamePlayScreen({ navigation, route }: Props) {
   const { t } = useTranslation();
+  const { isDark } = useTheme();
   const { targetScore, gameMode, teamNames, playerNames } = route.params;
   const participants = gameMode === 'teams' ? teamNames! : playerNames!;
   
@@ -66,6 +67,9 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   const [currentScore, setCurrentScore] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Add a unique ID for the input accessory view
+  const inputAccessoryViewID = "scoreInputAccessoryView";
 
   // Update animation arrays when participants change
   useEffect(() => {
@@ -241,13 +245,17 @@ export default function GamePlayScreen({ navigation, route }: Props) {
     return (
       <View style={styles.scoreInputContainer}>
         <TextInput
-          style={styles.scoreInput}
+          style={[
+            styles.scoreInput,
+            isDark && styles.scoreInputDark
+          ]}
           value={currentScore}
           onChangeText={setCurrentScore}
           keyboardType="number-pad"
           autoFocus
           returnKeyType="done"
           onSubmitEditing={() => handleScoreSubmit(participantIndex)}
+          inputAccessoryViewID={Platform.OS === 'ios' ? inputAccessoryViewID : undefined}
         />
         <TouchableOpacity
           style={styles.doneButton}
@@ -363,12 +371,16 @@ export default function GamePlayScreen({ navigation, route }: Props) {
 
     return (
       <View key={index} style={styles.participantColumn}>
-        <FrostedGlassCard>
+        <View style={[
+          styles.participantCard,
+          isDark && styles.participantCardDark
+        ]}>
           <View style={styles.headerContainer}>
             {isLeading && total > 0 && (
               <Animated.View 
                 style={[
                   styles.crownContainer,
+                  isDark && styles.crownContainerDark,
                   {
                     transform: [{ scale: crownBounce }],
                   },
@@ -377,11 +389,15 @@ export default function GamePlayScreen({ navigation, route }: Props) {
                 <Icon name="crown" size={24} color={COLORS.accent} />
               </Animated.View>
             )}
-            <Text style={styles.participantName}>{participants[index]}</Text>
+            <Text style={[
+              styles.participantName,
+              isDark && styles.participantNameDark
+            ]}>{participants[index]}</Text>
           </View>
 
           <Text style={[
             styles.totalScore,
+            isDark && styles.totalScoreDark,
             isLeading && total > 0 && styles.leadingScore,
           ]}>
             {total}
@@ -390,13 +406,17 @@ export default function GamePlayScreen({ navigation, route }: Props) {
           {activeInputIndex === index ? (
             <View style={styles.scoreInputContainer}>
               <TextInput
-                style={styles.scoreInput}
+                style={[
+                  styles.scoreInput,
+                  isDark && styles.scoreInputDark
+                ]}
                 value={currentScore}
                 onChangeText={setCurrentScore}
                 keyboardType="number-pad"
                 autoFocus
                 returnKeyType="done"
                 onSubmitEditing={() => handleScoreSubmit(index)}
+                inputAccessoryViewID={Platform.OS === 'ios' ? inputAccessoryViewID : undefined}
               />
               <TouchableOpacity
                 style={styles.doneButton}
@@ -434,7 +454,12 @@ export default function GamePlayScreen({ navigation, route }: Props) {
           ]}>
             {scores[index].map((score, scoreIndex) => (
               <View key={scoreIndex} style={styles.scoreRow}>
-                <Text style={styles.scoreText}>{score}</Text>
+                <Text style={[
+                  styles.scoreText,
+                  isDark && styles.scoreTextDark
+                ]}>
+                  {score}
+                </Text>
                 {score !== 0 && (
                   <TouchableOpacity
                     style={styles.deleteButton}
@@ -446,7 +471,7 @@ export default function GamePlayScreen({ navigation, route }: Props) {
               </View>
             ))}
           </ScrollView>
-        </FrostedGlassCard>
+        </View>
       </View>
     );
   };
@@ -502,18 +527,24 @@ export default function GamePlayScreen({ navigation, route }: Props) {
         ios: ['top', 'bottom'],
         android: ['top', 'bottom'],
       })}>
-        <DominoPattern variant="gameplay" />
+        <DominoPattern variant="gameplay" opacity={0.05} />
         
         <View style={styles.headerButtons}>
-          <TouchableOpacity 
-            style={styles.backButton}
+          <TouchableOpacity
+            style={[
+              styles.backButton,
+              isDark && styles.backButtonDark
+            ]}
             onPress={() => navigation.goBack()}
           >
-            <Icon name="chevron-left" size={32} color={COLORS.primary} />
+            <Icon name="chevron-left" size={32} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
           </TouchableOpacity>
           
-          <TouchableOpacity 
-            style={styles.resetButton}
+          <TouchableOpacity
+            style={[
+              styles.resetButton,
+              isDark && styles.resetButtonDark
+            ]}
             onPress={handleReset}
           >
             <Icon name="refresh" size={24} color={COLORS.white} />
@@ -545,6 +576,31 @@ export default function GamePlayScreen({ navigation, route }: Props) {
             {renderParticipantColumns()}
           </View>
         </ScrollView>
+
+        {/* Add InputAccessoryView for iOS */}
+        {Platform.OS === 'ios' && activeInputIndex !== null && (
+          <InputAccessoryView nativeID={inputAccessoryViewID}>
+            <View style={[
+              styles.keyboardToolbar,
+              isDark && styles.keyboardToolbarDark
+            ]}>
+              <TouchableOpacity
+                style={styles.keyboardDoneButton}
+                onPress={() => {
+                  if (activeInputIndex !== null) {
+                    handleScoreSubmit(activeInputIndex);
+                  }
+                  Keyboard.dismiss();
+                }}
+              >
+                <Text style={[
+                  styles.keyboardDoneButtonText,
+                  isDark && styles.keyboardDoneButtonTextDark
+                ]}>{t.common.done}</Text>
+              </TouchableOpacity>
+            </View>
+          </InputAccessoryView>
+        )}
       </GradientBackground>
     </>
   );
@@ -608,23 +664,31 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: SPACING.xs,
   },
+  crownContainerDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.7)',
+  },
   participantName: {
     ...FONTS.bold,
     fontSize: 20,
     color: COLORS.text.primary,
     textAlign: 'center',
-    flex: 1,
+    marginBottom: SPACING.xs,
+  },
+  participantNameDark: {
+    color: COLORS.text.dark.primary,
   },
   totalScore: {
     ...FONTS.bold,
-    fontSize: 40,
-    color: COLORS.primary,
+    fontSize: 36,
+    color: COLORS.text.primary,
     textAlign: 'center',
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
+  },
+  totalScoreDark: {
+    color: COLORS.text.dark.primary,
   },
   leadingScore: {
     color: COLORS.accent,
-    fontSize: 48,
   },
   scoresContainer: {
     marginTop: SPACING.md,
@@ -644,6 +708,9 @@ const styles = StyleSheet.create({
     color: COLORS.text.primary,
     textAlign: 'center',
     flex: 1,
+  },
+  scoreTextDark: {
+    color: COLORS.text.dark.primary,
   },
   deleteButton: {
     padding: SPACING.xs,
@@ -687,11 +754,16 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.sm,
   },
   scoreInput: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white + '80',
     borderRadius: 8,
     padding: SPACING.sm,
     fontSize: 24,
     textAlign: 'center',
+    color: COLORS.text.primary,
+  },
+  scoreInputDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    color: COLORS.text.dark.primary,
   },
   doneButton: {
     backgroundColor: COLORS.success,
@@ -735,6 +807,10 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: '#919191',
   },
+  keyboardToolbarDark: {
+    backgroundColor: COLORS.card.dark,
+    borderTopColor: COLORS.border,
+  },
   keyboardDoneButton: {
     padding: SPACING.sm,
     marginRight: SPACING.sm,
@@ -743,6 +819,9 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontSize: 17,
     fontWeight: '600',
+  },
+  keyboardDoneButtonTextDark: {
+    color: COLORS.accent,
   },
   loadingContainer: {
     position: 'absolute',
@@ -775,15 +854,30 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white + '80',
     borderRadius: 8,
     padding: SPACING.xs,
     ...SHADOWS.small,
+  },
+  backButtonDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
   },
   resetButton: {
     backgroundColor: COLORS.primary,
     padding: SPACING.sm,
     borderRadius: 8,
     ...SHADOWS.medium,
+  },
+  resetButtonDark: {
+    backgroundColor: COLORS.secondary,
+  },
+  participantCard: {
+    padding: SPACING.lg,
+    borderRadius: 12,
+    backgroundColor: COLORS.white + '80',
+    ...SHADOWS.small,
+  },
+  participantCardDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
   },
 }); 

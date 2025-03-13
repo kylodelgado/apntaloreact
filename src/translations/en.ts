@@ -33,6 +33,11 @@ export const en = {
     legal: 'Legal',
     termsOfService: 'Terms of Service',
     appStoreInfo: 'App Store Information',
+    appearance: 'Appearance',
+    theme: 'Theme',
+    light: 'Light',
+    dark: 'Dark',
+    system: 'System',
   },
   gameHistory: {
     title: 'Game History',

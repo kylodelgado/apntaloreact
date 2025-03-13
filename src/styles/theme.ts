@@ -14,18 +14,27 @@ export const COLORS = {
   border: '#E5E7EB',     // Light gray for borders
   background: {
     light: '#EEF2FF',
-    dark: '#1E3A8A',
+    dark: '#0F172A',     // Updated dark background
   },
   text: {
     primary: '#1F2937',
     secondary: '#4B5563',
     light: '#9CA3AF',
+    dark: {
+      primary: '#F9FAFB',
+      secondary: '#E5E7EB',
+    }
+  },
+  card: {
+    light: 'rgba(255, 255, 255, 0.9)',
+    dark: 'rgba(30, 41, 59, 0.9)',
   },
   gradient: {
     primary: ['#EEF2FF', '#C7D2FE'],
     secondary: ['#1E3A8A', '#3B82F6'],
     accent: ['#FBC02D', '#F59E0B'],
-    background: ['#EEF2FF', '#1E3A8A']
+    background: ['#EEF2FF', '#1E3A8A'],
+    dark: ['#0F172A', '#1E3A8A'], // Dark theme gradient
   }
 };
 

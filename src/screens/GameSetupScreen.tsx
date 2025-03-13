@@ -23,6 +23,7 @@ import { useTranslation } from '../translations/TranslationContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import { useTheme } from '../context/ThemeContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameSetup'>;
 
@@ -35,6 +36,7 @@ const STORAGE_KEYS = {
 export default function GameSetupScreen({ navigation }: Props) {
   const { t } = useTranslation();
   const { getResponsiveFontSize, getResponsiveSpacing, isTablet } = useResponsiveLayout();
+  const { isDark } = useTheme();
   const [gameMode, setGameMode] = useState<'teams' | 'players'>('teams');
   const [teamNames, setTeamNames] = useState([`${t.settings.team} 1`, `${t.settings.team} 2`]);
   const [playerNames, setPlayerNames] = useState([`${t.settings.player} 1`, `${t.settings.player} 2`]);
@@ -184,6 +186,7 @@ export default function GameSetupScreen({ navigation }: Props) {
         key={index}
         style={[
           styles.inputWrapper,
+          isDark && styles.inputWrapperDark,
           {
             transform: [{ 
               scale: inputScales.current[index] ? inputScales.current[index] : 1 
@@ -193,7 +196,11 @@ export default function GameSetupScreen({ navigation }: Props) {
       >
         <View style={styles.inputRow}>
           <TextInput
-            style={[styles.input, gameMode === 'players' && index > 1 && styles.inputWithButton]}
+            style={[
+              styles.input,
+              isDark && styles.inputDark,
+              gameMode === 'players' && index > 1 && styles.inputWithButton
+            ]}
             value={name}
             onChangeText={(text) => {
               if (gameMode === 'teams') {
@@ -214,6 +221,8 @@ export default function GameSetupScreen({ navigation }: Props) {
               setFocusedInput(null);
               animateInput(index, false);
             }}
+            placeholder={`${gameMode === 'teams' ? t.settings.team : t.settings.player} ${index + 1}`}
+            placeholderTextColor={isDark ? COLORS.text.dark.secondary : COLORS.text.secondary}
           />
           {gameMode === 'players' && index > 1 && (
             <TouchableOpacity
@@ -223,7 +232,7 @@ export default function GameSetupScreen({ navigation }: Props) {
                 setPlayerNames(newNames);
               }}
             >
-              <Icon name="close" size={20} color={COLORS.error} />
+              <Icon name="close" size={24} color={COLORS.error} />
             </TouchableOpacity>
           )}
         </View>
@@ -262,28 +271,34 @@ export default function GameSetupScreen({ navigation }: Props) {
             <View style={styles.titleContainer}>
               <Text style={[
                 styles.title,
+                isDark && styles.titleDark,
                 { fontSize: getResponsiveFontSize(32) }
               ]}>
                 {t.gameSetup.title}
               </Text>
             </View>
 
-            <View style={styles.modeToggle}>
+            <View style={[
+              styles.modeToggle,
+              isDark && styles.modeToggleDark
+            ]}>
               <TouchableOpacity
                 style={[
                   styles.modeButton,
                   gameMode === 'teams' && styles.modeButtonActive,
+                  gameMode === 'teams' && isDark && styles.modeButtonActiveDark,
                 ]}
                 onPress={() => setGameMode('teams')}
               >
                 <Icon
                   name="account-group"
                   size={24}
-                  color={gameMode === 'teams' ? COLORS.white : COLORS.primary}
+                  color={gameMode === 'teams' ? COLORS.white : (isDark ? COLORS.text.dark.primary : COLORS.primary)}
                 />
                 <Text
                   style={[
                     styles.modeButtonText,
+                    isDark && gameMode !== 'teams' && styles.modeButtonTextDark,
                     gameMode === 'teams' && styles.modeButtonTextActive,
                   ]}
                 >
@@ -294,17 +309,19 @@ export default function GameSetupScreen({ navigation }: Props) {
                 style={[
                   styles.modeButton,
                   gameMode === 'players' && styles.modeButtonActive,
+                  gameMode === 'players' && isDark && styles.modeButtonActiveDark,
                 ]}
                 onPress={() => setGameMode('players')}
               >
                 <Icon
                   name="account-multiple"
                   size={24}
-                  color={gameMode === 'players' ? COLORS.white : COLORS.primary}
+                  color={gameMode === 'players' ? COLORS.white : (isDark ? COLORS.text.dark.primary : COLORS.primary)}
                 />
                 <Text
                   style={[
                     styles.modeButtonText,
+                    isDark && gameMode !== 'players' && styles.modeButtonTextDark,
                     gameMode === 'players' && styles.modeButtonTextActive,
                   ]}
                 >
@@ -314,9 +331,10 @@ export default function GameSetupScreen({ navigation }: Props) {
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>
-                {gameMode === 'teams' ? t.gameSetup.teamNames : t.gameSetup.playerNames}
-              </Text>
+              <Text style={[
+                styles.sectionTitle,
+                isDark && styles.sectionTitleDark
+              ]}>{gameMode === 'teams' ? t.gameSetup.teamNames : t.gameSetup.playerNames}</Text>
               <View style={styles.inputsContainer}>
                 {renderNameInputs()}
                 {gameMode === 'players' && playerNames.length < 6 && (
@@ -337,19 +355,25 @@ export default function GameSetupScreen({ navigation }: Props) {
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>{t.gameSetup.targetScore}</Text>
+              <Text style={[
+                styles.sectionTitle,
+                isDark && styles.sectionTitleDark
+              ]}>{t.gameSetup.targetScore}</Text>
               <View style={styles.commonScores}>
                 {[200, 300, 400].map((score) => (
                   <TouchableOpacity
                     key={score}
                     style={[
                       styles.scoreButton,
+                      isDark && styles.scoreButtonDark,
                       targetScore === score && styles.scoreButtonActive,
+                      targetScore === score && isDark && styles.scoreButtonActiveDark,
                     ]}
                     onPress={() => handleScoreChange(score)}
                   >
                     <Text style={[
                       styles.scoreButtonText,
+                      isDark && styles.scoreButtonTextDark,
                       targetScore === score && styles.scoreButtonTextActive,
                     ]}>
                       {score}
@@ -362,15 +386,33 @@ export default function GameSetupScreen({ navigation }: Props) {
             <View style={styles.buttonContainer}>
               {hasGameInProgress ? (
                 <>
-                  <TouchableOpacity style={styles.newGameButton} onPress={startNewGame}>
+                  <TouchableOpacity
+                    style={[
+                      styles.newGameButton,
+                      isDark && styles.newGameButtonDark
+                    ]}
+                    onPress={startNewGame}
+                  >
                     <Text style={styles.buttonText}>{t.gameSetup.newGame}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.continueButton} onPress={continueGame}>
+                  <TouchableOpacity
+                    style={[
+                      styles.continueButton,
+                      isDark && styles.continueButtonDark
+                    ]}
+                    onPress={continueGame}
+                  >
                     <Text style={styles.buttonText}>{t.gameSetup.continueGame}</Text>
                   </TouchableOpacity>
                 </>
               ) : (
-                <TouchableOpacity style={styles.startButton} onPress={startNewGame}>
+                <TouchableOpacity
+                  style={[
+                    styles.startButton,
+                    isDark && styles.startButtonDark
+                  ]}
+                  onPress={startNewGame}
+                >
                   <Text style={styles.startButtonText}>{t.gameSetup.startGame}</Text>
                 </TouchableOpacity>
               )}
@@ -392,20 +434,22 @@ export default function GameSetupScreen({ navigation }: Props) {
           <TouchableOpacity
             style={[
               styles.iconButton,
+              isDark && styles.iconButtonDark,
               { padding: getResponsiveSpacing(SPACING.sm) }
             ]}
             onPress={() => navigation.navigate('Settings')}
           >
-            <Icon name="cog" size={24} color={COLORS.primary} />
+            <Icon name="cog" size={24} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.iconButton,
+              isDark && styles.iconButtonDark,
               { padding: getResponsiveSpacing(SPACING.sm) }
             ]}
             onPress={() => navigation.navigate('GameHistory')}
           >
-            <Icon name="history" size={24} color={COLORS.primary} />
+            <Icon name="history" size={24} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
           </TouchableOpacity>
         </View>
       </GradientBackground>
@@ -434,6 +478,10 @@ const styles = StyleSheet.create({
   title: {
     ...FONTS.title,
     textAlign: 'center',
+    color: COLORS.primary,
+  },
+  titleDark: {
+    color: COLORS.text.dark.primary,
   },
   section: {
     marginBottom: SPACING.xl,
@@ -444,12 +492,18 @@ const styles = StyleSheet.create({
     color: COLORS.text.secondary,
     marginBottom: SPACING.md,
   },
+  sectionTitleDark: {
+    color: COLORS.text.dark.secondary,
+  },
   modeToggle: {
     flexDirection: 'row',
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: COLORS.white + '80',
     borderRadius: 12,
     padding: SPACING.xs,
     marginBottom: SPACING.xl,
+  },
+  modeToggleDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
   },
   modeButton: {
     flex: 1,
@@ -463,10 +517,16 @@ const styles = StyleSheet.create({
   modeButtonActive: {
     backgroundColor: COLORS.primary,
   },
+  modeButtonActiveDark: {
+    backgroundColor: COLORS.secondary,
+  },
   modeButtonText: {
     ...FONTS.medium,
     color: COLORS.primary,
     fontSize: 16,
+  },
+  modeButtonTextDark: {
+    color: COLORS.text.dark.primary,
   },
   modeButtonTextActive: {
     color: COLORS.white,
@@ -475,9 +535,12 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
   },
   inputWrapper: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white + '80',
     borderRadius: 8,
     ...SHADOWS.small,
+  },
+  inputWrapperDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
   },
   inputRow: {
     flexDirection: 'row',
@@ -488,6 +551,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     padding: SPACING.md,
     color: COLORS.text.primary,
+  },
+  inputDark: {
+    color: COLORS.text.dark.primary,
   },
   inputWithButton: {
     flex: 1,
@@ -509,7 +575,7 @@ const styles = StyleSheet.create({
   },
   scoreButton: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white + '80',
     padding: SPACING.lg,
     borderRadius: 12,
     alignItems: 'center',
@@ -517,14 +583,23 @@ const styles = StyleSheet.create({
     ...SHADOWS.small,
     minHeight: 80,
   },
+  scoreButtonDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+  },
   scoreButtonActive: {
     backgroundColor: COLORS.primary,
     ...SHADOWS.medium,
+  },
+  scoreButtonActiveDark: {
+    backgroundColor: COLORS.secondary,
   },
   scoreButtonText: {
     ...FONTS.bold,
     fontSize: 28,
     color: COLORS.primary,
+  },
+  scoreButtonTextDark: {
+    color: COLORS.text.dark.primary,
   },
   scoreButtonTextActive: {
     color: COLORS.white,
@@ -543,6 +618,9 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.md,
     ...SHADOWS.medium,
   },
+  startButtonDark: {
+    backgroundColor: COLORS.secondary,
+  },
   startButtonText: {
     ...FONTS.bold,
     color: COLORS.white,
@@ -560,12 +638,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...SHADOWS.medium,
   },
+  newGameButtonDark: {
+    backgroundColor: COLORS.secondary,
+  },
   continueButton: {
     backgroundColor: COLORS.primary,
     padding: SPACING.md,
     borderRadius: 8,
     alignItems: 'center',
     ...SHADOWS.medium,
+  },
+  continueButtonDark: {
+    backgroundColor: COLORS.secondary,
   },
   buttonText: {
     ...FONTS.bold,
@@ -578,9 +662,12 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   iconButton: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white + '80',
     borderRadius: 8,
     ...SHADOWS.small,
+  },
+  iconButtonDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
   },
   removeButton: {
     padding: SPACING.sm,

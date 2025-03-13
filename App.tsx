@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState, useRef } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 import { AppRegistry, Animated, Platform } from 'react-native';
@@ -15,6 +15,8 @@ import mobileAds from 'react-native-google-mobile-ads';
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
 import AppNavigator from './src/navigation/AppNavigator';
 import { TranslationProvider } from './src/translations/TranslationContext';
+import { ThemeProvider } from './src/context/ThemeContext';
+import { useTheme } from './src/context/ThemeContext';
 import { COLORS } from './src/styles/theme';
 
 // Initialize AdMob
@@ -25,7 +27,30 @@ mobileAds()
     console.log('AdMob Initialized');
   });
 
-function App() {
+const customLightTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: COLORS.background.light,
+    text: COLORS.text.primary,
+    border: COLORS.border,
+    card: COLORS.card.light,
+  },
+};
+
+const customDarkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: COLORS.background.dark,
+    text: COLORS.text.dark.primary,
+    border: COLORS.border,
+    card: COLORS.card.dark,
+  },
+};
+
+function AppContent() {
+  const { isDark } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -63,18 +88,26 @@ function App() {
           right: 0,
           top: 0,
           bottom: 0,
-          backgroundColor: COLORS.background.light,
+          backgroundColor: isDark ? COLORS.background.dark : COLORS.background.light,
         }}
       >
-        <TranslationProvider>
-          <SafeAreaProvider>
-            <NavigationContainer>
-              <AppNavigator />
-            </NavigationContainer>
-          </SafeAreaProvider>
-        </TranslationProvider>
+        <SafeAreaProvider>
+          <NavigationContainer theme={isDark ? customDarkTheme : customLightTheme}>
+            <AppNavigator />
+          </NavigationContainer>
+        </SafeAreaProvider>
       </Animated.View>
     </>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <TranslationProvider>
+        <AppContent />
+      </TranslationProvider>
+    </ThemeProvider>
   );
 }
 

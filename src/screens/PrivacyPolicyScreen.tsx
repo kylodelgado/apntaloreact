@@ -6,11 +6,13 @@ import { RootStackParamList } from '../navigation/types';
 import { COLORS, SPACING, FONTS, SHADOWS } from '../styles/theme';
 import { GradientBackground } from '../components/GradientBackground';
 import { DominoPattern } from '../components/DominoPattern';
-import { FrostedGlassCard } from '../components/FrostedGlassCard';
+import { useTheme } from '../context/ThemeContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PrivacyPolicy'>;
 
 export default function PrivacyPolicyScreen({ navigation }: Props) {
+  const { isDark } = useTheme();
+
   return (
     <GradientBackground safeAreaEdges={['top', 'bottom']}>
       <DominoPattern variant="setup" opacity={0.05} />
@@ -22,39 +24,66 @@ export default function PrivacyPolicyScreen({ navigation }: Props) {
       >
         <View style={styles.header}>
           <TouchableOpacity
-            style={styles.backButton}
+            style={[
+              styles.backButton,
+              isDark && styles.backButtonDark
+            ]}
             onPress={() => navigation.goBack()}
           >
-            <Icon name="chevron-left" size={32} color={COLORS.primary} />
+            <Icon name="chevron-left" size={32} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
           </TouchableOpacity>
-          <Text style={styles.title}>Privacy Policy</Text>
+          <Text style={[
+            styles.title,
+            isDark && styles.titleDark
+          ]}>Privacy Policy</Text>
         </View>
         
-        <FrostedGlassCard style={styles.card}>
-          <Text style={styles.text}>
+        <View style={styles.section}>
+          <Text style={[
+            styles.text,
+            isDark && styles.textDark
+          ]}>
             Our app does not collect personal data. All game data is stored locally on your device.
             We do not use analytics or tracking services.
           </Text>
           
-          <Text style={styles.sectionTitle}>Data Storage</Text>
-          <Text style={styles.text}>
+          <Text style={[
+            styles.sectionTitle,
+            isDark && styles.sectionTitleDark
+          ]}>Data Storage</Text>
+          <Text style={[
+            styles.text,
+            isDark && styles.textDark
+          ]}>
             • Game scores and settings are stored locally{'\n'}
             • No data is transmitted to external servers{'\n'}
             • You can clear all data through the Settings menu
           </Text>
           
-          <Text style={styles.sectionTitle}>Permissions</Text>
-          <Text style={styles.text}>
+          <Text style={[
+            styles.sectionTitle,
+            isDark && styles.sectionTitleDark
+          ]}>Permissions</Text>
+          <Text style={[
+            styles.text,
+            isDark && styles.textDark
+          ]}>
             The app only requests access to:{'\n'}
             • Haptic feedback for game interactions
           </Text>
           
-          <Text style={styles.sectionTitle}>Contact</Text>
-          <Text style={styles.text}>
+          <Text style={[
+            styles.sectionTitle,
+            isDark && styles.sectionTitleDark
+          ]}>Contact</Text>
+          <Text style={[
+            styles.text,
+            isDark && styles.textDark
+          ]}>
             For questions about this privacy policy:{'\n'}
             app@ardanco.com
           </Text>
-        </FrostedGlassCard>
+        </View>
       </ScrollView>
     </GradientBackground>
   );
@@ -75,21 +104,28 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white + '80',
     borderRadius: 8,
     padding: SPACING.xs,
     marginRight: SPACING.md,
     ...SHADOWS.small,
+  },
+  backButtonDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
   },
   title: {
     ...FONTS.title,
     fontSize: 32,
     color: COLORS.primary,
     flex: 1,
-    marginRight: 40, // To offset the back button width and keep title centered
+    marginRight: 40,
   },
-  card: {
-    padding: SPACING.lg,
+  titleDark: {
+    color: COLORS.text.dark.primary,
+  },
+  section: {
+    marginBottom: SPACING.lg,
+    paddingHorizontal: SPACING.md,
   },
   sectionTitle: {
     ...FONTS.bold,
@@ -98,10 +134,16 @@ const styles = StyleSheet.create({
     marginTop: SPACING.lg,
     marginBottom: SPACING.sm,
   },
+  sectionTitleDark: {
+    color: COLORS.text.dark.primary,
+  },
   text: {
     ...FONTS.regular,
     fontSize: 16,
     color: COLORS.text.primary,
     lineHeight: 24,
+  },
+  textDark: {
+    color: COLORS.text.dark.primary,
   },
 }); 

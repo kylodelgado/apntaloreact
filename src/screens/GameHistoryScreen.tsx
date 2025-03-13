@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
+  StatusBar,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,9 +14,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS, SPACING, FONTS, SHADOWS } from '../styles/theme';
 import { GradientBackground } from '../components/GradientBackground';
 import { DominoPattern } from '../components/DominoPattern';
-import { FrostedGlassCard } from '../components/FrostedGlassCard';
 import { RootStackParamList } from '../navigation/types';
 import { useTranslation } from '../translations/TranslationContext';
+import { useTheme } from '../context/ThemeContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameHistory'>;
 
@@ -30,6 +31,7 @@ type GameHistoryItem = {
 
 export default function GameHistoryScreen({ navigation }: Props) {
   const { t } = useTranslation();
+  const { isDark } = useTheme();
   const [gameHistory, setGameHistory] = useState<GameHistoryItem[]>([]);
 
   useEffect(() => {
@@ -62,33 +64,59 @@ export default function GameHistoryScreen({ navigation }: Props) {
     const isCompleted = game.winner !== undefined;
 
     return (
-      <FrostedGlassCard key={index} style={styles.gameCard}>
+      <View key={index} style={[
+        styles.gameCard,
+        isDark && styles.gameCardDark,
+        index > 0 && styles.gameCardMargin
+      ]}>
         <View style={styles.gameHeader}>
-          <Text style={styles.timestamp}>{formatDate(game.timestamp)}</Text>
+          <Text style={[
+            styles.timestamp,
+            isDark && styles.timestampDark
+          ]}>{formatDate(game.timestamp)}</Text>
           <View style={[
             styles.statusBadge,
-            isCompleted ? styles.completedBadge : styles.inProgressBadge
+            isCompleted ? styles.completedBadge : styles.inProgressBadge,
+            isDark && (isCompleted ? styles.completedBadgeDark : styles.inProgressBadgeDark)
           ]}>
-            <Text style={styles.statusText}>
+            <Text style={[
+              styles.statusText,
+              isDark && styles.statusTextDark
+            ]}>
               {isCompleted ? t.gameHistory.completed : t.gameHistory.inProgress}
             </Text>
           </View>
         </View>
 
         <View style={styles.gameInfo}>
-          <Text style={styles.gameMode}>
+          <Text style={[
+            styles.gameMode,
+            isDark && styles.gameModeDark
+          ]}>
             {game.gameMode === 'teams' ? t.settings.teams : t.settings.players}
           </Text>
-          <Text style={styles.targetScore}>
+          <Text style={[
+            styles.targetScore,
+            isDark && styles.targetScoreDark
+          ]}>
             {t.gameSetup.targetScore}: {game.targetScore}
           </Text>
         </View>
 
         <View style={styles.participantsContainer}>
           {game.participants.map((participant, idx) => (
-            <View key={idx} style={styles.participantRow}>
-              <Text style={styles.participantName}>{participant}</Text>
-              <Text style={styles.participantScore}>
+            <View key={idx} style={[
+              styles.participantRow,
+              isDark && styles.participantRowDark
+            ]}>
+              <Text style={[
+                styles.participantName,
+                isDark && styles.participantNameDark
+              ]}>{participant}</Text>
+              <Text style={[
+                styles.participantScore,
+                isDark && styles.participantScoreDark
+              ]}>
                 {game.scores[idx].reduce((sum, score) => sum + score, 0)}
               </Text>
             </View>
@@ -96,12 +124,18 @@ export default function GameHistoryScreen({ navigation }: Props) {
         </View>
 
         {game.winner && (
-          <View style={styles.winnerContainer}>
-            <Icon name="trophy" size={20} color={COLORS.primary} />
-            <Text style={styles.winnerText}>{game.winner}</Text>
+          <View style={[
+            styles.winnerContainer,
+            isDark && styles.winnerContainerDark
+          ]}>
+            <Icon name="trophy" size={20} color={isDark ? COLORS.accent : COLORS.primary} />
+            <Text style={[
+              styles.winnerText,
+              isDark && styles.winnerTextDark
+            ]}>{game.winner}</Text>
           </View>
         )}
-      </FrostedGlassCard>
+      </View>
     );
   };
 
@@ -109,27 +143,40 @@ export default function GameHistoryScreen({ navigation }: Props) {
     <GradientBackground safeAreaEdges={['top', 'bottom']}>
       <DominoPattern variant="setup" opacity={0.05} />
       
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.navigate('GameSetup')}
-        >
-          <Icon name="chevron-left" size={32} color={COLORS.primary} />
-        </TouchableOpacity>
-        <Text style={styles.title}>{t.gameHistory.title}</Text>
-      </View>
-
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={[
+              styles.backButton,
+              isDark && styles.backButtonDark
+            ]}
+            onPress={() => navigation.navigate('GameSetup')}
+          >
+            <Icon name="chevron-left" size={32} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
+          </TouchableOpacity>
+          <Text style={[
+            styles.title,
+            isDark && styles.titleDark
+          ]}>{t.gameHistory.title}</Text>
+        </View>
+
         {gameHistory.length > 0 ? (
           gameHistory.map((game, index) => renderGameItem(game, index))
         ) : (
           <View style={styles.emptyState}>
-            <Icon name="history" size={48} color={COLORS.text.secondary} />
-            <Text style={styles.emptyText}>{t.gameHistory.noGames}</Text>
+            <Icon 
+              name="history" 
+              size={48} 
+              color={isDark ? COLORS.text.dark.secondary : COLORS.text.secondary} 
+            />
+            <Text style={[
+              styles.emptyText,
+              isDark && styles.emptyTextDark
+            ]}>{t.gameHistory.noGames}</Text>
           </View>
         )}
       </ScrollView>
@@ -138,39 +185,56 @@ export default function GameHistoryScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    padding: SPACING.lg,
+    paddingTop: 0,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: SPACING.xl,
     paddingHorizontal: SPACING.lg,
-    paddingTop: Platform.OS === 'ios' ? 60 : SPACING.xl,
-    paddingBottom: SPACING.lg,
+    paddingTop: Platform.select({
+      ios: 60,
+      android: SPACING.xl,
+    }),
   },
   backButton: {
-    position: 'absolute',
-    left: SPACING.lg,
-    top: Platform.OS === 'ios' ? 60 : SPACING.xl,
-    zIndex: 10,
-    backgroundColor: COLORS.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.white + '80',
     borderRadius: 8,
     padding: SPACING.xs,
+    marginRight: SPACING.md,
     ...SHADOWS.small,
+  },
+  backButtonDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
   },
   title: {
     ...FONTS.title,
     fontSize: 32,
     color: COLORS.primary,
-    textAlign: 'center',
     flex: 1,
+    marginRight: 40,
   },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: SPACING.lg,
-    gap: SPACING.lg,
+  titleDark: {
+    color: COLORS.text.dark.primary,
   },
   gameCard: {
-    padding: SPACING.md,
+    padding: SPACING.lg,
+    borderRadius: 12,
+    backgroundColor: COLORS.white + '80',
+    ...SHADOWS.small,
+  },
+  gameCardDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+  },
+  gameCardMargin: {
+    marginTop: SPACING.md,
   },
   gameHeader: {
     flexDirection: 'row',
@@ -183,6 +247,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.text.secondary,
   },
+  timestampDark: {
+    color: COLORS.text.dark.secondary,
+  },
   statusBadge: {
     paddingHorizontal: SPACING.sm,
     paddingVertical: SPACING.xs,
@@ -191,13 +258,22 @@ const styles = StyleSheet.create({
   completedBadge: {
     backgroundColor: COLORS.success + '20',
   },
+  completedBadgeDark: {
+    backgroundColor: COLORS.success + '40',
+  },
   inProgressBadge: {
     backgroundColor: COLORS.warning + '20',
+  },
+  inProgressBadgeDark: {
+    backgroundColor: COLORS.warning + '40',
   },
   statusText: {
     ...FONTS.medium,
     fontSize: 12,
     color: COLORS.text.secondary,
+  },
+  statusTextDark: {
+    color: COLORS.text.dark.secondary,
   },
   gameInfo: {
     flexDirection: 'row',
@@ -209,10 +285,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.text.primary,
   },
+  gameModeDark: {
+    color: COLORS.text.dark.primary,
+  },
   targetScore: {
     ...FONTS.medium,
     fontSize: 16,
     color: COLORS.text.primary,
+  },
+  targetScoreDark: {
+    color: COLORS.text.dark.primary,
   },
   participantsContainer: {
     gap: SPACING.xs,
@@ -221,16 +303,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border + '20',
+    paddingVertical: SPACING.xs,
+  },
+  participantRowDark: {
+    borderBottomColor: COLORS.text.dark.secondary + '20',
   },
   participantName: {
     ...FONTS.regular,
     fontSize: 16,
     color: COLORS.text.primary,
   },
+  participantNameDark: {
+    color: COLORS.text.dark.primary,
+  },
   participantScore: {
     ...FONTS.bold,
     fontSize: 16,
     color: COLORS.primary,
+  },
+  participantScoreDark: {
+    color: COLORS.accent,
   },
   winnerContainer: {
     flexDirection: 'row',
@@ -239,12 +333,18 @@ const styles = StyleSheet.create({
     marginTop: SPACING.md,
     paddingTop: SPACING.sm,
     borderTopWidth: 1,
-    borderTopColor: COLORS.border,
+    borderTopColor: COLORS.border + '20',
+  },
+  winnerContainerDark: {
+    borderTopColor: COLORS.text.dark.secondary + '20',
   },
   winnerText: {
     ...FONTS.bold,
     fontSize: 16,
     color: COLORS.primary,
+  },
+  winnerTextDark: {
+    color: COLORS.accent,
   },
   emptyState: {
     flex: 1,
@@ -258,5 +358,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.text.secondary,
     textAlign: 'center',
+  },
+  emptyTextDark: {
+    color: COLORS.text.dark.secondary,
   },
 }); 
