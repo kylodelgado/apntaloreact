@@ -9,6 +9,7 @@ import {
   Animated,
   Platform,
   StatusBar,
+  AppState,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -43,6 +44,7 @@ export default function GameSetupScreen({ navigation }: Props) {
   const [targetScore, setTargetScore] = useState(200);
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [hasGameInProgress, setHasGameInProgress] = useState(false);
+  const appState = useRef(AppState.currentState);
 
   // Animation values
   const inputScales = useRef<Animated.Value[]>([]);
@@ -59,6 +61,23 @@ export default function GameSetupScreen({ navigation }: Props) {
       checkGameInProgress();
     }, [])
   );
+
+  // Add AppState listener to handle app background/foreground transitions
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        // App has come to the foreground - check for game in progress
+        checkGameInProgress();
+      }
+      
+      // Update the AppState ref
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   // Update names when language changes
   useEffect(() => {

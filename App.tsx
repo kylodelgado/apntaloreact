@@ -9,7 +9,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
-import { AppRegistry, Animated, Platform } from 'react-native';
+import { AppRegistry, Animated, Platform, AppState } from 'react-native';
 import mobileAds from 'react-native-google-mobile-ads';
 
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
@@ -50,13 +50,32 @@ const customDarkTheme = {
 };
 
 function AppContent() {
-  const { isDark } = useTheme();
+  const { isDark, isThemeReady } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const appState = useRef(AppState.currentState);
 
   useEffect(() => {
     // Hide the native splash screen
     SplashScreen.hide();
+  }, []);
+
+  // Add AppState listener to handle app background/foreground transitions
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        // App has come to the foreground - handle any app-level state restoration here
+        console.log('App has come to the foreground');
+        // No need to reload or show loading indicators - React Native preserves state
+      }
+      
+      // Update the AppState ref
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   const handleSplashComplete = () => {
@@ -73,6 +92,11 @@ function AppContent() {
       })
     ]).start();
   };
+
+  // Only render content when theme is ready
+  if (!isThemeReady && !isLoading) {
+    return null; // Return empty until theme is ready
+  }
 
   return (
     <>

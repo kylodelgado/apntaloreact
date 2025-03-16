@@ -13,6 +13,7 @@ import {
   Animated,
   StatusBar,
   InputAccessoryView,
+  AppState,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -49,6 +50,12 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   const { targetScore, gameMode, teamNames, playerNames } = route.params;
   const participants = gameMode === 'teams' ? teamNames! : playerNames!;
   
+  // Add AppState ref to track app state changes
+  const appState = useRef(AppState.currentState);
+  
+  // Add a ref to track if initial load has completed
+  const hasInitiallyLoaded = useRef(false);
+  
   // Animation refs
   const animationRefs = useRef({
     totalScoreAnims: participants.map(() => new Animated.Value(0)),
@@ -60,13 +67,16 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   });
 
   // State
-  const [scores, setScores] = useState<number[][]>(
-    participants.map(() => [0])
-  );
+  const [scores, setScores] = useState<number[][]>(() => {
+    // Initialize with empty arrays instead of [0] to prevent overriding saved scores
+    return participants.map(() => []);
+  });
   const [activeInputIndex, setActiveInputIndex] = useState<number | null>(null);
   const [currentScore, setCurrentScore] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Add state to prevent rendering until initial load is complete
+  const [isReady, setIsReady] = useState(false);
 
   // Add a unique ID for the input accessory view
   const inputAccessoryViewID = "scoreInputAccessoryView";
@@ -91,40 +101,119 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   useEffect(() => {
     const loadGameState = async () => {
       try {
+        // Only show loading on initial mount and if we haven't loaded yet
+        if (!hasInitiallyLoaded.current) {
+          setIsLoading(true);
+        }
+        
         const savedState = await AsyncStorage.getItem(STORAGE_KEYS.GAME_IN_PROGRESS);
         if (savedState) {
           const { scores: savedScores, gameMode: savedGameMode, targetScore: savedTargetScore } = JSON.parse(savedState);
           // Only restore if it's the same game configuration
           if (savedGameMode === gameMode && savedTargetScore === targetScore && 
               savedScores.length === participants.length) {
-            setScores(savedScores);
+            // Ensure we're not setting empty scores
+            if (savedScores.some((participantScores: number[]) => participantScores.length > 0)) {
+              setScores(savedScores);
+              console.log('Restored scores:', savedScores);
+            } else if (scores.every((participantScores: number[]) => participantScores.length === 0)) {
+              // If saved scores are empty and current scores are empty, initialize with [0]
+              setScores(participants.map(() => [0]));
+            }
+          } else if (!hasInitiallyLoaded.current) {
+            // Only initialize with [0] on initial mount if configuration doesn't match
+            setScores(participants.map(() => [0]));
           }
+        } else if (!hasInitiallyLoaded.current) {
+          // Only initialize with [0] on initial mount if no saved state
+          setScores(participants.map(() => [0]));
         }
+        
+        // Mark as initially loaded
+        hasInitiallyLoaded.current = true;
+        // Mark component as ready to render
+        setIsReady(true);
       } catch (error) {
         console.error('Error loading game state:', error);
+        // Only fallback to default initialization on initial mount
+        if (!hasInitiallyLoaded.current) {
+          setScores(participants.map(() => [0]));
+        }
+        // Even on error, mark as ready
+        setIsReady(true);
+        hasInitiallyLoaded.current = true;
+      } finally {
+        setIsLoading(false);
       }
     };
     loadGameState();
-  }, []);
+  }, []); // Only run on mount
+
+  // Add AppState change listener to handle app background/foreground transitions
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      // Only handle transitions from background to active
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        // App has come to the foreground - silently sync with storage
+        const loadGameState = async () => {
+          try {
+            // Never show loading indicator on resume
+            const savedState = await AsyncStorage.getItem(STORAGE_KEYS.GAME_IN_PROGRESS);
+            if (savedState) {
+              const { scores: savedScores, gameMode: savedGameMode, targetScore: savedTargetScore } = JSON.parse(savedState);
+              // Only restore if it's the same game configuration and there's a difference
+              if (savedGameMode === gameMode && savedTargetScore === targetScore && 
+                  savedScores.length === participants.length) {
+                const currentTotal = scores.reduce((sum: number, participantScores: number[]) => 
+                  sum + participantScores.reduce((s: number, score: number) => s + score, 0), 0);
+                const savedTotal = savedScores.reduce((sum: number, participantScores: number[]) => 
+                  sum + participantScores.reduce((s: number, score: number) => s + score, 0), 0);
+                
+                // Only update if there's actually a difference
+                if (currentTotal !== savedTotal) {
+                  setScores(savedScores);
+                }
+              }
+            }
+          } catch (error) {
+            console.error('Error syncing game state on app foreground:', error);
+            // Never show error on resume
+          }
+        };
+        loadGameState();
+      }
+      
+      // Update the AppState ref
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [gameMode, targetScore, participants, scores]);
 
   // Save game state whenever scores change
   useEffect(() => {
     const saveGameState = async () => {
       try {
-        const gameState = {
-          scores,
-          gameMode,
-          targetScore,
-          participants,
-          timestamp: new Date().toISOString(),
-        };
-        await AsyncStorage.setItem(STORAGE_KEYS.GAME_IN_PROGRESS, JSON.stringify(gameState));
+        // Only save if we have actual scores (not just empty arrays)
+        if (scores.some(participantScores => participantScores.length > 0)) {
+          const gameState = {
+            scores,
+            gameMode,
+            targetScore,
+            participants,
+            timestamp: new Date().toISOString(),
+          };
+          console.log('Saving game state:', gameState);
+          await AsyncStorage.setItem(STORAGE_KEYS.GAME_IN_PROGRESS, JSON.stringify(gameState));
+        }
       } catch (error) {
         console.error('Error saving game state:', error);
       }
     };
     saveGameState();
-  }, [scores]);
+  }, [scores, gameMode, targetScore, participants]);
 
   const checkGameOver = useCallback((newScores: number[][]) => {
     newScores.forEach((participantScores, index) => {
@@ -199,13 +288,16 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   const handleScoreSubmit = (participantIndex: number) => {
     const score = parseInt(currentScore);
     if (!isNaN(score) && score > 0) {
+      // Create a deep copy of the scores array to ensure React detects the change
       const newScores = scores.map((participantScores, index) => {
         if (index === participantIndex) {
           return [...participantScores, score];
         }
-        return [...participantScores, 0];
+        // For other participants, add 0 or keep their scores unchanged
+        return participantScores.length === 0 ? [0] : [...participantScores, 0];
       });
       
+      console.log('Submitting score:', score, 'for participant:', participantIndex, 'new scores:', newScores);
       setScores(newScores);
       setCurrentScore('');
       setActiveInputIndex(null);
@@ -216,13 +308,16 @@ export default function GamePlayScreen({ navigation, route }: Props) {
   };
 
   const handleQuickScore = (participantIndex: number, score: number) => {
+    // Create a deep copy of the scores array to ensure React detects the change
     const newScores = scores.map((participantScores, index) => {
       if (index === participantIndex) {
         return [...participantScores, score];
       }
-      return [...participantScores, 0];
+      // For other participants, add 0 or keep their scores unchanged
+      return participantScores.length === 0 ? [0] : [...participantScores, 0];
     });
     
+    console.log('Quick score:', score, 'for participant:', participantIndex, 'new scores:', newScores);
     setScores(newScores);
     animateNewScore(participantIndex, score);
     checkGameOver(newScores);
@@ -521,87 +616,90 @@ export default function GamePlayScreen({ navigation, route }: Props) {
       <StatusBar
         translucent
         backgroundColor="transparent"
-        barStyle="dark-content"
+        barStyle={isDark ? "light-content" : "dark-content"}
       />
-      <GradientBackground safeAreaEdges={Platform.select({
-        ios: ['top', 'bottom'],
-        android: ['top', 'bottom'],
-      })}>
-        <DominoPattern variant="gameplay" opacity={0.05} />
-        
-        <View style={styles.headerButtons}>
-          <TouchableOpacity
-            style={[
-              styles.backButton,
-              isDark && styles.backButtonDark
-            ]}
-            onPress={() => navigation.goBack()}
-          >
-            <Icon name="chevron-left" size={32} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
-          </TouchableOpacity>
+      {/* Only render content when ready to prevent flashing */}
+      {isReady && (
+        <GradientBackground safeAreaEdges={Platform.select({
+          ios: ['top', 'bottom'],
+          android: ['top', 'bottom'],
+        })}>
+          <DominoPattern variant="gameplay" opacity={0.05} />
           
-          <TouchableOpacity
-            style={[
-              styles.resetButton,
-              isDark && styles.resetButtonDark
-            ]}
-            onPress={handleReset}
-          >
-            <Icon name="refresh" size={24} color={COLORS.white} />
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView 
-          style={[
-            styles.container,
-            Platform.OS === 'android' && { marginTop: StatusBar.currentHeight },
-          ]}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.content}>
-            {isLoading && (
-              <View style={styles.loadingContainer}>
-                <LoadingSpinner size={32} color={COLORS.primary} />
-              </View>
-            )}
+          <View style={styles.headerButtons}>
+            <TouchableOpacity
+              style={[
+                styles.backButton,
+                isDark && styles.backButtonDark
+              ]}
+              onPress={() => navigation.goBack()}
+            >
+              <Icon name="chevron-left" size={32} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
+            </TouchableOpacity>
             
-            {error && (
-              <ErrorMessage 
-                message={error} 
-                onFinish={() => setError(null)} 
-              />
-            )}
-            
-            {renderParticipantColumns()}
+            <TouchableOpacity
+              style={[
+                styles.resetButton,
+                isDark && styles.resetButtonDark
+              ]}
+              onPress={handleReset}
+            >
+              <Icon name="refresh" size={24} color={COLORS.white} />
+            </TouchableOpacity>
           </View>
-        </ScrollView>
 
-        {/* Add InputAccessoryView for iOS */}
-        {Platform.OS === 'ios' && activeInputIndex !== null && (
-          <InputAccessoryView nativeID={inputAccessoryViewID}>
-            <View style={[
-              styles.keyboardToolbar,
-              isDark && styles.keyboardToolbarDark
-            ]}>
-              <TouchableOpacity
-                style={styles.keyboardDoneButton}
-                onPress={() => {
-                  if (activeInputIndex !== null) {
-                    handleScoreSubmit(activeInputIndex);
-                  }
-                  Keyboard.dismiss();
-                }}
-              >
-                <Text style={[
-                  styles.keyboardDoneButtonText,
-                  isDark && styles.keyboardDoneButtonTextDark
-                ]}>{t.common.done}</Text>
-              </TouchableOpacity>
+          <ScrollView 
+            style={[
+              styles.container,
+              Platform.OS === 'android' && { marginTop: StatusBar.currentHeight },
+            ]}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.content}>
+              {isLoading && (
+                <View style={styles.loadingContainer}>
+                  <LoadingSpinner size={32} color={COLORS.primary} />
+                </View>
+              )}
+              
+              {error && (
+                <ErrorMessage 
+                  message={error} 
+                  onFinish={() => setError(null)} 
+                />
+              )}
+              
+              {renderParticipantColumns()}
             </View>
-          </InputAccessoryView>
-        )}
-      </GradientBackground>
+          </ScrollView>
+
+          {/* Add InputAccessoryView for iOS */}
+          {Platform.OS === 'ios' && activeInputIndex !== null && (
+            <InputAccessoryView nativeID={inputAccessoryViewID}>
+              <View style={[
+                styles.keyboardToolbar,
+                isDark && styles.keyboardToolbarDark
+              ]}>
+                <TouchableOpacity
+                  style={styles.keyboardDoneButton}
+                  onPress={() => {
+                    if (activeInputIndex !== null) {
+                      handleScoreSubmit(activeInputIndex);
+                    }
+                    Keyboard.dismiss();
+                  }}
+                >
+                  <Text style={[
+                    styles.keyboardDoneButtonText,
+                    isDark && styles.keyboardDoneButtonTextDark
+                  ]}>{t.common.done}</Text>
+                </TouchableOpacity>
+              </View>
+            </InputAccessoryView>
+          )}
+        </GradientBackground>
+      )}
     </>
   );
 }
