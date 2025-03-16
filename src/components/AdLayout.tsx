@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { BannerAd } from './BannerAd';
 import { useRoute } from '@react-navigation/native';
 
 interface AdLayoutProps {
@@ -10,15 +9,12 @@ interface AdLayoutProps {
 export const AdLayout: React.FC<AdLayoutProps> = ({ children }) => {
   const route = useRoute();
   
-  // Don't show ads on the splash screen
-  const shouldShowAd = route.name !== 'Splash';
-
+  // No longer needed for ads, but keeping the component structure
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         {children}
       </View>
-      {shouldShowAd && <BannerAd />}
     </View>
   );
 };

@@ -10,7 +10,6 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 import { AppRegistry, Animated, Platform, AppState } from 'react-native';
-import mobileAds from 'react-native-google-mobile-ads';
 
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
 import AppNavigator from './src/navigation/AppNavigator';
@@ -18,14 +17,6 @@ import { TranslationProvider } from './src/translations/TranslationContext';
 import { ThemeProvider } from './src/context/ThemeContext';
 import { useTheme } from './src/context/ThemeContext';
 import { COLORS } from './src/styles/theme';
-
-// Initialize AdMob
-mobileAds()
-  .initialize()
-  .then(adapterStatuses => {
-    // Mobile Ads SDK is initialized
-    console.log('AdMob Initialized');
-  });
 
 const customLightTheme = {
   ...DefaultTheme,
