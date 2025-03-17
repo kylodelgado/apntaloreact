@@ -45,10 +45,11 @@ export default function GameSetupScreen({ navigation }: Props) {
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [hasGameInProgress, setHasGameInProgress] = useState(false);
   const appState = useRef(AppState.currentState);
-
+  
+  // Create refs array for inputs
+  const inputRefs = useRef<Array<React.RefObject<TextInput>>>([]);
   // Animation values
   const inputScales = useRef<Animated.Value[]>([]);
-  const scoreScale = useRef(new Animated.Value(1)).current;
 
   // Load default settings on mount
   useEffect(() => {
@@ -136,10 +137,18 @@ export default function GameSetupScreen({ navigation }: Props) {
     }
   };
 
-  // Initialize animation values
+  // Initialize or update refs when number of participants changes
   useEffect(() => {
     const participants = gameMode === 'teams' ? teamNames : playerNames;
-    inputScales.current = participants.map(() => new Animated.Value(1));
+    // Initialize input refs
+    inputRefs.current = Array(participants.length)
+      .fill(null)
+      .map((_, i) => inputRefs.current[i] || React.createRef<TextInput>());
+    
+    // Initialize animation values
+    inputScales.current = Array(participants.length)
+      .fill(null)
+      .map((_, i) => inputScales.current[i] || new Animated.Value(1));
   }, [gameMode, teamNames.length, playerNames.length]);
 
   const animateInput = (index: number, focused: boolean) => {
@@ -208,13 +217,18 @@ export default function GameSetupScreen({ navigation }: Props) {
           isDark && styles.inputWrapperDark,
           {
             transform: [{ 
-              scale: inputScales.current[index] ? inputScales.current[index] : 1 
+              scale: inputScales.current[index] || new Animated.Value(1)
             }],
           },
         ]}
       >
-        <View style={styles.inputRow}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.inputRow}
+          onPress={() => inputRefs.current[index]?.current?.focus()}
+        >
           <TextInput
+            ref={inputRefs.current[index]}
             style={[
               styles.input,
               isDark && styles.inputDark,
@@ -243,18 +257,26 @@ export default function GameSetupScreen({ navigation }: Props) {
             placeholder={`${gameMode === 'teams' ? t.settings.team : t.settings.player} ${index + 1}`}
             placeholderTextColor={isDark ? COLORS.text.dark.secondary : COLORS.text.secondary}
           />
-          {gameMode === 'players' && index > 1 && (
-            <TouchableOpacity
-              style={styles.removeButton}
-              onPress={() => {
-                const newNames = playerNames.filter((_, i) => i !== index);
-                setPlayerNames(newNames);
-              }}
-            >
-              <Icon name="close" size={24} color={COLORS.error} />
-            </TouchableOpacity>
-          )}
-        </View>
+          <View style={styles.inputIconsContainer}>
+            <Icon 
+              name="pencil-outline" 
+              size={18} 
+              color={isDark ? COLORS.text.dark.secondary : COLORS.text.secondary}
+              style={styles.editIcon}
+            />
+            {gameMode === 'players' && index > 1 && (
+              <TouchableOpacity
+                style={styles.removeButton}
+                onPress={() => {
+                  const newNames = playerNames.filter((_, i) => i !== index);
+                  setPlayerNames(newNames);
+                }}
+              >
+                <Icon name="close" size={24} color={COLORS.error} />
+              </TouchableOpacity>
+            )}
+          </View>
+        </TouchableOpacity>
       </Animated.View>
     ));
   };
@@ -360,10 +382,11 @@ export default function GameSetupScreen({ navigation }: Props) {
                   <TouchableOpacity
                     style={styles.addButton}
                     onPress={() => {
-                      setPlayerNames([
+                      const newNames = [
                         ...playerNames,
                         `${t.settings.player} ${playerNames.length + 1}`,
-                      ]);
+                      ];
+                      setPlayerNames(newNames);
                     }}
                   >
                     <Icon name="plus" size={24} color={COLORS.white} />
@@ -564,12 +587,14 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   input: {
     ...FONTS.regular,
     fontSize: 16,
     padding: SPACING.md,
     color: COLORS.text.primary,
+    flex: 1,
   },
   inputDark: {
     color: COLORS.text.dark.primary,
@@ -687,6 +712,15 @@ const styles = StyleSheet.create({
   },
   iconButtonDark: {
     backgroundColor: 'rgba(45, 55, 72, 0.5)',
+  },
+  inputIconsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: SPACING.sm,
+  },
+  editIcon: {
+    opacity: 0.6,
+    marginRight: SPACING.xs,
   },
   removeButton: {
     padding: SPACING.sm,
