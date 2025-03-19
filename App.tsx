@@ -10,6 +10,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 import { AppRegistry, Animated, Platform, AppState } from 'react-native';
+import mobileAds from 'react-native-google-mobile-ads';
 
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
 import AppNavigator from './src/navigation/AppNavigator';
@@ -47,6 +48,14 @@ function AppContent() {
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
+    // Initialize mobile ads
+    mobileAds()
+      .initialize()
+      .then(adapterStatuses => {
+        // Initialization complete
+        console.log('Mobile Ads initialized:', adapterStatuses);
+      });
+
     // Hide the native splash screen
     SplashScreen.hide();
   }, []);

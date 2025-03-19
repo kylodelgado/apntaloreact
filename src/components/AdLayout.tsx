@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { BannerAd } from './ads/BannerAd';
 
 interface AdLayoutProps {
   children: React.ReactNode;
@@ -9,12 +10,15 @@ interface AdLayoutProps {
 export const AdLayout: React.FC<AdLayoutProps> = ({ children }) => {
   const route = useRoute();
   
-  // No longer needed for ads, but keeping the component structure
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         {children}
       </View>
+      <View style={styles.adContainer}>
+        <BannerAd />
+      </View>
+      <View style={styles.bottomPadding} />
     </View>
   );
 };
@@ -25,5 +29,13 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+  },
+  adContainer: {
+    width: '100%',
+    backgroundColor: 'transparent',
+    paddingBottom: 8,
+  },
+  bottomPadding: {
+    height: Platform.select({ ios: 20, android: 12 }),
   },
 }); 

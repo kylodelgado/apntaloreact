@@ -170,6 +170,19 @@ export default function GameSetupScreen({ navigation }: Props) {
   };
 
   const startNewGame = async () => {
+    // Fill empty fields with default names before starting
+    if (gameMode === 'teams') {
+      const filledTeamNames = teamNames.map((name, index) => 
+        name.trim() || `${t.settings.team} ${index + 1}`
+      );
+      setTeamNames(filledTeamNames);
+    } else {
+      const filledPlayerNames = playerNames.map((name, index) => 
+        name.trim() || `${t.settings.player} ${index + 1}`
+      );
+      setPlayerNames(filledPlayerNames);
+    }
+
     // Clear any existing game data
     try {
       await AsyncStorage.removeItem(STORAGE_KEYS.GAME_IN_PROGRESS);
@@ -177,11 +190,14 @@ export default function GameSetupScreen({ navigation }: Props) {
       console.error('Error clearing game data:', error);
     }
     
-    // Start new game
+    // Start new game with filled names
     navigation.navigate('GamePlay', {
       targetScore,
       gameMode,
-      ...(gameMode === 'teams' ? { teamNames } : { playerNames }),
+      ...(gameMode === 'teams' 
+        ? { teamNames: teamNames.map((name, index) => name.trim() || `${t.settings.team} ${index + 1}`) }
+        : { playerNames: playerNames.map((name, index) => name.trim() || `${t.settings.player} ${index + 1}`) }
+      ),
     });
   };
 
@@ -249,13 +265,38 @@ export default function GameSetupScreen({ navigation }: Props) {
             onFocus={() => {
               setFocusedInput(index);
               animateInput(index, true);
+              // Clear text immediately on focus
+              if (gameMode === 'teams') {
+                const newNames = [...teamNames];
+                newNames[index] = '';
+                setTeamNames(newNames);
+              } else {
+                const newNames = [...playerNames];
+                newNames[index] = '';
+                setPlayerNames(newNames);
+              }
             }}
             onBlur={() => {
               setFocusedInput(null);
               animateInput(index, false);
+              // If the field is empty when losing focus, restore default name
+              if (gameMode === 'teams') {
+                const newNames = [...teamNames];
+                if (!newNames[index].trim()) {
+                  newNames[index] = `${t.settings.team} ${index + 1}`;
+                  setTeamNames(newNames);
+                }
+              } else {
+                const newNames = [...playerNames];
+                if (!newNames[index].trim()) {
+                  newNames[index] = `${t.settings.player} ${index + 1}`;
+                  setPlayerNames(newNames);
+                }
+              }
             }}
-            placeholder={`${gameMode === 'teams' ? t.settings.team : t.settings.player} ${index + 1}`}
-            placeholderTextColor={isDark ? COLORS.text.dark.secondary : COLORS.text.secondary}
+            autoCorrect={false}
+            spellCheck={false}
+            autoCapitalize="words"
           />
           <View style={styles.inputIconsContainer}>
             <Icon 
