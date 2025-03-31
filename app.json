@@ -1,4 +1,7 @@
 {
   "name": "dominoapunte",
-  "displayName": "Domino Apunte!"
+  "displayName": "Domino Apunte!",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-5105447899809010~5062778503"
+  }
 }
