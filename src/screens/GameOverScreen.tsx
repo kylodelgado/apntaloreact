@@ -217,22 +217,34 @@ const styles = StyleSheet.create({
     width: '47%',
   },
   participantSummary: {
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgba(255, 255, 255, 0.9)',
+    }),
     borderRadius: 12,
     padding: SPACING.md,
     height: 'auto',
     ...SHADOWS.small,
   },
   participantSummaryDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgba(45, 55, 72, 0.7)',
+    }),
   },
   winningParticipant: {
-    backgroundColor: COLORS.success + '20',
+    backgroundColor: Platform.select({
+      ios: COLORS.success + '20',
+      android: 'rgba(40, 167, 69, 0.2)',
+    }),
     borderWidth: 2,
     borderColor: COLORS.success,
   },
   winningParticipantDark: {
-    backgroundColor: COLORS.success + '30',
+    backgroundColor: Platform.select({
+      ios: COLORS.success + '30',
+      android: 'rgba(40, 167, 69, 0.3)',
+    }),
     borderColor: COLORS.success + 'CC',
   },
   participantHeader: {
@@ -244,14 +256,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: COLORS.text.primary,
     marginBottom: SPACING.xs,
+    opacity: 1,
   },
   participantTitleDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   winnerLabel: {
     ...FONTS.medium,
     fontSize: 16,
     color: COLORS.success,
+    opacity: 1,
   },
   totalScore: {
     ...FONTS.bold,
@@ -259,9 +274,11 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     textAlign: 'center',
     marginBottom: SPACING.sm,
+    opacity: 1,
   },
   totalScoreDark: {
     color: COLORS.accent,
+    opacity: 1,
   },
   scoresList: {
     width: '100%',
@@ -277,10 +294,12 @@ const styles = StyleSheet.create({
     padding: SPACING.xs,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.gray + '20',
+    opacity: 1,
   },
   scoreItemDark: {
     color: COLORS.text.dark.primary,
     borderBottomColor: COLORS.text.dark.secondary + '20',
+    opacity: 1,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -314,12 +333,20 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.md,
   },
   shareButton: {
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     padding: SPACING.xs,
     borderRadius: 8,
     ...SHADOWS.small,
   },
   shareButtonDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
 }); 

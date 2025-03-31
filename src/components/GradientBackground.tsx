@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Platform, StatusBar, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { COLORS } from '../styles/theme';
 import { Edge, SafeAreaView } from 'react-native-safe-area-context';
@@ -8,9 +8,10 @@ import { useTheme } from '../context/ThemeContext';
 type Props = {
   children?: ReactNode;
   safeAreaEdges?: Edge[];
+  containerStyle?: ViewStyle;
 };
 
-export function GradientBackground({ children, safeAreaEdges }: Props) {
+export function GradientBackground({ children, safeAreaEdges, containerStyle }: Props) {
   const { isDark } = useTheme();
 
   const gradientColors = isDark
@@ -18,7 +19,7 @@ export function GradientBackground({ children, safeAreaEdges }: Props) {
     : COLORS.gradient.background; // Light theme gradient
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <LinearGradient
         colors={gradientColors}
         style={StyleSheet.absoluteFillObject}
@@ -41,6 +42,7 @@ export function GradientBackground({ children, safeAreaEdges }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   content: {
     flex: 1,

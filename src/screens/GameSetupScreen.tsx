@@ -327,20 +327,14 @@ export default function GameSetupScreen({ navigation }: Props) {
       <StatusBar
         translucent
         backgroundColor="transparent"
-        barStyle="dark-content"
+        barStyle={isDark ? "light-content" : "dark-content"}
       />
-      <GradientBackground safeAreaEdges={Platform.select({
-        ios: ['top', 'bottom'],
-        android: ['bottom'],
-      })}>
+      <GradientBackground safeAreaEdges={['bottom']}>
         <DominoPattern variant="setup" opacity={0.05} />
         
         <ResponsiveContainer>
           <ScrollView 
-            style={[
-              styles.container,
-              Platform.OS === 'android' && { marginTop: StatusBar.currentHeight },
-            ]}
+            style={styles.container}
             contentContainerStyle={[
               styles.content,
               { 
@@ -543,6 +537,7 @@ export default function GameSetupScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   content: {
     flexGrow: 1,
@@ -580,13 +575,21 @@ const styles = StyleSheet.create({
   },
   modeToggle: {
     flexDirection: 'row',
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 12,
     padding: SPACING.xs,
     marginBottom: SPACING.xl,
   },
   modeToggleDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   modeButton: {
     flex: 1,
@@ -618,12 +621,20 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
   },
   inputWrapper: {
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
     ...SHADOWS.small,
   },
   inputWrapperDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   inputRow: {
     flexDirection: 'row',
@@ -660,7 +671,11 @@ const styles = StyleSheet.create({
   },
   scoreButton: {
     flex: 1,
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     padding: SPACING.lg,
     borderRadius: 12,
     alignItems: 'center',
@@ -669,7 +684,11 @@ const styles = StyleSheet.create({
     minHeight: 80,
   },
   scoreButtonDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   scoreButtonActive: {
     backgroundColor: COLORS.primary,
@@ -747,12 +766,20 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   iconButton: {
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
     ...SHADOWS.small,
   },
   iconButtonDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   inputIconsContainer: {
     flexDirection: 'row',

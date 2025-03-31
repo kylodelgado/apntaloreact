@@ -758,12 +758,20 @@ const styles = StyleSheet.create({
     top: -SPACING.sm,
     right: 0,
     zIndex: 2,
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 12,
     padding: SPACING.xs,
   },
   crownContainerDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.7)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   participantName: {
     ...FONTS.bold,
@@ -852,7 +860,11 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.sm,
   },
   scoreInput: {
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
     padding: SPACING.sm,
     fontSize: 24,
@@ -860,7 +872,11 @@ const styles = StyleSheet.create({
     color: COLORS.text.primary,
   },
   scoreInputDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
     color: COLORS.text.dark.primary,
   },
   doneButton: {
@@ -952,13 +968,21 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
     padding: SPACING.xs,
     ...SHADOWS.small,
   },
   backButtonDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   resetButton: {
     backgroundColor: COLORS.primary,
@@ -972,10 +996,18 @@ const styles = StyleSheet.create({
   participantCard: {
     padding: SPACING.lg,
     borderRadius: 12,
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     ...SHADOWS.small,
   },
   participantCardDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
 }); 

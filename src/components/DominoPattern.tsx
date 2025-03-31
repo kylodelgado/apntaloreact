@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginVertical: Platform.select({
       ios: PATTERN_SIZE / 4,
-      android: PATTERN_SIZE / 3, // Adjust spacing for Android
+      android: PATTERN_SIZE / 3,
     }),
   },
   dominoContainer: {
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '45deg' }],
     ...Platform.select({
       android: {
-        elevation: 0, // Remove elevation on Android for pattern
+        elevation: 0,
       },
       ios: {
         shadowColor: '#000',
@@ -150,15 +150,21 @@ const styles = StyleSheet.create({
     padding: PATTERN_SIZE / 8,
     ...Platform.select({
       android: {
-        elevation: 0, // Remove elevation on Android for pattern
+        elevation: 0,
       },
     }),
   },
   dominoLight: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: Platform.select({
+      ios: COLORS.primary,
+      android: 'rgba(44, 62, 80, 0.9)',
+    }),
   },
   dominoDark: {
-    backgroundColor: COLORS.white,
+    backgroundColor: Platform.select({
+      ios: COLORS.white,
+      android: 'rgba(255, 255, 255, 0.5)',
+    }),
   },
   dominoHalf: {
     flex: 1,
@@ -169,10 +175,16 @@ const styles = StyleSheet.create({
     marginVertical: PATTERN_SIZE / 16,
   },
   dominoLineLight: {
-    backgroundColor: COLORS.white,
+    backgroundColor: Platform.select({
+      ios: COLORS.white,
+      android: 'rgba(255, 255, 255, 0.9)',
+    }),
   },
   dominoLineDark: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: Platform.select({
+      ios: COLORS.primary,
+      android: 'rgba(44, 62, 80, 0.9)',
+    }),
   },
   dotsContainer: {
     flex: 1,
@@ -197,15 +209,27 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
       },
       android: {
-        elevation: 0, // Remove elevation on Android for pattern
+        elevation: 0,
       },
     }),
   },
   visibleDotLight: {
-    backgroundColor: COLORS.white,
+    backgroundColor: Platform.select({
+      ios: COLORS.white,
+      android: 'rgba(255, 255, 255, 0.9)',
+    }),
   },
   visibleDotDark: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: Platform.select({
+      ios: COLORS.primary,
+      android: 'rgba(44, 62, 80, 1)',
+    }),
+    ...Platform.select({
+      android: {
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.3)',
+      },
+    }),
   },
   invisibleDot: {
     backgroundColor: 'transparent',

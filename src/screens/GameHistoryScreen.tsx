@@ -205,14 +205,22 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
     padding: SPACING.xs,
     marginRight: SPACING.md,
     ...SHADOWS.small,
   },
   backButtonDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   title: {
     ...FONTS.title,
@@ -227,11 +235,19 @@ const styles = StyleSheet.create({
   gameCard: {
     padding: SPACING.lg,
     borderRadius: 12,
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     ...SHADOWS.small,
   },
   gameCardDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   gameCardMargin: {
     marginTop: SPACING.md,
@@ -256,16 +272,32 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   completedBadge: {
-    backgroundColor: COLORS.success + '20',
+    backgroundColor: Platform.select({
+      ios: COLORS.success + '20',
+      android: 'rgb(40, 167, 69)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.2 : 1,
   },
   completedBadgeDark: {
-    backgroundColor: COLORS.success + '40',
+    backgroundColor: Platform.select({
+      ios: COLORS.success + '40',
+      android: 'rgb(40, 167, 69)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.4 : 1,
   },
   inProgressBadge: {
-    backgroundColor: COLORS.warning + '20',
+    backgroundColor: Platform.select({
+      ios: COLORS.warning + '20',
+      android: 'rgb(255, 193, 7)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.2 : 1,
   },
   inProgressBadgeDark: {
-    backgroundColor: COLORS.warning + '40',
+    backgroundColor: Platform.select({
+      ios: COLORS.warning + '40',
+      android: 'rgb(255, 193, 7)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.4 : 1,
   },
   statusText: {
     ...FONTS.medium,

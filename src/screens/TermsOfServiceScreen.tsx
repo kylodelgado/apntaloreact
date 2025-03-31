@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { ScrollView, Text, StyleSheet, View, TouchableOpacity, Platform } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RootStackParamList } from '../navigation/types';
@@ -184,14 +184,20 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgba(255, 255, 255, 0.9)',
+    }),
     borderRadius: 8,
     padding: SPACING.xs,
     marginRight: SPACING.md,
     ...SHADOWS.small,
   },
   backButtonDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgba(45, 55, 72, 0.7)',
+    }),
   },
   title: {
     ...FONTS.title,

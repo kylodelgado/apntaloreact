@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
+  Platform,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -476,14 +477,22 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
     padding: SPACING.xs,
     marginRight: SPACING.md,
     ...SHADOWS.small,
   },
   backButtonDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   title: {
     ...FONTS.title,
@@ -544,7 +553,11 @@ const styles = StyleSheet.create({
   },
   languageOption: {
     flex: 1,
-    backgroundColor: COLORS.white + '80',
+    backgroundColor: Platform.select({
+      ios: COLORS.white + '80',
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     paddingVertical: SPACING.sm,
     paddingHorizontal: SPACING.md,
     borderRadius: 8,
@@ -552,7 +565,11 @@ const styles = StyleSheet.create({
     ...SHADOWS.small,
   },
   languageOptionDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.79: 1,
   },
   languageOptionActive: {
     backgroundColor: COLORS.primary + '80',
@@ -577,7 +594,11 @@ const styles = StyleSheet.create({
     marginTop: SPACING.xs,
   },
   scoreOption: {
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: Platform.select({
+      ios: COLORS.lightGray,
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.sm,
     borderRadius: 8,
@@ -585,7 +606,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scoreOptionDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   scoreOptionActive: {
     backgroundColor: COLORS.primary + '80',
@@ -609,7 +634,11 @@ const styles = StyleSheet.create({
     marginTop: SPACING.xs,
   },
   gameModeOption: {
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: Platform.select({
+      ios: COLORS.lightGray,
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.sm,
     borderRadius: 8,
@@ -617,7 +646,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   gameModeOptionDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   gameModeOptionActive: {
     backgroundColor: COLORS.primary + '80',
@@ -645,14 +678,22 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: Platform.select({
+      ios: COLORS.lightGray,
+      android: 'rgb(255, 255, 255)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.9 : 1,
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.sm,
     borderRadius: 8,
     gap: SPACING.xs,
   },
   themeOptionDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+    backgroundColor: Platform.select({
+      ios: 'rgba(45, 55, 72, 0.5)',
+      android: 'rgb(45, 55, 72)',
+    }),
+    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
   themeOptionActive: {
     backgroundColor: COLORS.primary + '80',

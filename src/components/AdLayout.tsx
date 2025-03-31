@@ -15,10 +15,7 @@ export const AdLayout: React.FC<AdLayoutProps> = ({ children }) => {
       <View style={styles.content}>
         {children}
       </View>
-      <View style={styles.adContainer}>
-        <BannerAd />
-      </View>
-      <View style={styles.bottomPadding} />
+      <BannerAd />
     </View>
   );
 };
@@ -26,16 +23,12 @@ export const AdLayout: React.FC<AdLayoutProps> = ({ children }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
+    backgroundColor: 'transparent',
   },
   content: {
     flex: 1,
-  },
-  adContainer: {
-    width: '100%',
     backgroundColor: 'transparent',
-    paddingBottom: 8,
-  },
-  bottomPadding: {
-    height: Platform.select({ ios: 20, android: 12 }),
+    marginBottom: Platform.select({ ios: 50, android: 56 }), // Reduced margin to account for the negative margin in BannerAd
   },
 }); 
