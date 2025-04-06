@@ -33,6 +33,13 @@ local.properties
 .cxx/
 *.keystore
 !debug.keystore
+android/app/release/
+android/app/debug/
+android/app/src/main/assets/index.android.bundle
+android/app/src/main/res/raw/
+android/keystores/
+google-services.json
+*.aab
 
 # node.js
 #
@@ -40,6 +47,9 @@ node_modules/
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+.env
+.env.*
+!.env.example
 
 # fastlane
 #
@@ -55,13 +65,48 @@ yarn-error.log
 
 # Bundle artifact
 *.jsbundle
+*.bundle
+*.bundle.map
 
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+ios/Podfile.lock
+ios/Pods/
+ios/build/
 
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
+.watchman-cookie-*
 
 # testing
 /coverage
+__tests__/coverage/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# iOS specific
+ios/*.xcarchive
+ios/*.dSYM.zip
+ios/*.ipa
+ios/tmp.xcconfig
+
+# Android specific
+android/*.apk
+android/app/build/
+android/captures/
+android/local.properties
+android/.project
+android/.settings/
+android/.classpath
+
+# Misc
+.DS_Store
+*.log
+logs/
+tmp/
+temp/
