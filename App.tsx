@@ -18,6 +18,8 @@ import { TranslationProvider } from './src/translations/TranslationContext';
 import { ThemeProvider } from './src/context/ThemeContext';
 import { useTheme } from './src/context/ThemeContext';
 import { COLORS } from './src/styles/theme';
+import { initIronSource } from './src/services/IronSourceService';
+import { USE_IRONSOURCE } from './src/config/ads';
 
 const customLightTheme = {
   ...DefaultTheme,
@@ -48,16 +50,25 @@ function AppContent() {
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
-    // Initialize mobile ads
-    mobileAds()
-      .initialize()
-      .then(adapterStatuses => {
-        // Initialization complete
-        console.log('Mobile Ads initialized:', adapterStatuses);
-      });
+    const initializeApp = async () => {
+      // Initialize mobile ads
+      await mobileAds().initialize();
+      console.log('Mobile Ads initialized');
 
-    // Hide the native splash screen
-    SplashScreen.hide();
+      // Initialize IronSource if enabled
+      if (USE_IRONSOURCE && Platform.OS === 'ios') {
+        const success = await initIronSource();
+        console.log('IronSource initialization:', success ? 'success' : 'failed');
+      }
+
+      // Hide the native splash screen
+      SplashScreen.hide();
+      
+      // Set loading to false after initialization
+      setIsLoading(false);
+    };
+
+    initializeApp();
   }, []);
 
   // Add AppState listener to handle app background/foreground transitions

@@ -1,13 +1,20 @@
 import React from 'react';
 import { StyleSheet, View, Platform, Dimensions } from 'react-native';
 import { BannerAd as RNBannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-import { AD_UNIT_IDS } from '../../config/ads';
+import { AD_UNIT_IDS, USE_IRONSOURCE } from '../../config/ads';
+import { IronSourceBannerAd } from './IronSourceBannerAd';
 
 interface Props {
   size?: BannerAdSize;
 }
 
 export const BannerAd: React.FC<Props> = ({ size = BannerAdSize.ANCHORED_ADAPTIVE_BANNER }) => {
+  // If IronSource is enabled, use IronSource banner ad
+  if (USE_IRONSOURCE && Platform.OS === 'ios') {
+    return <IronSourceBannerAd />;
+  }
+
+  // Otherwise, use AdMob banner ad
   if (!AD_UNIT_IDS.BANNER) return null;
 
   return (

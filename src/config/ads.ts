@@ -1,5 +1,8 @@
 import { Platform } from 'react-native';
 
+// Toggle between ad providers
+export const USE_IRONSOURCE = true;
+
 // Test IDs for development
 const TEST_IDS = {
   BANNER: Platform.select({
@@ -14,6 +17,12 @@ const PRODUCTION_IDS = {
     ios: 'ca-app-pub-5105447899809010/5030988911',
     android: 'ca-app-pub-5105447899809010/8843075568',
   }),
+};
+
+// IronSource IDs
+export const IRONSOURCE_IDS = {
+  APP_KEY: '2260b5485',
+  BANNER: 'l5qm716vok36zdve',
 };
 
 // Use test IDs in development and production IDs in release

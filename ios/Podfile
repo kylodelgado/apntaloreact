@@ -37,5 +37,8 @@ target 'apntaloreact' do
       # :ccache_enabled => true
     )
   end
+
+  pod 'IronSourceAdQualitySDK', '7.25.0'
 end
+
 pod "glog", :podspec => "../node_modules/react-native/third-party-podspecs/glog.podspec", :modular_headers => false

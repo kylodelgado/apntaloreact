@@ -12,6 +12,11 @@ PODS:
   - hermes-engine (0.76.7):
     - hermes-engine/Pre-built (= 0.76.7)
   - hermes-engine/Pre-built (0.76.7)
+  - ironsource-mediation (3.1.0):
+    - IronSourceSDK (= 8.7.0.0)
+    - React-Core
+  - IronSourceAdQualitySDK (7.25.0)
+  - IronSourceSDK (8.7.0.0)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1991,6 +1996,8 @@ DEPENDENCIES:
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
+  - ironsource-mediation (from `../node_modules/ironsource-mediation`)
+  - IronSourceAdQualitySDK (= 7.25.0)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2069,6 +2076,8 @@ SPEC REPOS:
   trunk:
     - Google-Mobile-Ads-SDK
     - GoogleUserMessagingPlatform
+    - IronSourceAdQualitySDK
+    - IronSourceSDK
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2087,6 +2096,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2024-11-12-RNv0.76.2-5b4aa20c719830dcf5684832b89a6edb95ac3d64
+  ironsource-mediation:
+    :path: "../node_modules/ironsource-mediation"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -2240,6 +2251,9 @@ SPEC CHECKSUMS:
   Google-Mobile-Ads-SDK: 1dfb0c3cb46c7e2b00b0f4de74a1e06d9ea25d67
   GoogleUserMessagingPlatform: a8b56893477f67212fbc8411c139e61d463349f5
   hermes-engine: eb4a80f6bf578536c58a44198ec93a30f6e69218
+  ironsource-mediation: 079c6586465cb1d0acbdb88fea54eb19c1125b9d
+  IronSourceAdQualitySDK: 807df37715d35b4d2cfd051a888eff57818d5685
+  IronSourceSDK: 0b5a640179ef91acc637332608183a05db1757df
   RCT-Folly: 84578c8756030547307e4572ab1947de1685c599
   RCTDeprecation: 7691283dd69fed46f6653d376de6fa83aaad774c
   RCTRequired: eac044a04629288f272ee6706e31f81f3a2b4bfe
@@ -2313,6 +2327,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 90d80701b27946c4b23461c00a7207f300a6ff71
 
-PODFILE CHECKSUM: b759b1ebd9d96a9bd6b142281ec5ebb61c8a92dd
+PODFILE CHECKSUM: 32b763b4fa605276892163f57806f4aa382048a0
 
 COCOAPODS: 1.16.2
