@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BannerAd as RNBannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import { 
@@ -22,20 +22,24 @@ interface Props {
 
 export const BannerAd: React.FC<Props> = ({ size = BannerAdSize.ANCHORED_ADAPTIVE_BANNER }) => {
   const bannerAdViewRef = useRef<LevelPlayBannerAdViewMethods>(null);
+  const [isAdLoaded, setIsAdLoaded] = useState(false);
 
   // IronSource Banner Ad Listener
   const ironSourceListener: LevelPlayBannerAdViewListener = {
     onAdLoaded: (adInfo: LevelPlayAdInfo) => {
       console.log('IronSource Banner loaded:', adInfo);
+      setIsAdLoaded(true);
     },
     onAdLoadFailed: (error: LevelPlayAdError) => {
       console.log('IronSource Banner load failed:', error);
+      setIsAdLoaded(false);
     },
     onAdDisplayed: (adInfo: LevelPlayAdInfo) => {
       console.log('IronSource Banner displayed:', adInfo);
     },
     onAdDisplayFailed: (adInfo: LevelPlayAdInfo, error: LevelPlayAdError) => {
       console.log('IronSource Banner display failed:', error);
+      setIsAdLoaded(false);
     },
     onAdClicked: (adInfo: LevelPlayAdInfo) => {
       console.log('IronSource Banner clicked:', adInfo);
@@ -83,9 +87,8 @@ export const BannerAd: React.FC<Props> = ({ size = BannerAdSize.ANCHORED_ADAPTIV
         placementName={IRONSOURCE_CONFIG.PLACEMENT_NAME}
         listener={ironSourceListener}
         style={{
-          width: adSize.width,
+          width: '100%',
           height: adSize.height,
-          alignSelf: 'center'
         }}
         onLayout={loadIronSourceAd}
       />
@@ -113,9 +116,6 @@ export const BannerAd: React.FC<Props> = ({ size = BannerAdSize.ANCHORED_ADAPTIV
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginTop: 8,
   },
 }); 

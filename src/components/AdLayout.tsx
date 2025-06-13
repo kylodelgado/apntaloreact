@@ -18,7 +18,6 @@ export const AdLayout: React.FC<AdLayoutProps> = ({ children }) => {
       <View style={styles.adContainer}>
         <BannerAd />
       </View>
-      <View style={styles.bottomPadding} />
     </View>
   );
 };
@@ -31,11 +30,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   adContainer: {
-    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: 'transparent',
-    paddingBottom: 8,
-  },
-  bottomPadding: {
-    height: Platform.select({ ios: 20, android: 12 }),
+    zIndex: 1000,
   },
 }); 
