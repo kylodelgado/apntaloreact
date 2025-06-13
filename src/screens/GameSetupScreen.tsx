@@ -366,9 +366,6 @@ export default function GameSetupScreen({ navigation }: Props) {
               </Text>
             </View>
 
-            {/* Development Tools */}
-            <AdProviderToggle />
-
             <View style={[
               styles.modeToggle,
               isDark && styles.modeToggleDark

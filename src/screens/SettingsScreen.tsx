@@ -40,7 +40,6 @@ export default function SettingsScreen({ navigation }: Props) {
   // Game Settings
   const [defaultScore, setDefaultScore] = useState(200);
   const [defaultGameMode, setDefaultGameMode] = useState<GameMode>('teams');
-  const [isClearing, setIsClearing] = useState(false);
 
   // Load saved settings
   useEffect(() => {
@@ -95,7 +94,6 @@ export default function SettingsScreen({ navigation }: Props) {
           text: t.common.clear,
           style: 'destructive',
           onPress: async () => {
-            setIsClearing(true);
             try {
               // Clear both game in progress and game history
               await Promise.all([
@@ -106,65 +104,12 @@ export default function SettingsScreen({ navigation }: Props) {
             } catch (error) {
               console.error('Error clearing history:', error);
               Alert.alert(t.alerts.error, t.alerts.clearHistoryError);
-            } finally {
-              setIsClearing(false);
             }
           },
         },
       ]
     );
   };
-
-  const toggleLanguage = () => {
-    const newLanguage = language === 'es' ? 'en' : 'es';
-    handleLanguageChange(newLanguage);
-  };
-
-  const settingsOptions = [
-    {
-      icon: 'theme-light-dark',
-      title: t.settings.theme,
-      subtitle: isDark ? t.settings.dark : t.settings.light,
-      onPress: () => setTheme(theme === 'light' ? 'dark' : 'light'),
-    },
-    {
-      icon: 'translate',
-      title: t.settings.language,
-      subtitle: language === 'es' ? 'Español' : 'English',
-      onPress: toggleLanguage,
-    },
-    {
-      icon: 'history',
-      title: t.settings.gameHistory,
-      subtitle: t.settings.viewGameHistory,
-      onPress: () => navigation.navigate('GameHistory'),
-    },
-    {
-      icon: 'delete-forever',
-      title: t.settings.clearHistory,
-      subtitle: t.settings.clearAllGameData,
-      onPress: handleClearHistory,
-      loading: isClearing,
-    },
-    {
-      icon: 'shield-account',
-      title: t.settings.privacyPolicy,
-      subtitle: t.settings.privacyPolicySubtitle,
-      onPress: () => navigation.navigate('PrivacyPolicy'),
-    },
-    {
-      icon: 'file-document',
-      title: t.settings.termsOfService,
-      subtitle: t.settings.termsOfServiceSubtitle,
-      onPress: () => navigation.navigate('TermsOfService'),
-    },
-    {
-      icon: 'store',
-      title: t.settings.appStore,
-      subtitle: t.settings.appStoreSubtitle,
-      onPress: () => navigation.navigate('AppStore'),
-    },
-  ];
 
   return (
     <GradientBackground safeAreaEdges={['top', 'bottom']}>
@@ -191,54 +136,138 @@ export default function SettingsScreen({ navigation }: Props) {
           ]}>{t.settings.title}</Text>
         </View>
 
-        {/* Development Tools */}
-        <AdProviderToggle />
+        {/* Language Settings */}
+        <View style={styles.section}>
+          <Text style={[
+            styles.sectionTitle,
+            isDark && styles.sectionTitleDark
+          ]}>{t.settings.language}</Text>
+          <View style={styles.settingContainer}>
+            <Text style={[
+              styles.settingText,
+              isDark && styles.settingTextDark
+            ]}>{t.settings.appLanguage}</Text>
+            <View style={styles.languageOptions}>
+              <TouchableOpacity
+                style={[
+                  styles.languageOption,
+                  isDark && styles.languageOptionDark,
+                  language === 'en' && styles.languageOptionActive,
+                  language === 'en' && isDark && styles.languageOptionActiveDark,
+                ]}
+                onPress={() => handleLanguageChange('en')}
+              >
+                <Text style={[
+                  styles.languageOptionText,
+                  isDark && styles.languageOptionTextDark,
+                  language === 'en' && styles.languageOptionTextActive,
+                ]}>
+                  English
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.languageOption,
+                  isDark && styles.languageOptionDark,
+                  language === 'es' && styles.languageOptionActive,
+                  language === 'es' && isDark && styles.languageOptionActiveDark,
+                ]}
+                onPress={() => handleLanguageChange('es')}
+              >
+                <Text style={[
+                  styles.languageOptionText,
+                  isDark && styles.languageOptionTextDark,
+                  language === 'es' && styles.languageOptionTextActive,
+                ]}>
+                  Español
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
 
-        {/* Settings Options */}
-        <View style={styles.optionsContainer}>
-          {settingsOptions.map((option, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.optionItem,
-                isDark && styles.optionItemDark,
-                option.loading && styles.optionItemDisabled,
-              ]}
-              onPress={option.onPress}
-              disabled={option.loading}
-            >
-              <View style={styles.optionLeft}>
+        {/* Appearance Settings */}
+        <View style={styles.section}>
+          <Text style={[
+            styles.sectionTitle,
+            isDark && styles.sectionTitleDark
+          ]}>{t.settings.appearance}</Text>
+          <View style={styles.settingContainer}>
+            <Text style={[
+              styles.settingText,
+              isDark && styles.settingTextDark
+            ]}>{t.settings.theme}</Text>
+            <View style={styles.themeOptions}>
+              <TouchableOpacity
+                style={[
+                  styles.themeOption,
+                  isDark && styles.themeOptionDark,
+                  theme === 'light' && styles.themeOptionActive,
+                  theme === 'light' && isDark && styles.themeOptionActiveDark,
+                ]}
+                onPress={() => setTheme('light')}
+              >
                 <Icon 
-                  name={option.icon as any} 
+                  name="white-balance-sunny" 
                   size={24} 
-                  color={isDark ? COLORS.text.dark.primary : COLORS.primary} 
-                  style={styles.optionIcon}
+                  color={theme === 'light' ? COLORS.white : (isDark ? COLORS.text.dark.primary : COLORS.primary)}
                 />
-                <View style={styles.optionText}>
-                  <Text style={[styles.optionTitle, isDark && styles.optionTitleDark]}>
-                    {option.title}
-                  </Text>
-                  <Text style={[styles.optionSubtitle, isDark && styles.optionSubtitleDark]}>
-                    {option.subtitle}
-                  </Text>
-                </View>
-              </View>
-              
-              {option.loading ? (
+                <Text style={[
+                  styles.themeOptionText,
+                  isDark && styles.themeOptionTextDark,
+                  theme === 'light' && styles.themeOptionTextActive,
+                ]}>
+                  {t.settings.light}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.themeOption,
+                  isDark && styles.themeOptionDark,
+                  theme === 'dark' && styles.themeOptionActive,
+                  theme === 'dark' && isDark && styles.themeOptionActiveDark,
+                ]}
+                onPress={() => setTheme('dark')}
+              >
                 <Icon 
-                  name="loading" 
-                  size={20} 
-                  color={isDark ? COLORS.text.dark.secondary : COLORS.text.secondary} 
+                  name="moon-waning-crescent" 
+                  size={24} 
+                  color={theme === 'dark' ? COLORS.white : (isDark ? COLORS.text.dark.primary : COLORS.primary)}
                 />
-              ) : (
+                <Text style={[
+                  styles.themeOptionText,
+                  isDark && styles.themeOptionTextDark,
+                  theme === 'dark' && styles.themeOptionTextActive,
+                ]}>
+                  {t.settings.dark}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.themeOption,
+                  isDark && styles.themeOptionDark,
+                  theme === 'system' && styles.themeOptionActive,
+                  theme === 'system' && isDark && styles.themeOptionActiveDark,
+                ]}
+                onPress={() => setTheme('system')}
+              >
                 <Icon 
-                  name="chevron-right" 
-                  size={20} 
-                  color={isDark ? COLORS.text.dark.secondary : COLORS.text.secondary} 
+                  name="theme-light-dark" 
+                  size={24} 
+                  color={theme === 'system' ? COLORS.white : (isDark ? COLORS.text.dark.primary : COLORS.primary)}
                 />
-              )}
-            </TouchableOpacity>
-          ))}
+                <Text style={[
+                  styles.themeOptionText,
+                  isDark && styles.themeOptionTextDark,
+                  theme === 'system' && styles.themeOptionTextActive,
+                ]}>
+                  {t.settings.system}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
 
         {/* App Information */}
@@ -384,6 +413,23 @@ export default function SettingsScreen({ navigation }: Props) {
                 isDark && styles.settingTextDark
               ]}>{t.settings.requestFeature}</Text>
               <Icon name="lightbulb-on" size={24} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Data Management */}
+        <View style={styles.section}>
+          <Text style={[
+            styles.sectionTitle,
+            isDark && styles.sectionTitleDark
+          ]}>{t.settings.dataManagement}</Text>
+          <View>
+            <TouchableOpacity style={styles.settingRow} onPress={handleClearHistory}>
+              <Text style={[
+                styles.settingText,
+                isDark && styles.settingTextDark
+              ]}>{t.settings.clearGameHistory}</Text>
+              <Icon name="delete" size={24} color={COLORS.error} />
             </TouchableOpacity>
           </View>
         </View>
@@ -639,52 +685,5 @@ const styles = StyleSheet.create({
   },
   sectionTitleDark: {
     color: COLORS.text.dark.primary,
-  },
-  optionsContainer: {
-    marginBottom: SPACING.xl,
-  },
-  optionItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: COLORS.white + '90',
-    padding: SPACING.md,
-    marginBottom: SPACING.sm,
-    borderRadius: 12,
-    ...SHADOWS.small,
-  },
-  optionItemDark: {
-    backgroundColor: 'rgba(45, 55, 72, 0.7)',
-  },
-  optionItemDisabled: {
-    opacity: 0.6,
-  },
-  optionLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  optionIcon: {
-    marginRight: SPACING.md,
-  },
-  optionText: {
-    flex: 1,
-  },
-  optionTitle: {
-    ...FONTS.semiBold,
-    fontSize: 16,
-    color: COLORS.text.primary,
-    marginBottom: 2,
-  },
-  optionTitleDark: {
-    color: COLORS.text.dark.primary,
-  },
-  optionSubtitle: {
-    ...FONTS.regular,
-    fontSize: 14,
-    color: COLORS.text.secondary,
-  },
-  optionSubtitleDark: {
-    color: COLORS.text.dark.secondary,
   },
 }); 
