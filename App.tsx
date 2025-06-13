@@ -11,6 +11,14 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 import { AppRegistry, Animated, Platform, AppState } from 'react-native';
 import mobileAds from 'react-native-google-mobile-ads';
+import { 
+  LevelPlay, 
+  LevelPlayInitRequest, 
+  LevelPlayInitListener, 
+  LevelPlayInitError, 
+  LevelPlayConfiguration,
+  AdFormat 
+} from 'ironsource-mediation';
 
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
 import AppNavigator from './src/navigation/AppNavigator';
@@ -18,6 +26,7 @@ import { TranslationProvider } from './src/translations/TranslationContext';
 import { ThemeProvider } from './src/context/ThemeContext';
 import { useTheme } from './src/context/ThemeContext';
 import { COLORS } from './src/styles/theme';
+import { AdProvider, CURRENT_AD_PROVIDER, IRONSOURCE_CONFIG } from './src/config/ads';
 
 const customLightTheme = {
   ...DefaultTheme,
@@ -48,13 +57,35 @@ function AppContent() {
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
-    // Initialize mobile ads
-    mobileAds()
-      .initialize()
-      .then(adapterStatuses => {
-        // Initialization complete
-        console.log('Mobile Ads initialized:', adapterStatuses);
-      });
+    const initializeAds = async () => {
+      try {
+        if (CURRENT_AD_PROVIDER === AdProvider.IRONSOURCE) {
+          // Initialize IronSource LevelPlay
+          const initRequest: LevelPlayInitRequest = LevelPlayInitRequest.builder(IRONSOURCE_CONFIG.APP_ID)
+            .withLegacyAdFormats([AdFormat.BANNER])
+            .build();
+
+          const initListener: LevelPlayInitListener = {
+            onInitSuccess: (configuration: LevelPlayConfiguration) => {
+              console.log('IronSource LevelPlay initialized successfully:', configuration);
+            },
+            onInitFailed: (error: LevelPlayInitError) => {
+              console.error('IronSource LevelPlay initialization failed:', error);
+            }
+          };
+
+          await LevelPlay.init(initRequest, initListener);
+        } else {
+          // Initialize Google Mobile Ads (fallback or when using AdMob)
+          const adapterStatuses = await mobileAds().initialize();
+          console.log('Google Mobile Ads initialized:', adapterStatuses);
+        }
+      } catch (error) {
+        console.error('Ad initialization error:', error);
+      }
+    };
+
+    initializeAds();
 
     // Hide the native splash screen
     SplashScreen.hide();

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { BannerAd } from './ads/BannerAd';
+import { AdProviderToggle } from './ads/AdProviderToggle';
 
 interface AdLayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,8 @@ export const AdLayout: React.FC<AdLayoutProps> = ({ children }) => {
       <View style={styles.content}>
         {children}
       </View>
+      {/* Development Tools */}
+      <AdProviderToggle />
       <View style={styles.adContainer}>
         <BannerAd />
       </View>

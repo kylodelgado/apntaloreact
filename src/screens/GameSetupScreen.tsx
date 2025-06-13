@@ -10,6 +10,7 @@ import {
   Platform,
   StatusBar,
   AppState,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -25,6 +26,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import { useTheme } from '../context/ThemeContext';
+import { AdProviderToggle } from '../components/ads/AdProviderToggle';
+import { PlayerSetup } from '../components/PlayerSetup';
+import { GameModeSelector } from '../components/GameModeSelector';
+import { TargetScoreSelector } from '../components/TargetScoreSelector';
+import { GameMode, Player } from '../types/game';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameSetup'>;
 
@@ -359,6 +365,9 @@ export default function GameSetupScreen({ navigation }: Props) {
                 {t.gameSetup.title}
               </Text>
             </View>
+
+            {/* Development Tools */}
+            <AdProviderToggle />
 
             <View style={[
               styles.modeToggle,

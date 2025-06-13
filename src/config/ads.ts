@@ -1,20 +1,37 @@
 import { Platform } from 'react-native';
 
-// Test IDs for development
-const TEST_IDS = {
+// Ad provider types
+export enum AdProvider {
+  GOOGLE_ADMOB = 'google_admob',
+  IRONSOURCE = 'ironsource'
+}
+
+// Current ad provider - toggle this to switch between providers
+export const CURRENT_AD_PROVIDER: AdProvider = AdProvider.IRONSOURCE;
+
+// Google AdMob Configuration
+const ADMOB_TEST_IDS = {
   BANNER: Platform.select({
     ios: 'ca-app-pub-3940256099942544/2934735716',
     android: 'ca-app-pub-3940256099942544/6300978111',
   }),
 };
 
-// Production IDs
-const PRODUCTION_IDS = {
+const ADMOB_PRODUCTION_IDS = {
   BANNER: Platform.select({
     ios: 'ca-app-pub-5105447899809010/5030988911',
     android: 'ca-app-pub-5105447899809010/8843075568',
   }),
 };
 
-// Use test IDs in development and production IDs in release
-export const AD_UNIT_IDS = __DEV__ ? TEST_IDS : PRODUCTION_IDS; 
+export const ADMOB_AD_UNIT_IDS = __DEV__ ? ADMOB_TEST_IDS : ADMOB_PRODUCTION_IDS;
+
+// IronSource LevelPlay Configuration
+export const IRONSOURCE_CONFIG = {
+  APP_ID: '2260b5485',
+  BANNER_AD_UNIT_ID: 'l5qm716vok36zdve',
+  PLACEMENT_NAME: 'DefaultBanner',
+};
+
+// Legacy export for backward compatibility
+export const AD_UNIT_IDS = ADMOB_AD_UNIT_IDS; 
