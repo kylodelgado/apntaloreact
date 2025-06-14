@@ -23,6 +23,9 @@ PODS:
     - Google-Mobile-Ads-SDK (= 12.2.0)
     - IronSourceSDK (~> 8.4)
   - IronSourceSDK (8.7.0.0)
+  - IronSourceUnityAdsAdapter (4.3.52.0):
+    - IronSourceSDK (~> 8.4)
+    - UnityAds (= 4.15.0)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1992,6 +1995,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.1)
+  - UnityAds (4.15.0)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -2006,6 +2010,7 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - ironsource-mediation (from `../node_modules/ironsource-mediation`)
   - IronSourceAdMobAdapter
+  - IronSourceUnityAdsAdapter
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2088,7 +2093,9 @@ SPEC REPOS:
     - GoogleUserMessagingPlatform
     - IronSourceAdMobAdapter
     - IronSourceSDK
+    - IronSourceUnityAdsAdapter
     - SocketRocket
+    - UnityAds
 
 EXTERNAL SOURCES:
   boost:
@@ -2266,6 +2273,7 @@ SPEC CHECKSUMS:
   ironsource-mediation: 079c6586465cb1d0acbdb88fea54eb19c1125b9d
   IronSourceAdMobAdapter: 1c1bdd564a97ab694009f606a1177d416ee9ede5
   IronSourceSDK: 0b5a640179ef91acc637332608183a05db1757df
+  IronSourceUnityAdsAdapter: 00c6c4141d1388531f93c4767f61e5580a22fa46
   RCT-Folly: 84578c8756030547307e4572ab1947de1685c599
   RCTDeprecation: 7691283dd69fed46f6653d376de6fa83aaad774c
   RCTRequired: eac044a04629288f272ee6706e31f81f3a2b4bfe
@@ -2337,8 +2345,9 @@ SPEC CHECKSUMS:
   RNSVG: bbbdd17e8730c0f2a9cb416e5f37be87e29ebc90
   RNVectorIcons: a24016b773380b1aa37fca501ec6b94a951890a0
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
+  UnityAds: 5f487a7cf0b0cd162810cff51698f3ca0b4f8e68
   Yoga: 90d80701b27946c4b23461c00a7207f300a6ff71
 
-PODFILE CHECKSUM: 72a197c5cd3e2b654194a1a045568337d6771de9
+PODFILE CHECKSUM: 19c56f031c8def01663a195a37fd5c4cd6a0bfea
 
 COCOAPODS: 1.16.2
