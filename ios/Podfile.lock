@@ -22,6 +22,9 @@ PODS:
   - IronSourceAdMobAdapter (4.3.63.0):
     - Google-Mobile-Ads-SDK (= 12.2.0)
     - IronSourceSDK (~> 8.4)
+  - IronSourceFacebookAdapter (4.3.49.0):
+    - FBAudienceNetwork (= 6.17.1)
+    - IronSourceSDK (~> 8.5)
   - IronSourceSDK (8.7.0.0)
   - IronSourceUnityAdsAdapter (4.3.52.0):
     - IronSourceSDK (~> 8.4)
@@ -2010,6 +2013,7 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - ironsource-mediation (from `../node_modules/ironsource-mediation`)
   - IronSourceAdMobAdapter
+  - IronSourceFacebookAdapter
   - IronSourceUnityAdsAdapter
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
@@ -2092,6 +2096,7 @@ SPEC REPOS:
     - GoogleMobileAdsMediationFacebook
     - GoogleUserMessagingPlatform
     - IronSourceAdMobAdapter
+    - IronSourceFacebookAdapter
     - IronSourceSDK
     - IronSourceUnityAdsAdapter
     - SocketRocket
@@ -2272,6 +2277,7 @@ SPEC CHECKSUMS:
   hermes-engine: eb4a80f6bf578536c58a44198ec93a30f6e69218
   ironsource-mediation: 079c6586465cb1d0acbdb88fea54eb19c1125b9d
   IronSourceAdMobAdapter: 1c1bdd564a97ab694009f606a1177d416ee9ede5
+  IronSourceFacebookAdapter: 0a7d6f747b0e1e7dbe5566a1ff75d477ef863139
   IronSourceSDK: 0b5a640179ef91acc637332608183a05db1757df
   IronSourceUnityAdsAdapter: 00c6c4141d1388531f93c4767f61e5580a22fa46
   RCT-Folly: 84578c8756030547307e4572ab1947de1685c599
@@ -2348,6 +2354,6 @@ SPEC CHECKSUMS:
   UnityAds: 5f487a7cf0b0cd162810cff51698f3ca0b4f8e68
   Yoga: 90d80701b27946c4b23461c00a7207f300a6ff71
 
-PODFILE CHECKSUM: 19c56f031c8def01663a195a37fd5c4cd6a0bfea
+PODFILE CHECKSUM: 58c2191a995b8eaae11dd3a7f34ed5f6af91b26e
 
 COCOAPODS: 1.16.2
