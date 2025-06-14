@@ -1,0 +1,1 @@
+export const DISABLE_TEST_SUITE_MODAL = false; // Set to true for production builds to suppress the debug modal 
