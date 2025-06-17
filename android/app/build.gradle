@@ -97,7 +97,7 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file("../../android/dominoapunte.keystore")
+            storeFile file("../dominoapunte_upload.keystore")
             storePassword keystoreProperties['storePassword']
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
