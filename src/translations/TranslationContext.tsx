@@ -27,46 +27,53 @@ const getDeviceLanguage = (): Language => {
     let detectedLanguage = 'en';
 
     if (Platform.OS === 'ios') {
-      // Get device language settings
-      const languages = NativeModules.SettingsManager.settings.AppleLanguages;
-      const locale = NativeModules.SettingsManager.settings.AppleLocale;
-      
-      console.log('iOS Device Languages:', languages);
-      console.log('iOS Device Locale:', locale);
-      
-      // First try to get language from AppleLanguages array
-      if (languages && languages.length > 0) {
-        const primaryLanguage = languages[0].toLowerCase();
-        console.log('Primary language:', primaryLanguage);
-        // We only support 'es' (Spanish) and 'en' (English)
-        if (primaryLanguage.startsWith('es')) {
-          detectedLanguage = 'es';
+      // Check if SettingsManager is available before accessing it
+      if (NativeModules.SettingsManager && NativeModules.SettingsManager.settings) {
+        // Get device language settings
+        const languages = NativeModules.SettingsManager.settings.AppleLanguages;
+        const locale = NativeModules.SettingsManager.settings.AppleLocale;
+        
+        console.log('iOS Device Languages:', languages);
+        console.log('iOS Device Locale:', locale);
+        
+        // First try to get language from AppleLanguages array
+        if (languages && languages.length > 0) {
+          const primaryLanguage = languages[0].toLowerCase();
+          console.log('Primary language:', primaryLanguage);
+          // We only support 'es' (Spanish) and 'en' (English)
+          if (primaryLanguage.startsWith('es')) {
+            detectedLanguage = 'es';
+          }
         }
-      }
-      
-      // Fallback to locale if AppleLanguages doesn't give us what we need
-      if (!detectedLanguage && locale) {
-        const localeLanguage = locale.toLowerCase().split('_')[0];
-        console.log('Locale language:', localeLanguage);
-        if (localeLanguage === 'es') {
-          detectedLanguage = 'es';
+        
+        // Fallback to locale if AppleLanguages doesn't give us what we need
+        if (!detectedLanguage && locale) {
+          const localeLanguage = locale.toLowerCase().split('_')[0];
+          console.log('Locale language:', localeLanguage);
+          if (localeLanguage === 'es') {
+            detectedLanguage = 'es';
+          }
         }
+      } else {
+        console.log('SettingsManager not available, defaulting to English');
       }
     }
 
     if (Platform.OS === 'android') {
       try {
         // First try I18nManager
-        const locale = NativeModules.I18nManager.getConstants().localeIdentifier;
-        console.log('Android Device Locale (I18nManager):', locale);
-        
-        if (locale) {
-          const localeLanguage = locale.toLowerCase().split('_')[0];
-          console.log('Android locale language:', localeLanguage);
-          if (localeLanguage === 'es') {
-            detectedLanguage = 'es';
+        if (NativeModules.I18nManager && NativeModules.I18nManager.getConstants) {
+          const locale = NativeModules.I18nManager.getConstants().localeIdentifier;
+          console.log('Android Device Locale (I18nManager):', locale);
+          
+          if (locale) {
+            const localeLanguage = locale.toLowerCase().split('_')[0];
+            console.log('Android locale language:', localeLanguage);
+            if (localeLanguage === 'es') {
+              detectedLanguage = 'es';
+            }
           }
-        } else {
+        } else if (NativeModules.SettingsManager && NativeModules.SettingsManager.settings) {
           // Fallback to SettingsManager
           const settingsLocale = NativeModules.SettingsManager.settings.locale;
           console.log('Android Device Locale (SettingsManager):', settingsLocale);
@@ -78,6 +85,8 @@ const getDeviceLanguage = (): Language => {
               detectedLanguage = 'es';
             }
           }
+        } else {
+          console.log('No locale detection available on Android, defaulting to English');
         }
       } catch (error) {
         console.error('Error accessing Android locale:', error);

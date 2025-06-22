@@ -15,6 +15,7 @@ export const AdProviderToggle: React.FC<Props> = ({ onProviderChange }) => {
   const providers = [
     { key: AdProvider.IRONSOURCE, label: 'IronSource' },
     { key: AdProvider.GOOGLE_ADMOB, label: 'Google AdMob' },
+    { key: AdProvider.APPODEAL, label: 'Appodeal' },
   ];
 
   return (
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 10,
+    flexWrap: 'wrap',
   },
   button: {
     backgroundColor: '#fff',
@@ -81,13 +83,15 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: '#ccc',
+    marginHorizontal: 2,
+    marginVertical: 2,
   },
   activeButton: {
     backgroundColor: '#007AFF',
     borderColor: '#007AFF',
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#333',
   },
   activeButtonText: {

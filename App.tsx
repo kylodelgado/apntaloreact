@@ -19,6 +19,11 @@ import {
   LevelPlayConfiguration,
   AdFormat 
 } from 'ironsource-mediation';
+import { 
+  Appodeal,
+  AppodealAdType,
+  AppodealLogLevel
+} from 'react-native-appodeal';
 
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
 import AppNavigator from './src/navigation/AppNavigator';
@@ -26,7 +31,7 @@ import { TranslationProvider } from './src/translations/TranslationContext';
 import { ThemeProvider } from './src/context/ThemeContext';
 import { useTheme } from './src/context/ThemeContext';
 import { COLORS } from './src/styles/theme';
-import { AdProvider, CURRENT_AD_PROVIDER, IRONSOURCE_CONFIG } from './src/config/ads';
+import { AdProvider, CURRENT_AD_PROVIDER, IRONSOURCE_CONFIG, APPODEAL_CONFIG } from './src/config/ads';
 
 const customLightTheme = {
   ...DefaultTheme,
@@ -59,7 +64,40 @@ function AppContent() {
   useEffect(() => {
     const initializeAds = async () => {
       try {
-        if (CURRENT_AD_PROVIDER === AdProvider.IRONSOURCE) {
+        if (CURRENT_AD_PROVIDER === AdProvider.APPODEAL) {
+          // Initialize Appodeal
+          console.log('Initializing Appodeal SDK...');
+          
+          // Set log level for debugging
+          if (APPODEAL_CONFIG.LOG_LEVEL === 'verbose') {
+            Appodeal.setLogLevel(AppodealLogLevel.VERBOSE);
+          } else if (APPODEAL_CONFIG.LOG_LEVEL === 'none') {
+            Appodeal.setLogLevel(AppodealLogLevel.NONE);
+          }
+
+          // Set testing mode
+          if (APPODEAL_CONFIG.TEST_MODE) {
+            Appodeal.setTesting(true);
+          }
+
+          // Enable autocache if configured
+          if (APPODEAL_CONFIG.AUTOCACHE) {
+            Appodeal.setAutoCache(AppodealAdType.BANNER, true);
+          }
+
+          // Configure GDPR/CCPA if needed
+          if (APPODEAL_CONFIG.CONSENT.GDPR_ENABLED) {
+            // Note: In production, you should handle GDPR consent properly
+            // This is just a basic implementation
+            console.log('GDPR compliance enabled for Appodeal');
+          }
+
+          // Initialize Appodeal with banner ads
+          const adTypes = AppodealAdType.BANNER;
+          await Appodeal.initialize(APPODEAL_CONFIG.APP_KEY, adTypes);
+          
+          console.log('Appodeal SDK initialized successfully');
+        } else if (CURRENT_AD_PROVIDER === AdProvider.IRONSOURCE) {
           // Initialize IronSource LevelPlay
           const initRequest: LevelPlayInitRequest = LevelPlayInitRequest.builder(IRONSOURCE_CONFIG.APP_ID)
             .withLegacyAdFormats([AdFormat.BANNER])

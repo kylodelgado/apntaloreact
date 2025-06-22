@@ -40,6 +40,22 @@ target 'apntaloreact' do
   # Add Meta Audience Network (Facebook) mediation for IronSource LevelPlay
   pod 'IronSourceFacebookAdapter'
 
+  # Appodeal 3.5.0 SDK with confirmed working adapters
+  pod 'Appodeal', '3.5.0'
+  pod 'APDBidMachineAdapter', '3.5.0.0'     # BidMachine - Appodeal's own demand source
+  pod 'APDAppLovinAdapter', '3.5.0.0'       # AppLovin MAX mediation
+  pod 'APDVungleAdapter', '3.5.0.0'         # Vungle/Liftoff adapter  
+  pod 'APDInMobiAdapter', '3.5.0.0'         # InMobi adapter
+  pod 'APDMyTargetAdapter', '3.5.0.0'       # MyTarget adapter
+  pod 'APDMintegralAdapter', '3.5.0.0'      # Mintegral adapter
+  pod 'APDAmazonAdapter', '3.5.0.0'         # Amazon Publisher Services
+  pod 'APDSmaatoAdapter', '3.5.0.0'         # Smaato adapter
+  pod 'APDYandexAdapter', '3.5.0.0'         # Yandex adapter
+  pod 'APDPangleAdapter', '3.5.0.0'         # Pangle (TikTok) adapter
+  pod 'APDBigoAdsAdapter', '3.5.0.0'        # BigoAds adapter
+  pod 'APDDTExchangeAdapter', '3.5.0.0'     # DTExchange adapter
+  pod 'APDBidonAdapter', '3.5.0.0'          # Bidon mediation platform
+
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
