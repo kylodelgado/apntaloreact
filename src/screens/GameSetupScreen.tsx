@@ -60,6 +60,7 @@ export default function GameSetupScreen({ navigation }: Props) {
   // Animation values
   const inputScales = useRef<Animated.Value[]>([]);
   const [shareModalVisible, setShareModalVisible] = useState(false);
+  const [showShareDot, setShowShareDot] = useState(false);
   const GOOGLE_PLAY_LINK = 'https://play.google.com/store/apps/details?id=com.dominoapunte';
   const APP_STORE_LINK = 'https://apps.apple.com/us/app/domino-apunte-rd/id6740721729';
 
@@ -100,6 +101,19 @@ export default function GameSetupScreen({ navigation }: Props) {
       setPlayerNames(prevNames => prevNames.map((_, index) => `${t.settings.player} ${index + 1}`));
     }
   }, [t, gameMode]);
+
+  // Check if user has seen the share feature
+  useEffect(() => {
+    const checkShareFeature = async () => {
+      try {
+        const seen = await AsyncStorage.getItem('hasSeenShareFeature');
+        setShowShareDot(!seen);
+      } catch (e) {
+        setShowShareDot(false);
+      }
+    };
+    checkShareFeature();
+  }, []);
 
   const checkGameInProgress = async () => {
     try {
@@ -243,6 +257,17 @@ export default function GameSetupScreen({ navigation }: Props) {
       // Optionally handle error
     }
     setShareModalVisible(false);
+  };
+
+  // When opening the share modal, mark as seen
+  const handleOpenShareModal = async () => {
+    setShareModalVisible(true);
+    if (showShareDot) {
+      setShowShareDot(false);
+      try {
+        await AsyncStorage.setItem('hasSeenShareFeature', 'true');
+      } catch (e) {}
+    }
   };
 
   const renderNameInputs = () => {
@@ -563,9 +588,12 @@ export default function GameSetupScreen({ navigation }: Props) {
               isDark && styles.iconButtonDark,
               { padding: getResponsiveSpacing(SPACING.sm) }
             ]}
-            onPress={() => setShareModalVisible(true)}
+            onPress={handleOpenShareModal}
           >
             <Icon name="share-variant" size={24} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
+            {showShareDot && (
+              <View style={styles.redDot} />
+            )}
           </TouchableOpacity>
         </View>
         <Modal
@@ -910,5 +938,17 @@ const styles = StyleSheet.create({
   shareOptionContentColumn: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  redDot: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'red',
+    zIndex: 20,
+    borderWidth: 1,
+    borderColor: '#fff',
   },
 }); 
