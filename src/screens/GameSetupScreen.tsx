@@ -11,6 +11,9 @@ import {
   StatusBar,
   AppState,
   Alert,
+  Share,
+  Modal,
+  Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -56,6 +59,9 @@ export default function GameSetupScreen({ navigation }: Props) {
   const inputRefs = useRef<Array<React.RefObject<TextInput>>>([]);
   // Animation values
   const inputScales = useRef<Animated.Value[]>([]);
+  const [shareModalVisible, setShareModalVisible] = useState(false);
+  const GOOGLE_PLAY_LINK = 'https://play.google.com/store/apps/details?id=com.dominoapunte';
+  const APP_STORE_LINK = 'https://apps.apple.com/us/app/domino-apunte-rd/id6740721729';
 
   // Load default settings on mount
   useEffect(() => {
@@ -226,6 +232,17 @@ export default function GameSetupScreen({ navigation }: Props) {
     } catch (error) {
       console.error('Error loading saved game:', error);
     }
+  };
+
+  const handleShare = async (link: string) => {
+    try {
+      await Share.share({
+        message: link,
+      });
+    } catch (error) {
+      // Optionally handle error
+    }
+    setShareModalVisible(false);
   };
 
   const renderNameInputs = () => {
@@ -540,7 +557,55 @@ export default function GameSetupScreen({ navigation }: Props) {
           >
             <Icon name="history" size={24} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
           </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.iconButton,
+              isDark && styles.iconButtonDark,
+              { padding: getResponsiveSpacing(SPACING.sm) }
+            ]}
+            onPress={() => setShareModalVisible(true)}
+          >
+            <Icon name="share-variant" size={24} color={isDark ? COLORS.text.dark.primary : COLORS.primary} />
+          </TouchableOpacity>
         </View>
+        <Modal
+          visible={shareModalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShareModalVisible(false)}
+        >
+          <Pressable style={styles.modalOverlay} onPress={() => setShareModalVisible(false)}>
+            <View style={[styles.shareModal, isDark && styles.shareModalDark]}>
+              <Text style={[styles.shareTitle, isDark && styles.shareTitleDark]}>{t.gameSetup.shareTitle}</Text>
+              <View style={styles.shareOptionsRow}>
+                <TouchableOpacity
+                  style={[styles.shareOption, isDark && styles.shareOptionDark]}
+                  onPress={() => handleShare(GOOGLE_PLAY_LINK)}
+                >
+                  <View style={styles.shareOptionLabelContainer}>
+                    <Text style={[styles.shareOptionOsLabel, isDark && styles.shareOptionOsLabelDark]}>{t.gameSetup.shareAndroid}</Text>
+                    <View style={styles.shareOptionContentColumn}>
+                      <Icon name="google-play" size={24} color={COLORS.primary} style={{ marginBottom: 4 }} />
+                      <Text style={[styles.shareOptionText, isDark && styles.shareOptionTextDark]}>{t.gameSetup.shareGooglePlay}</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.shareOption, isDark && styles.shareOptionDark]}
+                  onPress={() => handleShare(APP_STORE_LINK)}
+                >
+                  <View style={styles.shareOptionLabelContainer}>
+                    <Text style={[styles.shareOptionOsLabel, isDark && styles.shareOptionOsLabelDark]}>{t.gameSetup.shareIOS}</Text>
+                    <View style={styles.shareOptionContentColumn}>
+                      <Icon name="apple" size={24} color={COLORS.primary} style={{ marginBottom: 4 }} />
+                      <Text style={[styles.shareOptionText, isDark && styles.shareOptionTextDark]}>{t.gameSetup.shareAppStore}</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Pressable>
+        </Modal>
       </GradientBackground>
     </>
   );
@@ -772,5 +837,78 @@ const styles = StyleSheet.create({
   removeButton: {
     padding: SPACING.sm,
     marginLeft: SPACING.xs,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  shareModal: {
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+    minWidth: 260,
+    elevation: 5,
+  },
+  shareModalDark: {
+    backgroundColor: '#23283a',
+  },
+  shareTitle: {
+    ...FONTS.bold,
+    fontSize: 18,
+    marginBottom: 16,
+    color: COLORS.primary,
+  },
+  shareTitleDark: {
+    color: COLORS.text.dark.primary,
+  },
+  shareOptionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    gap: 12,
+  },
+  shareOption: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: COLORS.white + '80',
+    minWidth: 120,
+    marginBottom: 0,
+  },
+  shareOptionDark: {
+    backgroundColor: 'rgba(45, 55, 72, 0.5)',
+  },
+  shareOptionText: {
+    ...FONTS.medium,
+    fontSize: 16,
+    color: COLORS.primary,
+  },
+  shareOptionTextDark: {
+    color: COLORS.text.dark.primary,
+  },
+  shareOptionLabelContainer: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  shareOptionOsLabel: {
+    fontSize: 15,
+    color: COLORS.text.secondary,
+    marginBottom: 2,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+  shareOptionOsLabelDark: {
+    color: COLORS.text.dark.secondary,
+  },
+  shareOptionContentColumn: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }); 

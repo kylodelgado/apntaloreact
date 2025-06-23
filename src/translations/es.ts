@@ -55,6 +55,11 @@ export const es = {
     newGame: 'Nuevo Juego',
     continueGame: 'Continuar Juego',
     viewHistory: 'Ver Historial',
+    shareTitle: 'Compartir Domino Apunte',
+    shareAndroid: 'Android',
+    shareIOS: 'iOS',
+    shareGooglePlay: 'Google Play',
+    shareAppStore: 'App Store',
   },
   gameplay: {
     resetGame: 'Reiniciar Juego',
