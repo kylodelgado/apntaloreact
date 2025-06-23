@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BannerAd } from './ads/BannerAd';
 
 interface AdLayoutProps {
@@ -9,13 +10,19 @@ interface AdLayoutProps {
 
 export const AdLayout: React.FC<AdLayoutProps> = ({ children }) => {
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         {children}
       </View>
-      <View style={styles.adContainer}>
+      <View style={[
+        styles.adContainer,
+        {
+          paddingBottom: Math.max(insets.bottom, 0),
+        }
+      ]}>
         <BannerAd />
       </View>
     </View>

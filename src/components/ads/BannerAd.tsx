@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { BannerAd as RNBannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import { 
   LevelPlayBannerAdView, 
@@ -26,6 +26,10 @@ import {
 interface Props {
   size?: BannerAdSize;
 }
+
+// Standard banner dimensions
+const BANNER_HEIGHT = 50;
+const LARGE_BANNER_HEIGHT = 100;
 
 export const BannerAd: React.FC<Props> = ({ size = BannerAdSize.ANCHORED_ADAPTIVE_BANNER }) => {
   const bannerAdViewRef = useRef<LevelPlayBannerAdViewMethods>(null);
@@ -116,13 +120,23 @@ export const BannerAd: React.FC<Props> = ({ size = BannerAdSize.ANCHORED_ADAPTIV
     if (!ADMOB_AD_UNIT_IDS.BANNER) return null;
 
     return (
-      <RNBannerAd
-        unitId={ADMOB_AD_UNIT_IDS.BANNER}
-        size={size}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-      />
+      <View style={[styles.bannerContainer, { height: BANNER_HEIGHT }]}>
+        <RNBannerAd
+          unitId={ADMOB_AD_UNIT_IDS.BANNER}
+          size={size}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+          onAdLoaded={() => {
+            console.log('AdMob Banner loaded');
+            setIsAdLoaded(true);
+          }}
+          onAdFailedToLoad={(error) => {
+            console.log('AdMob Banner failed to load:', error);
+            setIsAdLoaded(false);
+          }}
+        />
+      </View>
     );
   };
 
@@ -131,47 +145,53 @@ export const BannerAd: React.FC<Props> = ({ size = BannerAdSize.ANCHORED_ADAPTIV
     const adSize = LevelPlayAdSize.BANNER;
     
     return (
-      <LevelPlayBannerAdView
-        ref={bannerAdViewRef}
-        adUnitId={IRONSOURCE_CONFIG.BANNER_AD_UNIT_ID}
-        adSize={adSize}
-        placementName={IRONSOURCE_CONFIG.PLACEMENT_NAME}
-        listener={ironSourceListener}
-        style={{
-          width: '100%',
-          height: adSize.height,
-        }}
-        onLayout={loadIronSourceAd}
-      />
+      <View style={[styles.bannerContainer, { height: adSize.height }]}>
+        <LevelPlayBannerAdView
+          ref={bannerAdViewRef}
+          adUnitId={IRONSOURCE_CONFIG.BANNER_AD_UNIT_ID}
+          adSize={adSize}
+          placementName={IRONSOURCE_CONFIG.PLACEMENT_NAME}
+          listener={ironSourceListener}
+          style={{
+            width: '100%',
+            height: adSize.height,
+          }}
+          onLayout={loadIronSourceAd}
+        />
+      </View>
     );
   };
 
   // Render Appodeal Banner
   const renderAppodealBanner = () => {
+    const height = BANNER_HEIGHT;
+
     return (
-      <AppodealBanner
-        adSize="phone" // 320x50 banner
-        style={{
-          width: '100%',
-          height: 50,
-          backgroundColor: 'transparent',
-        }}
-        onAdLoaded={() => {
-          console.log('AppodealBanner loaded');
-          setIsAdLoaded(true);
-        }}
-        onAdFailedToLoad={() => {
-          console.log('AppodealBanner failed to load');
-          setIsAdLoaded(false);
-        }}
-        onAdClicked={() => {
-          console.log('AppodealBanner clicked');
-        }}
-        onAdExpired={() => {
-          console.log('AppodealBanner expired');
-          setIsAdLoaded(false);
-        }}
-      />
+      <View style={[styles.bannerContainer, { height }]}>
+        <AppodealBanner
+          adSize="phone" // 320x50 banner
+          style={{
+            width: '100%',
+            height,
+            backgroundColor: 'transparent',
+          }}
+          onAdLoaded={() => {
+            console.log('AppodealBanner loaded');
+            setIsAdLoaded(true);
+          }}
+          onAdFailedToLoad={() => {
+            console.log('AppodealBanner failed to load');
+            setIsAdLoaded(false);
+          }}
+          onAdClicked={() => {
+            console.log('AppodealBanner clicked');
+          }}
+          onAdExpired={() => {
+            console.log('AppodealBanner expired');
+            setIsAdLoaded(false);
+          }}
+        />
+      </View>
     );
   };
 
@@ -189,7 +209,7 @@ export const BannerAd: React.FC<Props> = ({ size = BannerAdSize.ANCHORED_ADAPTIV
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { height: BANNER_HEIGHT }]}>
       {renderBanner()}
     </View>
   );
@@ -197,6 +217,10 @@ export const BannerAd: React.FC<Props> = ({ size = BannerAdSize.ANCHORED_ADAPTIV
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
+    backgroundColor: 'transparent',
+  },
+  bannerContainer: {
     width: '100%',
     backgroundColor: 'transparent',
   },
