@@ -5,6 +5,9 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
+source 'https://github.com/appodeal/CocoaPods.git'
+source 'https://cdn.cocoapods.org/'
+
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
@@ -28,33 +31,32 @@ target 'apntaloreact' do
     # Pods for testing
   end
 
-  pod 'GoogleMobileAdsMediationFacebook'
-
-  # Add AdMob mediation for IronSource LevelPlay
-  pod 'IronSourceAdMobAdapter'
-  pod 'Google-Mobile-Ads-SDK'
-
-  # Add Unity Ads mediation for IronSource LevelPlay
-  pod 'IronSourceUnityAdsAdapter'
-
-  # Add Meta Audience Network (Facebook) mediation for IronSource LevelPlay
-  pod 'IronSourceFacebookAdapter'
-
   # Appodeal 3.5.0 SDK with confirmed working adapters
-  pod 'Appodeal', '3.5.0'
-  pod 'APDBidMachineAdapter', '3.5.0.0'     # BidMachine - Appodeal's own demand source
-  pod 'APDAppLovinAdapter', '3.5.0.0'       # AppLovin MAX mediation
-  pod 'APDVungleAdapter', '3.5.0.0'         # Vungle/Liftoff adapter  
-  pod 'APDInMobiAdapter', '3.5.0.0'         # InMobi adapter
-  pod 'APDMyTargetAdapter', '3.5.0.0'       # MyTarget adapter
-  pod 'APDMintegralAdapter', '3.5.0.0'      # Mintegral adapter
-  pod 'APDAmazonAdapter', '3.5.0.0'         # Amazon Publisher Services
-  pod 'APDSmaatoAdapter', '3.5.0.0'         # Smaato adapter
-  pod 'APDYandexAdapter', '3.5.0.0'         # Yandex adapter
-  pod 'APDPangleAdapter', '3.5.0.0'         # Pangle (TikTok) adapter
-  pod 'APDBigoAdsAdapter', '3.5.0.0'        # BigoAds adapter
-  pod 'APDDTExchangeAdapter', '3.5.0.0'     # DTExchange adapter
-  pod 'APDBidonAdapter', '3.5.0.0'          # Bidon mediation platform
+  pod 'Appodeal', '3.5.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+  pod 'APDBidMachineAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'     # BidMachine - Appodeal's own demand source
+  pod 'APDAppLovinAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'       # AppLovin MAX mediation
+  pod 'APDVungleAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'         # Vungle/Liftoff adapter  
+  pod 'APDInMobiAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'         # InMobi adapter
+  pod 'APDMyTargetAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'       # MyTarget adapter
+  pod 'APDMintegralAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'      # Mintegral adapter
+  pod 'APDAmazonAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'         # Amazon Publisher Services
+  pod 'APDSmaatoAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'         # Smaato adapter
+  pod 'APDYandexAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'         # Yandex adapter
+  pod 'APDPangleAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'         # Pangle (TikTok) adapter
+  pod 'APDBigoAdsAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'        # BigoAds adapter
+  pod 'APDDTExchangeAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'     # DTExchange adapter
+  pod 'APDBidonAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'          # Bidon mediation platform
+  pod 'APDAdjustAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+  pod 'APDAppLovinMAXAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+  pod 'APDAppsFlyerAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+  pod 'APDFacebookAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+  pod 'APDIABAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+  pod 'APDIronSourceAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+  pod 'StackConsentManager', '2.0.10', :source => 'https://github.com/appodeal/CocoaPods.git'
+  pod 'APDLevelPlayAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+  pod 'APDMetaAudienceNetworkAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+#   pod 'APDSentryAdapter', '3.5.0.0', :source => 'https://github.com/appodeal/CocoaPods.git'
+#   pod 'Sentry', '~> 8.0'
 
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202

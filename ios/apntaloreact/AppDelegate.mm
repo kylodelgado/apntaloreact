@@ -22,12 +22,14 @@
 
   // 4. Launch the Test Suite after initialization
   // (No delegate, so we launch immediately for test purposes)
+  /*
   dispatch_async(dispatch_get_main_queue(), ^{
     UIViewController *rootVC = [UIApplication sharedApplication].delegate.window.rootViewController;
     if (rootVC) {
       [IronSource launchTestSuite:rootVC];
     }
   });
+  */
 #endif
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
