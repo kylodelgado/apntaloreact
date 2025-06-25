@@ -206,21 +206,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Platform.select({
-      ios: COLORS.white + '80',
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '30',
+      android: 'rgba(255, 255, 255, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
     padding: SPACING.xs,
     marginRight: SPACING.md,
-    ...SHADOWS.small,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   backButtonDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.3)',
+      android: 'rgba(45, 55, 72, 0.4)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   title: {
     ...FONTS.title,
@@ -228,26 +232,32 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     flex: 1,
     marginRight: 40,
+    opacity: 1,
   },
   titleDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   gameCard: {
     padding: SPACING.lg,
     borderRadius: 12,
     backgroundColor: Platform.select({
-      ios: COLORS.white + '80',
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '20',
+      android: 'rgba(255, 255, 255, 0.2)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
-    ...SHADOWS.small,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   gameCardDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.2)',
+      android: 'rgba(45, 55, 72, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   gameCardMargin: {
     marginTop: SPACING.md,
@@ -262,9 +272,11 @@ const styles = StyleSheet.create({
     ...FONTS.regular,
     fontSize: 14,
     color: COLORS.text.secondary,
+    opacity: 1,
   },
   timestampDark: {
     color: COLORS.text.dark.secondary,
+    opacity: 1,
   },
   statusBadge: {
     paddingHorizontal: SPACING.sm,
@@ -274,38 +286,40 @@ const styles = StyleSheet.create({
   completedBadge: {
     backgroundColor: Platform.select({
       ios: COLORS.success + '20',
-      android: 'rgb(40, 167, 69)',
+      android: 'rgba(40, 167, 69, 0.25)',
     }),
-    opacity: Platform.OS === 'android' ? 0.2 : 1,
+    overflow: 'hidden',
   },
   completedBadgeDark: {
     backgroundColor: Platform.select({
       ios: COLORS.success + '40',
-      android: 'rgb(40, 167, 69)',
+      android: 'rgba(40, 167, 69, 0.4)',
     }),
-    opacity: Platform.OS === 'android' ? 0.4 : 1,
+    overflow: 'hidden',
   },
   inProgressBadge: {
     backgroundColor: Platform.select({
       ios: COLORS.warning + '20',
-      android: 'rgb(255, 193, 7)',
+      android: 'rgba(255, 193, 7, 0.25)',
     }),
-    opacity: Platform.OS === 'android' ? 0.2 : 1,
+    overflow: 'hidden',
   },
   inProgressBadgeDark: {
     backgroundColor: Platform.select({
       ios: COLORS.warning + '40',
-      android: 'rgb(255, 193, 7)',
+      android: 'rgba(255, 193, 7, 0.4)',
     }),
-    opacity: Platform.OS === 'android' ? 0.4 : 1,
+    overflow: 'hidden',
   },
   statusText: {
     ...FONTS.medium,
     fontSize: 12,
     color: COLORS.text.secondary,
+    opacity: 1,
   },
   statusTextDark: {
     color: COLORS.text.dark.secondary,
+    opacity: 1,
   },
   gameInfo: {
     flexDirection: 'row',
@@ -316,17 +330,21 @@ const styles = StyleSheet.create({
     ...FONTS.medium,
     fontSize: 16,
     color: COLORS.text.primary,
+    opacity: 1,
   },
   gameModeDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   targetScore: {
     ...FONTS.medium,
     fontSize: 16,
     color: COLORS.text.primary,
+    opacity: 1,
   },
   targetScoreDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   participantsContainer: {
     gap: SPACING.xs,
@@ -346,17 +364,21 @@ const styles = StyleSheet.create({
     ...FONTS.regular,
     fontSize: 16,
     color: COLORS.text.primary,
+    opacity: 1,
   },
   participantNameDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   participantScore: {
     ...FONTS.bold,
     fontSize: 16,
     color: COLORS.primary,
+    opacity: 1,
   },
   participantScoreDark: {
     color: COLORS.accent,
+    opacity: 1,
   },
   winnerContainer: {
     flexDirection: 'row',
@@ -374,9 +396,11 @@ const styles = StyleSheet.create({
     ...FONTS.bold,
     fontSize: 16,
     color: COLORS.primary,
+    opacity: 1,
   },
   winnerTextDark: {
     color: COLORS.accent,
+    opacity: 1,
   },
   emptyState: {
     flex: 1,
@@ -390,8 +414,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.text.secondary,
     textAlign: 'center',
+    opacity: 1,
   },
   emptyTextDark: {
     color: COLORS.text.dark.secondary,
+    opacity: 1,
   },
 }); 

@@ -557,9 +557,11 @@ const styles = StyleSheet.create({
     ...FONTS.title,
     textAlign: 'center',
     color: COLORS.primary,
+    opacity: 1,
   },
   titleDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   section: {
     marginBottom: SPACING.xl,
@@ -569,27 +571,34 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: COLORS.text.secondary,
     marginBottom: SPACING.md,
+    opacity: 1,
   },
   sectionTitleDark: {
     color: COLORS.text.dark.secondary,
+    opacity: 1,
   },
   modeToggle: {
     flexDirection: 'row',
     backgroundColor: Platform.select({
-      ios: COLORS.white + '80',
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '30',
+      android: 'rgba(255, 255, 255, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 12,
     padding: SPACING.xs,
     marginBottom: SPACING.xl,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   modeToggleDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.3)',
+      android: 'rgba(45, 55, 72, 0.4)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   modeButton: {
     flex: 1,
@@ -610,31 +619,38 @@ const styles = StyleSheet.create({
     ...FONTS.medium,
     color: COLORS.primary,
     fontSize: 16,
+    opacity: 1,
   },
   modeButtonTextDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   modeButtonTextActive: {
     color: COLORS.white,
+    opacity: 1,
   },
   inputsContainer: {
     gap: SPACING.md,
   },
   inputWrapper: {
     backgroundColor: Platform.select({
-      ios: COLORS.white + '80',
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '20',
+      android: 'rgba(255, 255, 255, 0.2)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
-    ...SHADOWS.small,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   inputWrapperDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.2)',
+      android: 'rgba(45, 55, 72, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   inputRow: {
     flexDirection: 'row',
@@ -647,9 +663,11 @@ const styles = StyleSheet.create({
     padding: SPACING.md,
     color: COLORS.text.primary,
     flex: 1,
+    opacity: 1,
   },
   inputDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   inputWithButton: {
     flex: 1,
@@ -668,27 +686,32 @@ const styles = StyleSheet.create({
     ...FONTS.medium,
     color: COLORS.white,
     fontSize: 16,
+    opacity: 1,
   },
   scoreButton: {
     flex: 1,
     backgroundColor: Platform.select({
-      ios: COLORS.white + '80',
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '20',
+      android: 'rgba(255, 255, 255, 0.2)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     padding: SPACING.lg,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    ...SHADOWS.small,
     minHeight: 80,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   scoreButtonDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.2)',
+      android: 'rgba(45, 55, 72, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   scoreButtonActive: {
     backgroundColor: COLORS.primary,
@@ -701,12 +724,15 @@ const styles = StyleSheet.create({
     ...FONTS.bold,
     fontSize: 28,
     color: COLORS.primary,
+    opacity: 1,
   },
   scoreButtonTextDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   scoreButtonTextActive: {
     color: COLORS.white,
+    opacity: 1,
   },
   commonScores: {
     flexDirection: 'row',
@@ -729,6 +755,7 @@ const styles = StyleSheet.create({
     ...FONTS.bold,
     color: COLORS.white,
     fontSize: 18,
+    opacity: 1,
   },
   buttonContainer: {
     marginTop: 'auto',
@@ -759,6 +786,7 @@ const styles = StyleSheet.create({
     ...FONTS.bold,
     color: COLORS.white,
     fontSize: 18,
+    opacity: 1,
   },
   headerButtons: {
     position: 'absolute',
@@ -767,19 +795,23 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     backgroundColor: Platform.select({
-      ios: COLORS.white + '80',
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '30',
+      android: 'rgba(255, 255, 255, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
-    ...SHADOWS.small,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   iconButtonDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.3)',
+      android: 'rgba(45, 55, 72, 0.4)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   inputIconsContainer: {
     flexDirection: 'row',

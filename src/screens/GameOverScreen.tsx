@@ -224,13 +224,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: SPACING.md,
     height: 'auto',
-    ...SHADOWS.small,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   participantSummaryDark: {
     backgroundColor: Platform.select({
       ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgba(45, 55, 72, 0.7)',
+      android: 'rgba(45, 55, 72, 0.65)',
     }),
+    overflow: 'hidden',
   },
   winningParticipant: {
     backgroundColor: Platform.select({
@@ -239,6 +245,7 @@ const styles = StyleSheet.create({
     }),
     borderWidth: 2,
     borderColor: COLORS.success,
+    overflow: 'hidden',
   },
   winningParticipantDark: {
     backgroundColor: Platform.select({
@@ -246,6 +253,7 @@ const styles = StyleSheet.create({
       android: 'rgba(40, 167, 69, 0.3)',
     }),
     borderColor: COLORS.success + 'CC',
+    overflow: 'hidden',
   },
   participantHeader: {
     alignItems: 'center',
@@ -335,9 +343,8 @@ const styles = StyleSheet.create({
   shareButton: {
     backgroundColor: Platform.select({
       ios: COLORS.white + '80',
-      android: 'rgb(255, 255, 255)',
+      android: 'rgba(255, 255, 255, 0.95)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     padding: SPACING.xs,
     borderRadius: 8,
     ...SHADOWS.small,
@@ -345,8 +352,7 @@ const styles = StyleSheet.create({
   shareButtonDark: {
     backgroundColor: Platform.select({
       ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      android: 'rgba(45, 55, 72, 0.9)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
   },
 }); 

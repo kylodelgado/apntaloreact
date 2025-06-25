@@ -478,21 +478,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Platform.select({
-      ios: COLORS.white + '80',
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '30',
+      android: 'rgba(255, 255, 255, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     borderRadius: 8,
     padding: SPACING.xs,
     marginRight: SPACING.md,
-    ...SHADOWS.small,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   backButtonDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.3)',
+      android: 'rgba(45, 55, 72, 0.4)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   title: {
     ...FONTS.title,
@@ -501,9 +505,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     marginRight: 40,
+    opacity: 1,
   },
   titleDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   card: {
     marginBottom: SPACING.lg,
@@ -514,9 +520,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: COLORS.primary,
     marginBottom: SPACING.md,
+    opacity: 1,
   },
   cardTitleDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   settingRow: {
     flexDirection: 'row',
@@ -531,9 +539,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.text.primary,
     marginBottom: SPACING.sm,
+    opacity: 1,
   },
   settingTextDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   settingContainer: {
     paddingVertical: SPACING.md,
@@ -542,9 +552,11 @@ const styles = StyleSheet.create({
     ...FONTS.regular,
     fontSize: 16,
     color: COLORS.text.secondary,
+    opacity: 1,
   },
   settingValueDark: {
     color: COLORS.text.dark.secondary,
+    opacity: 1,
   },
   languageOptions: {
     flexDirection: 'row',
@@ -554,22 +566,26 @@ const styles = StyleSheet.create({
   languageOption: {
     flex: 1,
     backgroundColor: Platform.select({
-      ios: COLORS.white + '80',
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '20',
+      android: 'rgba(255, 255, 255, 0.2)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     paddingVertical: SPACING.sm,
     paddingHorizontal: SPACING.md,
     borderRadius: 8,
     marginHorizontal: SPACING.xs,
-    ...SHADOWS.small,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   languageOptionDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.2)',
+      android: 'rgba(45, 55, 72, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.79: 1,
+    overflow: 'hidden',
   },
   languageOptionActive: {
     backgroundColor: COLORS.primary + '80',
@@ -581,12 +597,15 @@ const styles = StyleSheet.create({
     ...FONTS.regular,
     color: COLORS.primary,
     textAlign: 'center',
+    opacity: 1,
   },
   languageOptionTextDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   languageOptionTextActive: {
     color: COLORS.white,
+    opacity: 1,
   },
   scoreOptions: {
     flexDirection: 'row',
@@ -595,22 +614,27 @@ const styles = StyleSheet.create({
   },
   scoreOption: {
     backgroundColor: Platform.select({
-      ios: COLORS.lightGray,
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '20',
+      android: 'rgba(255, 255, 255, 0.2)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.sm,
     borderRadius: 8,
     minWidth: 80,
     alignItems: 'center',
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   scoreOptionDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.2)',
+      android: 'rgba(45, 55, 72, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   scoreOptionActive: {
     backgroundColor: COLORS.primary + '80',
@@ -621,12 +645,15 @@ const styles = StyleSheet.create({
   scoreOptionText: {
     ...FONTS.medium,
     color: COLORS.text.primary,
+    opacity: 1,
   },
   scoreOptionTextDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   scoreOptionTextActive: {
     color: COLORS.white,
+    opacity: 1,
   },
   gameModeOptions: {
     flexDirection: 'row',
@@ -635,22 +662,27 @@ const styles = StyleSheet.create({
   },
   gameModeOption: {
     backgroundColor: Platform.select({
-      ios: COLORS.lightGray,
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '20',
+      android: 'rgba(255, 255, 255, 0.2)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.sm,
     borderRadius: 8,
     minWidth: 100,
     alignItems: 'center',
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   gameModeOptionDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.2)',
+      android: 'rgba(45, 55, 72, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   gameModeOptionActive: {
     backgroundColor: COLORS.primary + '80',
@@ -661,12 +693,15 @@ const styles = StyleSheet.create({
   gameModeOptionText: {
     ...FONTS.medium,
     color: COLORS.text.primary,
+    opacity: 1,
   },
   gameModeOptionTextDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   gameModeOptionTextActive: {
     color: COLORS.white,
+    opacity: 1,
   },
   themeOptions: {
     flexDirection: 'row',
@@ -679,21 +714,26 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: Platform.select({
-      ios: COLORS.lightGray,
-      android: 'rgb(255, 255, 255)',
+      ios: COLORS.white + '20',
+      android: 'rgba(255, 255, 255, 0.2)',
     }),
-    opacity: Platform.OS === 'android' ? 0.9 : 1,
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.sm,
     borderRadius: 8,
     gap: SPACING.xs,
+    overflow: 'hidden',
+    shadowColor: SHADOWS.small.shadowColor,
+    shadowOffset: SHADOWS.small.shadowOffset,
+    shadowOpacity: SHADOWS.small.shadowOpacity,
+    shadowRadius: SHADOWS.small.shadowRadius,
+    elevation: Platform.OS === 'ios' ? SHADOWS.small.elevation : 0,
   },
   themeOptionDark: {
     backgroundColor: Platform.select({
-      ios: 'rgba(45, 55, 72, 0.5)',
-      android: 'rgb(45, 55, 72)',
+      ios: 'rgba(45, 55, 72, 0.2)',
+      android: 'rgba(45, 55, 72, 0.3)',
     }),
-    opacity: Platform.OS === 'android' ? 0.7 : 1,
+    overflow: 'hidden',
   },
   themeOptionActive: {
     backgroundColor: COLORS.primary + '80',
@@ -706,12 +746,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.primary,
     textAlign: 'center',
+    opacity: 1,
   },
   themeOptionTextDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
   themeOptionTextActive: {
     color: COLORS.white,
+    opacity: 1,
   },
   section: {
     marginBottom: SPACING.lg,
@@ -722,8 +765,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: COLORS.primary,
     marginBottom: SPACING.md,
+    opacity: 1,
   },
   sectionTitleDark: {
     color: COLORS.text.dark.primary,
+    opacity: 1,
   },
 }); 
