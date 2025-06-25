@@ -133,6 +133,9 @@ dependencies {
         implementation jscFlavor
     }
 
+    // Appodeal SDK for Android
+    implementation 'com.appodeal.ads:sdk:3.5.0.0'
+
     // Force all the support libraries to use the same version
     configurations.all {
         resolutionStrategy {

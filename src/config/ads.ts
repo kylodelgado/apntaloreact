@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 
-// Toggle between ad providers
-export const USE_IRONSOURCE = true;
+// Ad network selection - you can switch between networks
+export const USE_APPODEAL = true; // Set to false to use AdMob instead
 
 // Test IDs for development
 const TEST_IDS = {
@@ -19,10 +19,12 @@ const PRODUCTION_IDS = {
   }),
 };
 
-// IronSource IDs
-export const IRONSOURCE_IDS = {
-  APP_KEY: '2260b5485',
-  BANNER: 'l5qm716vok36zdve',
+// Appodeal IDs
+export const APPODEAL_IDS = {
+  APP_KEY: Platform.select({
+    ios: '', // Add iOS app key when available
+    android: '99a802ce1c066bc3daa13a82969c9af983bc7ddd5f4909e2',
+  }),
 };
 
 // Use test IDs in development and production IDs in release

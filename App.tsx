@@ -18,8 +18,8 @@ import { TranslationProvider } from './src/translations/TranslationContext';
 import { ThemeProvider } from './src/context/ThemeContext';
 import { useTheme } from './src/context/ThemeContext';
 import { COLORS } from './src/styles/theme';
-import { initIronSource } from './src/services/IronSourceService';
-import { USE_IRONSOURCE } from './src/config/ads';
+import { initAppodeal } from './src/services/AppodealService';
+import { USE_APPODEAL } from './src/config/ads';
 
 const customLightTheme = {
   ...DefaultTheme,
@@ -55,10 +55,10 @@ function AppContent() {
       await mobileAds().initialize();
       console.log('Mobile Ads initialized');
 
-      // Initialize IronSource if enabled
-      if (USE_IRONSOURCE && Platform.OS === 'ios') {
-        const success = await initIronSource();
-        console.log('IronSource initialization:', success ? 'success' : 'failed');
+      // Initialize Appodeal if enabled
+      if (USE_APPODEAL && Platform.OS === 'android') {
+        const success = await initAppodeal();
+        console.log('Appodeal initialization:', success ? 'success' : 'failed');
       }
 
       // Hide the native splash screen
