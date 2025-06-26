@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, StyleSheet, Platform, Dimensions } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import { BannerAd } from './ads/BannerAd';
 
 interface AdLayoutProps {
@@ -9,20 +8,21 @@ interface AdLayoutProps {
 
 const { width: screenWidth } = Dimensions.get('window');
 
-export const AdLayout: React.FC<AdLayoutProps> = ({ children }) => {
-  const route = useRoute();
-  
+const AdLayoutComponent: React.FC<AdLayoutProps> = ({ children }) => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         {children}
       </View>
       <View style={styles.bannerContainer}>
-        <BannerAd />
+        <BannerAd key="stable-banner-ad" />
       </View>
     </View>
   );
 };
+
+// Memoize the AdLayout to prevent unnecessary re-renders
+export const AdLayout = memo(AdLayoutComponent);
 
 const styles = StyleSheet.create({
   container: {
