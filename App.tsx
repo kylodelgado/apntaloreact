@@ -50,6 +50,20 @@ function AppContent() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const appState = useRef(AppState.currentState);
 
+  // Configure navigation bar based on theme
+  const configureNavigationBar = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        // Set navigation bar to fully transparent with appropriate content style
+        await SystemNavigationBar.setNavigationColor('transparent', isDark ? 'dark' : 'light', 'navigation');
+        // Also ensure the navigation bar doesn't enforce contrast which could cause white space
+        await SystemNavigationBar.setNavigationBarContrastEnforced(false);
+      } catch (error) {
+        console.log('Error configuring navigation bar:', error);
+      }
+    }
+  };
+
   useEffect(() => {
     const initializeApp = async () => {
       // Initialize mobile ads
@@ -62,14 +76,8 @@ function AppContent() {
         console.log('Appodeal initialization:', success ? 'success' : 'failed');
       }
 
-      // Configure Android navigation bar for navigation pill visibility
-      if (Platform.OS === 'android') {
-        try {
-          await SystemNavigationBar.setNavigationColor('transparent', 'light');
-        } catch (error) {
-          console.log('Error configuring navigation bar:', error);
-        }
-      }
+      // Configure Android navigation bar for transparency
+      await configureNavigationBar();
 
       // Hide the native splash screen
       SplashScreen.hide();
@@ -80,6 +88,13 @@ function AppContent() {
 
     initializeApp();
   }, []);
+
+  // Update navigation bar when theme changes
+  useEffect(() => {
+    if (isThemeReady) {
+      configureNavigationBar();
+    }
+  }, [isDark, isThemeReady]);
 
   // Add AppState listener to handle app background/foreground transitions
   useEffect(() => {
