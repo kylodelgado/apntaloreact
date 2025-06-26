@@ -53,7 +53,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
     flex: 0,
-    height: 50,
+    paddingBottom: Platform.select({
+      android: 15, // Add padding for navigation pill area
+      ios: 0,
+    }),
   },
   appodealBanner: {
     height: 50, // Standard banner height

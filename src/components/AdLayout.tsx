@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: 'transparent',
-    marginBottom: Platform.select({ ios: 0, android: 0 }), // No margin needed with new BannerAd component
   },
   bannerContainer: {
     position: 'absolute',

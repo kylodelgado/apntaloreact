@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 import { AppRegistry, Animated, Platform, AppState } from 'react-native';
 import mobileAds from 'react-native-google-mobile-ads';
+import SystemNavigationBar from 'react-native-system-navigation-bar';
 
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
 import AppNavigator from './src/navigation/AppNavigator';
@@ -59,6 +60,15 @@ function AppContent() {
       if (USE_APPODEAL && Platform.OS === 'android') {
         const success = await initAppodeal();
         console.log('Appodeal initialization:', success ? 'success' : 'failed');
+      }
+
+      // Configure Android navigation bar for navigation pill visibility
+      if (Platform.OS === 'android') {
+        try {
+          await SystemNavigationBar.setNavigationColor('transparent', 'light');
+        } catch (error) {
+          console.log('Error configuring navigation bar:', error);
+        }
       }
 
       // Hide the native splash screen
