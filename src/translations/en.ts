@@ -55,6 +55,11 @@ export const en = {
     newGame: 'New Game',
     continueGame: 'Continue Game',
     viewHistory: 'View History',
+    shareTitle: 'Share the App',
+    shareAndroid: 'Android',
+    shareIOS: 'iOS',
+    shareGooglePlay: 'Google Play',
+    shareAppStore: 'App Store',
   },
   gameplay: {
     resetGame: 'Reset Game',
