@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+        
+        <!-- Keep navigation bar transparent for navigation pill visibility -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!-- Ensure navigation bar is not enforced with contrast -->
+        <item name="android:enforceNavigationBarContrast">false</item>
+        <!-- Enable edge-to-edge layout -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <!-- Make sure the layout draws behind the navigation bar -->
+        <item name="android:windowTranslucentNavigation">true</item>
+        <!-- Enable drawing system bar backgrounds -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!-- Ensure status bar is also transparent -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+</resources> 
